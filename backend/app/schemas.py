@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
@@ -34,6 +34,10 @@ class StudySummary(BaseModel):
     verification_count: int
     registry_stream: str
     is_intervention: bool
+    evidence_role: str
+    intervention_class: str
+    outcome_directness: str
+    decision_relevance: str
 
 
 class StudyDetail(StudySummary):
@@ -70,6 +74,9 @@ class StudyDetail(StudySummary):
     verification_flags: list[str]
     raw_fields: dict[str, str]
     added_in_version: str
+    source_review: str
+    search_coverage_end: str
+    source_row: int | None
     effect_estimates: list[EffectEstimateOut]
 
 
@@ -115,6 +122,10 @@ class StatsResponse(BaseModel):
     updated_date: str
     last_search_date: str | None
     pending_candidates: int
+    direct_mental_health_count: int
+    structural_intervention_count: int
+    psychosocial_intervention_count: int
+    exposure_reduction_count: int
     countries: list[str]
     design_types: list[str]
     age_groups: list[str]
@@ -141,6 +152,9 @@ class InterventionSummary(BaseModel):
     effect_direction: str
     causal_tier: str
     slug: str
+    evidence_role: str
+    outcome_directness: str
+    decision_relevance: str
 
 
 class EvidenceBrief(BaseModel):
@@ -177,6 +191,9 @@ class GapRadarResponse(BaseModel):
     geographic_breakdown: dict[str, int]
     outcome_breakdown: dict[str, int]
     design_breakdown: dict[str, int]
+    stream_breakdown: dict[str, int]
+    directness_breakdown: dict[str, int]
+    intervention_breakdown: dict[str, int]
 
 
 # ── Reviewer / dashboard schemas ───────────────────────────────────────────────
@@ -202,21 +219,22 @@ class CandidateOut(BaseModel):
     doi: str | None
     abstract: str
     source_database: str
+    source_id: str
+    source_url: str
     relevance_score: float | None
     status: str
     screen_decision: str | None
+    screen_reason: str | None
     fulltext_decision: str | None
+    fulltext_reason: str | None
     created_at: datetime
 
 
-class ScreenDecision(BaseModel):
+class ReviewDecisionCreate(BaseModel):
+    stage: str = Field(pattern="^(screen|fulltext)$")
     decision: str = Field(pattern="^(include|exclude|uncertain)$")
     reason: str = Field(min_length=3, max_length=2000)
-
-
-class FulltextDecision(BaseModel):
-    decision: str = Field(pattern="^(include|exclude|uncertain)$")
-    reason: str = Field(min_length=3, max_length=2000)
+    reviewer_name: str = Field(min_length=2, max_length=180)
 
 
 class SearchRunOut(BaseModel):
@@ -224,6 +242,7 @@ class SearchRunOut(BaseModel):
 
     id: int
     run_date: datetime
+    coverage_end_date: date | None
     databases_searched: list[str]
     candidates_found: int
     new_candidates: int

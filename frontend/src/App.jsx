@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Link,
   NavLink,
@@ -14,7 +14,7 @@ import {
   askEvidence,
   createRelease,
   exportUrl,
-  fulltextCandidate,
+  getCandidates,
   getChangelog,
   getDashboard,
   getGaps,
@@ -24,9 +24,9 @@ import {
   getStudy,
   getUpdates,
   releaseDownloadUrl,
+  recordDecision,
   rescoreCandidates,
   reviewerLogin,
-  screenCandidate,
   submitStudy,
   triggerSearch,
 } from "./api";
@@ -58,9 +58,10 @@ const DIRECTION_STYLES = {
 };
 
 const CERTAINTY_STYLES = {
-  High: "bg-emerald-50 text-emerald-800 border-emerald-200",
-  Moderate: "bg-gold/15 text-amber-900 border-gold/30",
-  Low: "bg-scarlet/10 text-scarlet border-scarlet/20",
+  "Convergent credible evidence": "bg-emerald-50 text-emerald-800 border-emerald-200",
+  "Credible evidence with important limitations": "bg-gold/15 text-amber-900 border-gold/30",
+  "Associational evidence only": "bg-scarlet/10 text-scarlet border-scarlet/20",
+  "No directly matched evidence": "bg-slate-100 text-slate-700 border-slate-200",
 };
 
 const PRIORITY_STYLES = {
@@ -261,7 +262,7 @@ function HomePage() {
       stream: "gaps",
       count: null,
       heading: "Evidence Gap Radar",
-      body: "Where is evidence missing? Auto-computed gaps by geography, outcome, method, and population — guiding the next generation of research.",
+      body: "Where is evidence missing? The registry computes gaps by geography, outcome, method, and population.",
       cta: "View gap radar",
       to: "/gaps",
       accent: "border-t-4 border-t-gold",
@@ -281,13 +282,13 @@ function HomePage() {
               What does the evidence actually say about neighborhood violence and youth?
             </h1>
             <p className="mt-7 max-w-3xl text-lg leading-8 text-white/80">
-              VICINITY brings three connected evidence streams — exposure effects, intervention outcomes,
-              and evidence gaps — into one continuously updated observatory. Study design, causal quality,
-              and source limits remain visible on every record.
+              VICINITY connects exposure effects, intervention outcomes, and evidence gaps.
+              Scheduled surveillance identifies new publications for independent review.
+              Study design, causal quality, and source limits remain visible on every record.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <Link to="/ask" className="button-primary">
-                Ask a question →
+                Ask a question
               </Link>
               <Link to="/registry" className="button-secondary border-white/30 bg-white/10 text-white hover:bg-white/20">
                 Browse all evidence
@@ -349,7 +350,7 @@ function HomePage() {
               )}
               <p className="mt-3 text-xl font-bold text-navy">{card.heading}</p>
               <p className="mt-3 text-sm leading-6 text-slate-600">{card.body}</p>
-              <p className="mt-6 text-sm font-bold text-scarlet">{card.cta} →</p>
+              <p className="mt-6 text-sm font-bold text-scarlet">{card.cta}</p>
             </button>
           ))}
         </div>
@@ -366,23 +367,23 @@ function HomePage() {
               </h2>
               <p className="mt-5 text-lg leading-8 text-white/80">
                 VICINITY translates research into structured evidence briefs. Specify the population,
-                exposure type, and outcome you care about — and receive a synthesized answer with causal
+                exposure type, and outcome you care about. The result reports causal
                 certainty, effect direction, available interventions, and known evidence gaps.
               </p>
               <Link to="/ask" className="button-primary mt-7 border-transparent bg-gold text-navy hover:bg-amber-400">
-                Open the query interface →
+                Open the query interface
               </Link>
             </div>
             <div className="rounded-3xl border border-white/15 bg-white/10 p-7 backdrop-blur font-mono text-sm">
-              <p className="text-white/50 text-xs mb-4">Example query →</p>
-              <p className="text-gold font-bold">For adolescents exposed to shootings near home</p>
-              <p className="text-gold font-bold">during the previous 30 days:</p>
-              <div className="mt-5 space-y-2 text-white/80">
-                <p>Studies matched: <span className="text-white font-bold">14</span></p>
-                <p>Credible-tier: <span className="text-white font-bold">9</span></p>
-                <p>Effect direction: <span className="text-emerald-400 font-bold">Harmful (13/14)</span></p>
-                <p>Certainty: <span className="text-emerald-400 font-bold">High</span></p>
-                <p className="mt-3 text-white/50 text-xs">Interventions available: 8 · Evidence gaps: 4</p>
+              <p className="text-white/50 text-xs mb-4">Example query</p>
+                <p className="text-gold font-bold">For adolescents exposed to neighborhood violence</p>
+                <p className="text-gold font-bold">with depression as the outcome:</p>
+                <div className="mt-5 space-y-2 text-white/80">
+                <p>Studies matched: <span className="text-white font-bold">computed live</span></p>
+                <p>Credible-tier: <span className="text-white font-bold">shown separately</span></p>
+                <p>Effect direction: <span className="text-emerald-400 font-bold">source-derived</span></p>
+                <p>Certainty: <span className="text-emerald-400 font-bold">rule-based</span></p>
+                <p className="mt-3 text-white/50 text-xs">Interventions and evidence gaps remain distinct.</p>
               </div>
             </div>
           </div>
@@ -428,7 +429,7 @@ function HomePage() {
               <h2 className="mt-2 text-3xl font-bold text-navy">What changed recently</h2>
             </div>
             <Link to="/changelog" className="text-sm font-bold text-scarlet hover:underline">
-              Full changelog →
+              Full changelog
             </Link>
           </div>
           <div className="mt-6 space-y-4">
@@ -486,19 +487,28 @@ function StudyCard({ study }) {
         <Badge tone={study.causal_tier === "Credible" ? "green" : "gold"}>{study.causal_tier}</Badge>
         <Badge tone="red">{study.quality_tier}</Badge>
         <StreamBadge stream={study.registry_stream} />
+        {study.registry_stream === "intervention" && (
+          <Badge tone="sky">{study.intervention_class}</Badge>
+        )}
       </div>
       <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-3">
         <div><dt className="font-bold text-navy">Population</dt><dd className="mt-1 text-slate-600">{study.age_range}</dd></div>
         <div><dt className="font-bold text-navy">Outcome</dt><dd className="mt-1 text-slate-600">{study.outcome_type}</dd></div>
-        <div><dt className="font-bold text-navy">Exposure window</dt><dd className="mt-1 text-slate-600">{study.exposure_window}</dd></div>
+        <div>
+          <dt className="font-bold text-navy">Outcome directness</dt>
+          <dd className="mt-1 text-slate-600">{study.outcome_directness}</dd>
+        </div>
       </dl>
+      <p className="mt-4 rounded-xl bg-navy/5 px-4 py-3 text-sm text-slate-700">
+        <span className="font-bold text-navy">Decision use:</span> {study.decision_relevance}
+      </p>
       <p className="mt-5 line-clamp-3 text-sm leading-6 text-slate-700">{study.finding_summary}</p>
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-navy/10 pt-4">
         <span className="text-xs font-semibold text-slate-500">
           {study.country} · {study.publication_year || "Year needs verification"} · {study.verification_count} flags
         </span>
         <Link to={`/studies/${study.slug}`} className="text-sm font-bold text-scarlet hover:underline">
-          View full record →
+          View full record
         </Link>
       </div>
     </article>
@@ -616,10 +626,10 @@ function RegistryPage() {
         </p>
         <div className="flex gap-3">
           <a href={exportUrl("csv")} className="text-xs font-bold text-scarlet hover:underline">
-            Download CSV ↓
+            Download CSV
           </a>
           <a href={exportUrl("json")} className="text-xs font-bold text-navy hover:underline">
-            Download JSON ↓
+            Download JSON
           </a>
         </div>
       </div>
@@ -671,7 +681,7 @@ function StudyDetailPage() {
 
   return (
     <main className="page-shell py-12">
-      <Link to="/registry" className="text-sm font-bold text-scarlet hover:underline">← Back to registry</Link>
+      <Link to="/registry" className="text-sm font-bold text-scarlet hover:underline">Back to registry</Link>
       <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_320px]">
         <article>
           <p className="eyebrow">{study.citation}</p>
@@ -682,6 +692,9 @@ function StudyDetailPage() {
             <Badge tone="red">{study.quality_tier}</Badge>
             <Badge>{study.country}</Badge>
             <StreamBadge stream={study.registry_stream} />
+            {study.registry_stream === "intervention" && (
+              <Badge tone="sky">{study.intervention_class}</Badge>
+            )}
           </div>
 
           <section className="card mt-8 p-7">
@@ -709,7 +722,7 @@ function StudyDetailPage() {
             <section className="mt-8">
               <h2 className="text-3xl font-bold text-navy">Effect estimates</h2>
               <p className="mt-2 text-sm text-slate-500">
-                One row per distinct effect reported. Enables meta-analytic synthesis.
+                One row per effect that the source workbook reports in structured form.
               </p>
               <div className="mt-4 overflow-x-auto rounded-2xl border border-navy/10">
                 <table className="w-full text-sm">
@@ -728,14 +741,14 @@ function StudyDetailPage() {
                       <tr key={ee.id} className="hover:bg-navy/3">
                         <td className="px-4 py-3 font-semibold text-navy">{ee.outcome_label}</td>
                         <td className="px-4 py-3 text-slate-600">{ee.population_subgroup}</td>
-                        <td className="px-4 py-3 font-mono">{ee.point_estimate ?? "—"}</td>
-                        <td className="px-4 py-3 text-slate-500">{ee.estimate_type || "—"}</td>
+                        <td className="px-4 py-3 font-mono">{ee.point_estimate ?? "Not reported"}</td>
+                        <td className="px-4 py-3 text-slate-500">{ee.estimate_type || "Not reported"}</td>
                         <td className="px-4 py-3 font-mono text-slate-500">
                           {ee.ci_lower != null && ee.ci_upper != null
-                            ? `[${ee.ci_lower}, ${ee.ci_upper}]` : "—"}
+                            ? `[${ee.ci_lower}, ${ee.ci_upper}]` : "Not reported"}
                         </td>
                         <td className="px-4 py-3 text-center">
-                          {ee.is_primary ? <span className="text-emerald-600 font-bold">✓</span> : ""}
+                          {ee.is_primary ? <span className="text-emerald-600 font-bold">Primary</span> : ""}
                         </td>
                       </tr>
                     ))}
@@ -752,6 +765,9 @@ function StudyDetailPage() {
               <DetailItem label="Sample size">{study.sample_size}</DetailItem>
               <DetailItem label="Population details">{study.population_details}</DetailItem>
               <DetailItem label="Outcome category">{study.outcome_type}</DetailItem>
+              <DetailItem label="Outcome directness">{study.outcome_directness}</DetailItem>
+              <DetailItem label="Evidence role">{study.evidence_role}</DetailItem>
+              <DetailItem label="Decision relevance">{study.decision_relevance}</DetailItem>
               <DetailItem label="Outcome measure">{study.outcome_measure}</DetailItem>
               <DetailItem label="Outcome scale">{study.outcome_unit_scale}</DetailItem>
               <DetailItem label="Exposure measure">{study.exposure_measure}</DetailItem>
@@ -795,7 +811,11 @@ function StudyDetailPage() {
               <DetailItem label="Publication year">{study.publication_year}</DetailItem>
               <DetailItem label="Significance">{study.statistically_significant_raw}</DetailItem>
               <DetailItem label="Evidence stream">{study.registry_stream}</DetailItem>
+              <DetailItem label="Intervention class">{study.intervention_class}</DetailItem>
               <DetailItem label="Intervention type">{study.intervention_type}</DetailItem>
+              <DetailItem label="Source review">{study.source_review}</DetailItem>
+              <DetailItem label="Search coverage ends">{study.search_coverage_end}</DetailItem>
+              <DetailItem label="Source row">{study.source_row}</DetailItem>
               <DetailItem label="DOI">{study.doi || "[NEEDS VERIFICATION]"}</DetailItem>
               <DetailItem label="Registry version">{study.added_in_version}</DetailItem>
             </dl>
@@ -875,9 +895,8 @@ function AskPage() {
     }
   };
 
-  const certParts = brief?.causal_certainty?.split(" — ") || [];
-  const certLevel = certParts[0] || "Low";
-  const certStyle = Object.entries(CERTAINTY_STYLES).find(([k]) => certLevel.startsWith(k))?.[1] || CERTAINTY_STYLES.Low;
+  const certLevel = brief?.causal_certainty || "No directly matched evidence";
+  const certStyle = CERTAINTY_STYLES[certLevel] || CERTAINTY_STYLES["No directly matched evidence"];
 
   return (
     <main>
@@ -890,7 +909,7 @@ function AskPage() {
           <p className="mt-5 max-w-2xl text-lg leading-8 text-white/80">
             Specify the population, exposure type, and outcome. VICINITY returns a synthesized
             evidence brief with causal certainty, available interventions, and known evidence gaps.
-            This interface answers a different question than the registry browser — it synthesizes,
+            This interface answers a different question than the registry browser. It synthesizes,
             not just lists.
           </p>
         </div>
@@ -906,9 +925,21 @@ function AskPage() {
               <select className="field" value={query.age_group}
                 onChange={(e) => setQuery({ ...query, age_group: e.target.value })}>
                 <option value="all">All ages</option>
-                <option value="adolescent">Adolescents (10–17)</option>
-                <option value="child">Children (0–9)</option>
-                <option value="adult">Young adults (18–25)</option>
+                <option value="adolescent">Adolescents (10-17)</option>
+                <option value="child">Children (0-9)</option>
+                <option value="adult">Young adults (18-29)</option>
+              </select>
+            </label>
+
+            <label>
+              <span className="label">Violence exposure</span>
+              <select className="field" value={query.exposure_type}
+                onChange={(e) => setQuery({ ...query, exposure_type: e.target.value })}>
+                <option value="">Any violence exposure</option>
+                <option value="shooting">Shootings or gun violence</option>
+                <option value="assault">Assault or violent crime</option>
+                <option value="property">Property violence or disorder</option>
+                <option value="general">General community violence</option>
               </select>
             </label>
 
@@ -932,7 +963,7 @@ function AskPage() {
               <select className="field" value={query.exposure_window}
                 onChange={(e) => setQuery({ ...query, exposure_window: e.target.value })}>
                 <option value="">Any window</option>
-                <option value="Acute">Acute (recent, ≤30 days)</option>
+                <option value="Acute">Acute (recent, 30 days or less)</option>
                 <option value="Chronic">Chronic (ongoing)</option>
                 <option value="Lifetime">Lifetime cumulative</option>
               </select>
@@ -949,7 +980,7 @@ function AskPage() {
             )}
 
             <button type="submit" disabled={loading} className="button-primary w-full disabled:opacity-60">
-              {loading ? "Searching evidence…" : "Get evidence brief →"}
+              {loading ? "Searching evidence..." : "Get evidence brief"}
             </button>
 
             <p className="text-xs text-slate-400 leading-5">
@@ -1032,6 +1063,9 @@ function AskPage() {
                           <div>
                             <p className="font-semibold text-navy">{iv.citation}</p>
                             <p className="mt-1 text-sm text-slate-600">{iv.intervention_type}</p>
+                            <p className="mt-1 text-xs text-slate-500">
+                              {iv.outcome_directness}. {iv.decision_relevance}
+                            </p>
                           </div>
                           <div className="flex flex-col items-end gap-1">
                             <Badge tone={iv.causal_tier === "Credible" ? "green" : "gold"}>{iv.causal_tier}</Badge>
@@ -1059,7 +1093,7 @@ function AskPage() {
                       ))}
                     </ul>
                     <Link to="/gaps" className="mt-5 block text-sm font-bold text-scarlet hover:underline">
-                      View full evidence gap radar →
+                      View full evidence gap radar
                     </Link>
                   </div>
                 )}
@@ -1176,6 +1210,36 @@ function GapRadarPage() {
                   ))}
               </div>
             </div>
+
+            <div className="card p-6">
+              <h2 className="text-lg font-bold text-navy">Outcome directness</h2>
+              <p className="mt-1 text-xs text-slate-500">What each study actually measures</p>
+              <div className="mt-4 space-y-3">
+                {Object.entries(data.directness_breakdown || {})
+                  .sort(([, a], [, b]) => b - a)
+                  .map(([label, n]) => (
+                    <div key={label} className="flex items-start justify-between gap-3 text-sm">
+                      <span className="text-slate-600">{label}</span>
+                      <Badge>{n}</Badge>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            <div className="card p-6">
+              <h2 className="text-lg font-bold text-navy">Intervention portfolio</h2>
+              <p className="mt-1 text-xs text-slate-500">Structural and psychosocial studies</p>
+              <div className="mt-4 space-y-3">
+                {Object.entries(data.intervention_breakdown || {})
+                  .sort(([, a], [, b]) => b - a)
+                  .map(([label, n]) => (
+                    <div key={label} className="flex items-center justify-between gap-3 text-sm">
+                      <span className="text-slate-600">{label}</span>
+                      <Badge tone="sky">{n}</Badge>
+                    </div>
+                  ))}
+              </div>
+            </div>
           </aside>
 
           {/* Gap cards */}
@@ -1266,10 +1330,10 @@ function ChangelogPage() {
         <div className="mx-auto max-w-3xl">
           <div className="flex flex-wrap gap-3 mb-8">
             <a href={exportUrl("csv")} className="button-secondary text-sm">
-              Download registry CSV ↓
+              Download registry CSV
             </a>
             <a href={exportUrl("json")} className="button-secondary text-sm">
-              Download registry JSON ↓
+              Download registry JSON
             </a>
           </div>
 
@@ -1302,7 +1366,7 @@ function ChangelogPage() {
                   <p className="mt-4 text-sm leading-7 text-slate-700">{entry.summary}</p>
                   {entry.study_count_after > 0 && (
                     <p className="mt-3 text-xs font-semibold text-slate-500">
-                      Registry size: {entry.study_count_before} → {entry.study_count_after} studies
+                      Registry size: {entry.study_count_before} to {entry.study_count_after} studies
                     </p>
                   )}
                   {entry.affected_studies?.length > 0 && (
@@ -1433,7 +1497,7 @@ function AboutPage() {
               randomized trial, difference-in-differences design, natural experiment, instrumental
               variable, within-person fixed-effects design, or within-family fixed-effects design.
               Other quasi-experimental studies remain associational until a reviewer verifies the
-              design. Associational studies are not discarded — their tier is visible on every
+              design. Associational studies remain available. Their tier is visible on every
               card and record.
             </p>
           </section>
@@ -1466,12 +1530,12 @@ function AboutPage() {
             <p className="eyebrow">Living evidence pipeline</p>
             <h2 className="mt-2 text-3xl font-bold text-navy">How the registry stays current</h2>
             <p className="mt-4 leading-7 text-slate-700">
-              VICINITY runs documented searches each month across PubMed, OpenAlex, Crossref,
-              Europe PMC, and ERIC. Every publication moves through a defined workflow: Discovered
-              → Deduplicated → Screened → Full text reviewed → Extracted → Appraised → Approved →
-              Published. Reviewers make every inclusion and causal-quality decision. The system
-              follows the Cochrane living-review standard for continual surveillance, explicit
-              update rules, and transparent reporting.
+              VICINITY uses PubMed and Crossref for scheduled surveillance. OpenAlex joins the
+              search when the registry has an API key. Every publication moves through a defined
+              workflow from discovery to independent screening, extraction, appraisal, approval,
+              and publication. Two named reviewers must agree at screening and full text.
+              The system applies core living-review principles. It records the search interval,
+              source, review state, and public change history.
             </p>
           </section>
 
@@ -1482,20 +1546,30 @@ function AboutPage() {
             <h2 className="mt-2 text-3xl font-bold text-navy">Citation</h2>
             <div className="mt-4 space-y-4 rounded-2xl border border-navy/10 bg-white p-7">
               <div>
-                <p className="text-sm font-bold text-navy">Principal developer</p>
+                <p className="text-sm font-bold text-navy">Principal investigator and developer</p>
                 <p className="mt-1 text-slate-700">
-                  J. Abbas · PhD Candidate · School of Social Work · Rutgers University
+                  Joseph Abbas · PhD Candidate in Prevention Science · Rutgers University-Camden
+                </p>
+                <p className="mt-1 text-sm text-slate-600">
+                  Scientific concept, systematic reviews, data architecture, registry development,
+                  and stewardship.
                 </p>
               </div>
               <div>
+                <p className="text-sm font-bold text-navy">Software implementation support</p>
+                <p className="mt-1 text-slate-700">OpenAI Codex</p>
+              </div>
+              <div>
                 <p className="text-sm font-bold text-navy">Systematic review registration</p>
-                <p className="mt-1 text-slate-700">PROSPERO (2024). Pre-registered protocol available on request.</p>
+                <p className="mt-1 text-slate-700">
+                  PROSPERO CRD420251076481. Search coverage ends July 31, 2025.
+                </p>
               </div>
               <div>
                 <p className="text-sm font-bold text-navy">How to cite the registry</p>
                 <p className="mt-2 rounded-xl border border-navy/10 bg-navy/3 p-4 font-mono text-sm leading-6 text-slate-700">
-                  Abbas, J. (2026). VICINITY: Causal Evidence Registry for Neighborhood Violence
-                  and Youth Mental Health. Version 1.0.
+                  Abbas, J. (2026). VICINITY: Living Causal Evidence Observatory for Neighborhood
+                  Violence and Youth Mental Health. Version 2.0.
                 </p>
               </div>
             </div>
@@ -1507,7 +1581,7 @@ function AboutPage() {
           <div className="card p-6">
             <h2 className="text-xl font-bold text-navy">Current release</h2>
             <ul className="mt-5 space-y-3 text-sm leading-6 text-slate-700">
-              <li>58 validated study records</li>
+              <li>58 source-derived study records</li>
               <li>32 exposure studies</li>
               <li>26 intervention studies</li>
               <li>Field-level verification queue</li>
@@ -1521,14 +1595,13 @@ function AboutPage() {
           </div>
 
           <div className="card p-6">
-            <h2 className="text-xl font-bold text-navy">Platforms compared</h2>
+            <h2 className="text-xl font-bold text-navy">What Version 2 adds</h2>
             <dl className="mt-4 space-y-4 text-sm">
               {[
-                ["Youth Endowment Fund", "Broad approaches"],
-                ["CrimeSolutions", "Criminal justice"],
-                ["Blueprints", "Certified programs"],
-                ["3ie", "Evidence gap maps"],
-                ["VICINITY", "All of the above + causal design + living pipeline"],
+                ["Linked questions", "Exposure consequences and intervention outcomes remain distinct."],
+                ["Outcome directness", "The registry states whether mental health was measured directly."],
+                ["Decision views", "Researchers and decision makers can use the same source record differently."],
+                ["Living workflow", "Search intervals, review states, conflicts, and releases remain traceable."],
               ].map(([name, scope]) => (
                 <div key={name}>
                   <dt className="font-bold text-navy">{name}</dt>
@@ -1661,13 +1734,16 @@ function ReviewerDashboard({ token, onLogout }) {
   const [releaseNotes, setReleaseNotes] = useState("");
   const [creatingRelease, setCreatingRelease] = useState(false);
   const [releaseResult, setReleaseResult] = useState(null);
+  const [reviewerName, setReviewerName] = useState(
+    () => sessionStorage.getItem("vicinityReviewerName") || "",
+  );
 
-  const reload = () => {
+  const reload = useCallback(() => {
     getDashboard(token).then(setDashboard).catch((err) => setError(err.message));
     getCandidates(token).then(setCandidates).catch((err) => setError(err.message));
-  };
+  }, [token]);
 
-  useEffect(() => { reload(); }, [token]);
+  useEffect(() => { reload(); }, [reload]);
 
   const handleTrigger = async () => {
     setTriggering(true);
@@ -1713,9 +1789,15 @@ function ReviewerDashboard({ token, onLogout }) {
     }
   };
 
-  const handleScreen = async (id, decision, reason) => {
+  const handleDecision = async (id, stage, decision, reason) => {
+    const normalizedName = reviewerName.trim();
+    if (!normalizedName) {
+      window.alert("Enter your reviewer name before recording a decision.");
+      return;
+    }
     try {
-      await screenCandidate(token, id, decision, reason);
+      sessionStorage.setItem("vicinityReviewerName", normalizedName);
+      await recordDecision(token, id, stage, decision, reason, normalizedName);
       reload();
     } catch (err) {
       setError(err.message);
@@ -1749,6 +1831,15 @@ function ReviewerDashboard({ token, onLogout }) {
         <div>
           <p className="eyebrow">Private dashboard</p>
           <h1 className="mt-1 text-4xl font-bold text-navy">Reviewer workspace</h1>
+          <label className="mt-4 block max-w-sm">
+            <span className="label">Reviewer name</span>
+            <input
+              className="field"
+              value={reviewerName}
+              onChange={(event) => setReviewerName(event.target.value)}
+              placeholder="Your full name"
+            />
+          </label>
         </div>
         <div className="flex flex-wrap gap-3">
           <button
@@ -1757,7 +1848,7 @@ function ReviewerDashboard({ token, onLogout }) {
             disabled={triggering}
             className="button-primary disabled:opacity-60"
           >
-            {triggering ? "Searching OpenAlex…" : "Trigger surveillance run"}
+            {triggering ? "Searching sources…" : "Trigger surveillance run"}
           </button>
           <button
             type="button"
@@ -1775,10 +1866,12 @@ function ReviewerDashboard({ token, onLogout }) {
 
       {triggerResult && (
         <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-5">
-          <p className="font-bold text-emerald-800">Live OpenAlex search completed</p>
+          <p className="font-bold text-emerald-800">Surveillance run completed</p>
           <p className="mt-1 text-sm text-emerald-700">
-            {triggerResult.candidates_found} publications retrieved · {triggerResult.new_candidates} new after deduplication
-            · Source: {triggerResult.source || "OpenAlex API"}
+            Coverage: {triggerResult.coverage_start} to {triggerResult.coverage_end}.
+            {" "}{triggerResult.candidates_found} records retrieved.
+            {" "}{triggerResult.new_candidates} entered review.
+            {" "}Sources: {triggerResult.source || "No source completed"}.
           </p>
         </div>
       )}
@@ -1965,9 +2058,14 @@ function ReviewerDashboard({ token, onLogout }) {
                 <p className="mt-4 text-sm leading-6 text-slate-600 line-clamp-3">{c.abstract}</p>
               )}
 
-              {c.status === "discovered" && (
+              {(
+                ["discovered", "awaiting_second_screen"].includes(c.status)
+                || (c.status === "conflict" && !c.fulltext_decision)
+              ) && (
                 <div className="mt-5 space-y-3">
-                  <p className="text-sm font-bold text-navy">Screen decision</p>
+                  <p className="text-sm font-bold text-navy">
+                    Independent screen decision
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     {["include", "exclude", "uncertain"].map((dec) => (
                       <button
@@ -1975,7 +2073,36 @@ function ReviewerDashboard({ token, onLogout }) {
                         type="button"
                         onClick={() => {
                           const reason = prompt(`Reason for "${dec}" decision:`) || "";
-                          if (reason) handleScreen(c.id, dec, reason);
+                          if (reason) handleDecision(c.id, "screen", dec, reason);
+                        }}
+                        className={`rounded-full px-4 py-2 text-xs font-bold transition ${
+                          dec === "include" ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200" :
+                          dec === "exclude" ? "bg-scarlet/10 text-scarlet hover:bg-scarlet/20" :
+                          "bg-gold/15 text-amber-900 hover:bg-gold/25"}`}
+                      >
+                        {dec.charAt(0).toUpperCase() + dec.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {(
+                ["screened", "awaiting_second_fulltext"].includes(c.status)
+                || (c.status === "conflict" && Boolean(c.fulltext_decision))
+              ) && (
+                <div className="mt-5 space-y-3">
+                  <p className="text-sm font-bold text-navy">
+                    Independent full-text decision
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {["include", "exclude", "uncertain"].map((dec) => (
+                      <button
+                        key={dec}
+                        type="button"
+                        onClick={() => {
+                          const reason = prompt(`Reason for "${dec}" decision:`) || "";
+                          if (reason) handleDecision(c.id, "fulltext", dec, reason);
                         }}
                         className={`rounded-full px-4 py-2 text-xs font-bold transition ${
                           dec === "include" ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200" :
@@ -1992,7 +2119,13 @@ function ReviewerDashboard({ token, onLogout }) {
               {c.screen_decision && (
                 <p className="mt-3 text-xs text-slate-500">
                   Screen: <span className="font-semibold">{c.screen_decision}</span>
-                  {c.screen_reason && <> — {c.screen_reason}</>}
+                  {c.screen_reason && <>. {c.screen_reason}</>}
+                </p>
+              )}
+              {c.fulltext_decision && (
+                <p className="mt-2 text-xs text-slate-500">
+                  Full text: <span className="font-semibold">{c.fulltext_decision}</span>
+                  {c.fulltext_reason && <>. {c.fulltext_reason}</>}
                 </p>
               )}
             </div>
@@ -2066,7 +2199,7 @@ function ReviewerPage() {
         sessionStorage.setItem("vicinity_reviewer_token", inputToken.trim());
         setToken(inputToken.trim());
       }
-    } catch (err) {
+    } catch {
       setAuthError("Invalid reviewer token. Please check with the registry administrator.");
     } finally {
       setAuthenticating(false);
@@ -2127,35 +2260,35 @@ const IMPLEMENTATION_DOMAINS = [
     question: "Does the study sample match the population you serve?",
     dimensions: ["Age range", "Gender composition", "Race/ethnicity", "Urbanicity", "Income level"],
     guidance:
-      "Interventions tested in one demographic context can transfer, but effect sizes often attenuate. Look for studies with similar age ranges and neighborhood poverty levels before assuming transferability.",
+      "Compare the study population with the people you serve. Record important differences before applying the finding.",
   },
   {
     domain: "Setting transferability",
     question: "Was the intervention tested in a comparable setting?",
     dimensions: ["City size", "Crime rate", "School type", "Housing density", "Policy environment"],
     guidance:
-      "Place-based interventions (greening, lighting, housing mobility) are sensitive to local housing markets and zoning. Psychosocial interventions depend on trained providers and school buy-in.",
+      "Compare the study setting with the intended setting. Document the local conditions that could change delivery or outcomes.",
   },
   {
     domain: "Implementation requirements",
     question: "What does this intervention require to deliver?",
     dimensions: ["Staff training", "Fidelity protocols", "Technology", "Physical space", "Time commitment"],
     guidance:
-      "High-fidelity programs like TF-CBT require 8–25 sessions with a licensed clinician. School-based programs depend on administrator approval and class-time access.",
+      "Extract staffing, training, space, technology, time, and fidelity requirements from the primary report.",
   },
   {
     domain: "Cost and sustainability",
     question: "What does it cost and who has funded it?",
     dimensions: ["Per-participant cost", "Funding source", "Ongoing costs", "Revenue model", "Scale economics"],
     guidance:
-      "Most published RCTs were funded by NIH or federal grants. Real-world implementation costs often exceed trial costs by 2–4× after accounting for staff time and overhead.",
+      "Separate start-up costs from recurring costs. Identify the funding source and any resources that the study did not price.",
   },
   {
     domain: "Equity implications",
-    question: "Who benefits most — and who might be left out?",
+    question: "Who benefits most, and who might be left out?",
     dimensions: ["Differential effects by subgroup", "Access barriers", "Stigma", "Language", "Trust"],
     guidance:
-      "Several housing mobility studies show larger effects for younger children (ages 0–13). Opt-in designs may systematically exclude families with the highest needs.",
+      "Check subgroup effects and participation barriers. Identify who could be excluded by recruitment, eligibility, language, cost, or trust.",
   },
 ];
 
@@ -2164,7 +2297,7 @@ function ImplementationPage() {
     <main>
       <section className="bg-navy text-white">
         <div className="page-shell py-20">
-          <p className="text-xs font-bold uppercase tracking-[0.24em] text-gold">Stream 3 — Implementation</p>
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-gold">Stream 3: Implementation</p>
           <h1 className="mt-4 max-w-4xl text-5xl font-bold">Will it work here?</h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-white/80">
             Knowing that an intervention works on average is necessary but not sufficient. This stream

@@ -1,24 +1,78 @@
 # VICINITY
 
-VICINITY is the Causal Evidence Registry for Neighborhood Violence and Youth Mental Health.
+VICINITY is a Living Causal Evidence Observatory for neighborhood violence and youth mental health.
 
-**Tagline:** What the best evidence actually shows. Updated as it happens.
+The registry connects two systematic-review streams. The first contains 32 studies about violence exposure and its consequences. The second contains 26 intervention studies. The combined Version 2 release contains 58 unique studies.
 
-The MVP includes a searchable registry, study detail pages, a transparent coding protocol, and a structured study nomination queue. It uses 32 studies from the supplied systematic-review extraction workbook.
+## Purpose
 
-## Current Data
+VICINITY serves four decision groups.
 
-The project brief referred to a structured CSV. The supplied folder did not contain that CSV. It contained an Excel workbook with exactly 32 complete study rows:
+- Researchers can inspect design, appraisal, provenance, and evidence gaps.
+- Practitioners can query evidence by population, exposure, and outcome.
+- Policy makers can compare structural and psychosocial responses.
+- Administrators can monitor search coverage, review status, and releases.
 
-`data/source/Synthesis_Systematic_Review_Extraction_Paper_1.xlsx`
+The system does not treat every outcome as a mental-health outcome. It distinguishes direct mental-health outcomes from exposure-reduction outcomes. It also identifies pathway outcomes and records that require verification.
 
-The seed generator preserves all 32 raw fields. It exports:
+## Attribution
 
-- `backend/app/data/studies.csv`
-- `backend/app/data/studies.json`
-- `VALIDATION_REPORT.md`
+Joseph Abbas conceived and developed VICINITY. He led the systematic reviews, data architecture, registry development, and scientific stewardship.
 
-The current normalization yields 26 credible-tier studies and 6 associational studies. The application displays all field-level verification flags.
+Joseph Abbas is a PhD Candidate in Prevention Science at Rutgers University-Camden.
+
+OpenAI Codex provided software implementation support.
+
+This repository does not imply institutional endorsement by Rutgers University.
+
+## Evidence Base
+
+The canonical source files are:
+
+- `data/source/Synthesis_Systematic_Review_Extraction_Paper_1.xlsx`
+- `data/source/Intervention_Systematic_Review_Extraction_Paper_2.xlsx`
+
+The registered review protocol is PROSPERO CRD420251076481. The imported systematic-review search coverage ends July 31, 2025.
+
+The generators preserve source fields. They add conservative normalized fields for search and decision support.
+
+- `registry_stream`
+- `evidence_role`
+- `intervention_class`
+- `outcome_directness`
+- `decision_relevance`
+- `source_review`
+- `search_coverage_end`
+- `source_row`
+
+The seed process refuses to launch unless it finds exactly 32 exposure records and 26 intervention records.
+
+## Integrity Rules
+
+VICINITY applies the following rules.
+
+1. The registry never fabricates effect estimates, confidence intervals, p-values, DOIs, or publications.
+2. The registry preserves the raw extraction fields.
+3. The registry labels derived fields.
+4. The registry exposes verification flags.
+5. Two named reviewers must agree at screening and full text.
+6. Conflicting decisions remain unresolved.
+7. Only approved studies appear in public evidence synthesis.
+8. Every surveillance run records its date interval and completed sources.
+
+## Living Surveillance
+
+The surveillance service searches PubMed and Crossref. It can also search OpenAlex when `OPENALEX_API_KEY` is configured.
+
+The service searches only the uncovered interval after the latest completed search. It deduplicates by DOI. It uses normalized title and year when a DOI is unavailable.
+
+Automated relevance scoring prioritizes records for human review. The score never determines inclusion.
+
+The scheduled endpoint is:
+
+`POST /api/surveillance/run`
+
+The request must include `X-Surveillance-Token`.
 
 ## Stack
 
@@ -26,11 +80,19 @@ The current normalization yields 26 credible-tier studies and 6 associational st
 - Backend: FastAPI and SQLAlchemy
 - Development database: SQLite
 - Production database: PostgreSQL
-- Deployment: Render Blueprint
+- Deployment: Render
+- Scheduled surveillance: GitHub Actions
 
 ## Run Locally
 
-### Backend
+Set two private environment variables.
+
+```powershell
+$env:REVIEWER_TOKEN = "replace-with-a-random-secret"
+$env:SURVEILLANCE_TOKEN = "replace-with-another-random-secret"
+```
+
+Run the backend.
 
 ```powershell
 cd backend
@@ -39,9 +101,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --reload
 ```
 
-The API runs at `http://localhost:8000`. Interactive API documentation is available at `http://localhost:8000/docs`.
-
-### Frontend
+Run the frontend.
 
 ```powershell
 cd frontend
@@ -49,71 +109,16 @@ npm install
 npm run dev
 ```
 
-The frontend runs at `http://localhost:5173`.
+The API runs at `http://localhost:8000`. The frontend runs at `http://localhost:5173`.
 
-Set `VITE_API_URL` when the API uses another origin.
-
-## Validate and Rebuild Seed Data
-
-The seed generator requires `openpyxl`.
+## Rebuild Data
 
 ```powershell
 python scripts/generate_seed.py data/source/Synthesis_Systematic_Review_Extraction_Paper_1.xlsx --project-root .
+python scripts/generate_intervention_seed.py data/source/Intervention_Systematic_Review_Extraction_Paper_2.xlsx --project-root .
 ```
 
-The command fails if it does not find exactly 32 complete study rows or if generated slugs are not unique.
-
-## API
-
-- `GET /api/health`
-- `GET /api/stats`
-- `GET /api/studies`
-- `GET /api/studies/{slug}`
-- `GET /api/updates`
-- `POST /api/submissions`
-
-Study filters include design, age group, country, outcome, exposure window, quality tier, causal tier, publication year, intervention status, and free-text search.
-
-## Data Schema
-
-The `studies` table stores the raw extraction fields and normalized registry fields. Core normalized fields include:
-
-- Study ID, title, year, and country
-- Age range and age-group categories
-- Design type and causal tier
-- Exposure type, window, and geographic scale
-- Outcome type, measure, and scale
-- Effect direction and significance
-- Risk-of-bias tier
-- Verification flags
-
-The `submissions` table stores incoming nominations with a pending status. The `updates` table stores the registry changelog.
-
-## Causal Tier Rule
-
-The credible tier requires clear source support for at least one of these designs:
-
-- Randomized controlled trial
-- Difference-in-differences
-- Natural experiment
-- Instrumental variables
-- Within-person fixed effects
-- Within-family sibling or twin fixed effects
-
-Other designs remain associational. The registry does not promote uncertain designs.
-
-## Add a Study
-
-1. Submit the study through the public form.
-2. Confirm the study meets the population, exposure, and outcome criteria.
-3. Verify the causal design against the full article.
-4. Extract all source fields.
-5. Complete the risk-of-bias appraisal.
-6. Add the approved record to the source workbook or canonical data pipeline.
-7. Regenerate the seed files and review `VALIDATION_REPORT.md`.
-8. Run the backend tests and frontend build.
-
-## Tests
+## Verify
 
 ```powershell
 cd backend
@@ -124,32 +129,12 @@ npm run lint
 npm run build
 ```
 
-## Render Deployment
+## Current Limits
 
-`render.yaml` defines:
+The source workbooks do not provide structured estimates for most records. VICINITY therefore does not present a pooled effect.
 
-- A free Render static site for the frontend
-- A free Render Python web service for the API
-- A free Render Postgres database
+Many records lack verified DOIs. Many records also lack structured confidence intervals.
 
-Render spins down free web services after 15 minutes without traffic. A cold start can take about one minute.
+Scheduled surveillance does not make VICINITY a completed living systematic review by itself. The team must screen, extract, appraise, adjudicate, and publish eligible records.
 
-Render free Postgres databases expire 30 days after creation as of June 12, 2026. The initial free launch therefore needs a database upgrade before day 30 to preserve submissions and changelog entries. The 32-study seed can always rebuild the studies table.
-
-## Roadmap
-
-### Phase 2
-
-- Data-driven synthesis dashboard
-- Effect-size distribution chart
-- Subgroup panels by design and age
-- Summary statistics table
-- Manually curated narrative synthesis container
-- Interactive forest plot
-
-### Phase 3
-
-- Dynamic narrative generation
-- Bayesian updating module
-
-Phase 2 and Phase 3 are not part of the MVP.
+Render free databases expire unless the owner upgrades them. The team must maintain database backups and a durable production plan.

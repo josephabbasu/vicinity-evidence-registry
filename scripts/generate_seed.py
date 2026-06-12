@@ -79,7 +79,7 @@ def slugify(value: str) -> str:
 
 
 def extract_year(study_id: str, title: str) -> int | None:
-    matches = re.findall(r"\b(19\d{2}|20\d{2})\b", f"{study_id} {title}")
+    matches = re.findall(r"(19\d{2}|20\d{2})", f"{study_id} {title}")
     return int(matches[0]) if matches else None
 
 
@@ -343,6 +343,28 @@ def classify_effect_direction(value: str) -> str:
     return "Needs verification"
 
 
+def classify_outcome_directness(outcome_type: str) -> str:
+    if outcome_type in {
+        "Depression",
+        "Anxiety",
+        "PTSD or trauma",
+        "Distress or stress",
+        "Suicide or self-harm",
+        "Emotion or affect",
+        "General mental health",
+    }:
+        return "Direct mental-health outcome"
+    if outcome_type in {
+        "Sleep",
+        "Behavior or aggression",
+        "Cognition or education",
+        "Physiological",
+        "Substance use",
+    }:
+        return "Pathway or functional outcome"
+    return "Scope requires verification"
+
+
 def parse_significance(value: str) -> bool | None:
     text = value.strip().lower()
     if text in {"y", "yes"} or text.startswith("yes "):
@@ -471,6 +493,21 @@ def build_record(raw: dict[str, str], source_row: int) -> dict[str, Any]:
         "featured": study_id == FEATURED_STUDY,
         "verification_flags": sorted(set(flags)),
         "raw_fields": raw,
+        "registry_stream": "exposure",
+        "approval_status": "approved",
+        "registry_version": 2,
+        "added_in_version": "1.0",
+        "evidence_role": "Exposure consequence",
+        "intervention_class": "Not applicable",
+        "outcome_directness": classify_outcome_directness(outcome_type),
+        "decision_relevance": (
+            "Causal evidence of harm"
+            if causal_tier == "Credible"
+            else "Associational context"
+        ),
+        "source_review": "Causal inference systematic review (Paper 1)",
+        "search_coverage_end": "2025-07-31",
+        "source_row": source_row,
     }
 
 

@@ -77,19 +77,16 @@ export function getCandidates(token, statusFilter) {
   return request(`/api/reviewer/candidates${params}`, { headers: authHeaders(token) });
 }
 
-export function screenCandidate(token, id, decision, reason) {
-  return request(`/api/reviewer/candidates/${id}/screen`, {
+export function recordDecision(token, id, stage, decision, reason, reviewerName) {
+  return request(`/api/reviewer/candidates/${id}/decisions`, {
     method: "POST",
     headers: authHeaders(token),
-    body: JSON.stringify({ decision, reason }),
-  });
-}
-
-export function fulltextCandidate(token, id, decision, reason) {
-  return request(`/api/reviewer/candidates/${id}/fulltext`, {
-    method: "POST",
-    headers: authHeaders(token),
-    body: JSON.stringify({ decision, reason }),
+    body: JSON.stringify({
+      stage,
+      decision,
+      reason,
+      reviewer_name: reviewerName,
+    }),
   });
 }
 

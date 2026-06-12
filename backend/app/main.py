@@ -4,8 +4,12 @@ import csv
 import io
 import json
 import os
+import re
+import secrets
+import urllib.error
 import urllib.request
 import urllib.parse
+import xml.etree.ElementTree as ET
 from contextlib import asynccontextmanager
 from datetime import date, datetime, timedelta, timezone
 from typing import Annotated
@@ -20,6 +24,7 @@ from .db_models import (
     ChangeLog,
     EffectEstimate,
     LiteratureCandidate,
+    ReviewDecision,
     RegistryUpdate,
     Release,
     SearchRun,
@@ -32,14 +37,13 @@ from .schemas import (
     DashboardResponse,
     EvidenceBrief,
     EffectEstimateOut,
-    FulltextDecision,
     GapItem,
     GapRadarResponse,
     InterventionSummary,
     PractitionerQuery,
     ReviewerAuthRequest,
     ReviewerAuthResponse,
-    ScreenDecision,
+    ReviewDecisionCreate,
     SearchRunOut,
     StatsResponse,
     StudyDetail,
@@ -49,10 +53,12 @@ from .schemas import (
     SubmissionCreated,
     UpdateOut,
 )
+from .migrations import run_additive_migrations
 from .seed import seed_database
 
 
-REVIEWER_TOKEN = os.getenv("REVIEWER_TOKEN", "vicinity-reviewer-2026")
+REVIEWER_TOKEN = os.getenv("REVIEWER_TOKEN", "").strip()
+SURVEILLANCE_TOKEN = os.getenv("SURVEILLANCE_TOKEN", "").strip()
 
 
 def get_session():
@@ -64,10 +70,15 @@ def get_session():
 
 
 def require_reviewer(authorization: Annotated[str | None, Header()] = None):
+    if not REVIEWER_TOKEN:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Reviewer access is not configured.",
+        )
     if not authorization:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing Authorization header")
     scheme, _, token = authorization.partition(" ")
-    if scheme.lower() != "bearer" or token != REVIEWER_TOKEN:
+    if scheme.lower() != "bearer" or not secrets.compare_digest(token, REVIEWER_TOKEN):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid reviewer token")
 
 
@@ -86,6 +97,7 @@ def allowed_origins() -> list[str]:
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     Base.metadata.create_all(bind=engine)
+    run_additive_migrations(engine)
     with SessionLocal() as session:
         seed_database(session)
     yield
@@ -96,7 +108,8 @@ app = FastAPI(
     version="2.0.0",
     description=(
         "Living Causal Evidence Observatory for neighborhood violence and youth mental health. "
-        "Developed by J. Abbas, Rutgers University. "
+        "Scientific concept, development, and stewardship by Joseph Abbas, "
+        "Rutgers University-Camden. Software implementation supported by OpenAI Codex. "
         "Three linked registries: exposure/harm, intervention/recovery, and evidence gaps."
     ),
     lifespan=lifespan,
@@ -186,7 +199,8 @@ def root() -> dict[str, str]:
         "name": "VICINITY",
         "version": "2.0",
         "tagline": "Living Causal Evidence Observatory for neighborhood violence and youth mental health.",
-        "developer": "J. Abbas, Rutgers University",
+        "developer": "Joseph Abbas, Rutgers University-Camden",
+        "implementation_support": "OpenAI Codex",
         "docs": "/docs",
     }
 
@@ -200,10 +214,21 @@ def health() -> dict[str, str]:
 def stats(session: Session = Depends(get_session)) -> StatsResponse:
     studies = list(session.scalars(select(Study).where(Study.approval_status == "approved")).all())
     years = [s.publication_year for s in studies if s.publication_year]
-    last_run = session.scalar(select(SearchRun).order_by(SearchRun.run_date.desc()))
+    last_run = session.scalar(
+        select(SearchRun)
+        .where(SearchRun.coverage_end_date.is_not(None))
+        .order_by(SearchRun.coverage_end_date.desc())
+    )
+    pending_statuses = [
+        "discovered",
+        "awaiting_second_screen",
+        "screened",
+        "awaiting_second_fulltext",
+        "conflict",
+    ]
     pending = session.scalar(
         select(func.count()).select_from(LiteratureCandidate)
-        .where(LiteratureCandidate.status.in_(["discovered", "screened"]))
+        .where(LiteratureCandidate.status.in_(pending_statuses))
     ) or 0
     return StatsResponse(
         study_count=len(studies),
@@ -214,8 +239,28 @@ def stats(session: Session = Depends(get_session)) -> StatsResponse:
         associational_count=sum(s.causal_tier == "Associational" for s in studies),
         latest_year=max(years) if years else None,
         updated_date=date.today().isoformat(),
-        last_search_date=last_run.run_date.date().isoformat() if last_run else None,
+        last_search_date=(
+            last_run.coverage_end_date.isoformat()
+            if last_run and last_run.coverage_end_date
+            else None
+        ),
         pending_candidates=pending,
+        direct_mental_health_count=sum(
+            s.outcome_directness == "Direct mental-health outcome"
+            for s in studies
+        ),
+        structural_intervention_count=sum(
+            s.intervention_class == "Structural"
+            for s in studies
+        ),
+        psychosocial_intervention_count=sum(
+            s.intervention_class == "Psychosocial"
+            for s in studies
+        ),
+        exposure_reduction_count=sum(
+            s.outcome_directness == "Exposure-reduction outcome"
+            for s in studies
+        ),
         countries=sorted({s.country for s in studies}),
         design_types=sorted({s.design_type for s in studies}),
         age_groups=sorted({g for s in studies for g in s.age_groups}),
@@ -306,17 +351,27 @@ def ask(query: PractitionerQuery, session: Session = Depends(get_session)) -> Ev
 
     if query.age_group and query.age_group != "all":
         age_map = {
-            "adolescent": ["Adolescent", "Youth", "Teen"],
-            "child": ["Child", "Children"],
-            "adult": ["Adult", "Young adult"],
+            "adolescent": ["Adolescents 10-17"],
+            "child": ["Children 0-9"],
+            "adult": ["Young adults 18-29", "Adults 30+"],
         }
         groups = age_map.get(query.age_group, [])
         if groups:
             matched = [s for s in matched if any(g in s.age_groups for g in groups)]
 
+    if query.exposure_type and query.exposure_type != "general":
+        needle = query.exposure_type.casefold()
+        matched = [
+            s for s in matched
+            if needle in f"{s.exposure_type} {s.exposure_measure} {s.exposure_window_raw}".casefold()
+        ]
+
     if query.outcome_type:
         needle = query.outcome_type.casefold()
-        matched = [s for s in matched if needle in s.outcome_type.casefold()]
+        matched = [
+            s for s in matched
+            if needle in f"{s.outcome_type} {s.outcomes} {s.outcome_measure}".casefold()
+        ]
 
     if query.country:
         matched = [s for s in matched if s.country == query.country]
@@ -328,15 +383,38 @@ def ask(query: PractitionerQuery, session: Session = Depends(get_session)) -> Ev
     directions = [s.effect_direction for s in matched if s.effect_direction not in ("", "Needs verification")]
     dominant = max(set(directions), key=directions.count) if directions else "Insufficient data"
 
-    certainty = (
-        "High — majority of matched studies use credible causal designs"
-        if len(credible) >= len(matched) * 0.5 and len(credible) >= 3
-        else "Moderate — some credible designs present" if credible
-        else "Low — matched studies rely primarily on associational designs"
-    )
+    if not matched:
+        certainty = "No directly matched evidence"
+    elif len(credible) >= 3 and len(credible) >= len(matched) * 0.5:
+        certainty = "Convergent credible evidence"
+    elif credible:
+        certainty = "Credible evidence with important limitations"
+    else:
+        certainty = "Associational evidence only"
 
-    # Match intervention studies
     intervention_studies = [s for s in all_studies if s.registry_stream == "intervention"]
+    if query.age_group and query.age_group != "all":
+        groups = age_map.get(query.age_group, [])
+        if groups:
+            intervention_studies = [
+                s for s in intervention_studies
+                if any(g in s.age_groups for g in groups)
+            ]
+    if query.outcome_type:
+        needle = query.outcome_type.casefold()
+        direct_matches = [
+            s for s in intervention_studies
+            if needle in f"{s.outcome_type} {s.outcomes} {s.outcome_measure}".casefold()
+        ]
+        if direct_matches:
+            intervention_studies = direct_matches
+    intervention_studies.sort(
+        key=lambda s: (
+            s.outcome_directness != "Direct mental-health outcome",
+            s.causal_tier != "Credible",
+            -(s.publication_year or 0),
+        )
+    )
     interventions = [
         InterventionSummary(
             citation=s.citation,
@@ -345,16 +423,20 @@ def ask(query: PractitionerQuery, session: Session = Depends(get_session)) -> Ev
             effect_direction=s.effect_direction,
             causal_tier=s.causal_tier,
             slug=s.slug,
+            evidence_role=s.evidence_role,
+            outcome_directness=s.outcome_directness,
+            decision_relevance=s.decision_relevance,
         )
         for s in intervention_studies
     ]
 
-    # Build query description
     parts = []
     if query.age_group and query.age_group != "all":
         parts.append(query.age_group + "s")
     else:
         parts.append("youth and young adults")
+    if query.exposure_type and query.exposure_type != "general":
+        parts.append(f"exposed to {query.exposure_type}")
     if query.exposure_window:
         parts.append(f"with {query.exposure_window} exposure")
     if query.outcome_type:
@@ -363,23 +445,36 @@ def ask(query: PractitionerQuery, session: Session = Depends(get_session)) -> Ev
         parts.append(f"in {query.country}")
     description = "Evidence for " + " ".join(parts) if parts else "All matched evidence"
 
-    # Evidence gaps for this query
     gaps: list[str] = []
     if len(matched) == 0:
-        gaps.append("No studies match these exact criteria — the combination is an active evidence gap.")
+        gaps.append("No approved exposure study matches this exact combination.")
     if len(credible) == 0 and matched:
-        gaps.append("No credible-tier studies matched — conclusions rely on associational designs.")
-    if not any(s.country == "South Africa" for s in matched):
-        gaps.append("No matched studies from South Africa or sub-Saharan Africa.")
+        gaps.append("No credible-tier study matched. The result relies on associational evidence.")
+    if matched and not any(s.country not in ("United States", "Multiple countries") for s in matched):
+        gaps.append("The matched evidence does not include a clearly identified non-US setting.")
     if not any("anxiety" in s.outcome_type.casefold() for s in matched):
         gaps.append("Anxiety outcomes are underrepresented in the matched set.")
     if not any("suicide" in s.outcomes.casefold() for s in matched):
         gaps.append("Suicidality outcomes are absent from matched studies.")
 
-    last_run = session.scalar(select(SearchRun).order_by(SearchRun.run_date.desc()))
+    last_run = session.scalar(
+        select(SearchRun)
+        .where(SearchRun.coverage_end_date.is_not(None))
+        .order_by(SearchRun.coverage_end_date.desc())
+    )
     pending = session.scalar(
         select(func.count()).select_from(LiteratureCandidate)
-        .where(LiteratureCandidate.status.in_(["discovered", "screened"]))
+        .where(
+            LiteratureCandidate.status.in_(
+                [
+                    "discovered",
+                    "awaiting_second_screen",
+                    "screened",
+                    "awaiting_second_fulltext",
+                    "conflict",
+                ]
+            )
+        )
     ) or 0
 
     return EvidenceBrief(
@@ -401,11 +496,15 @@ def ask(query: PractitionerQuery, session: Session = Depends(get_session)) -> Ev
         limitations=(
             "The evidence base relies heavily on US urban samples. "
             "Most studies lack structured effect-size fields. "
-            "Publication bias toward significant findings cannot be excluded."
+            "The registry does not estimate a pooled effect. Publication bias remains possible."
         ),
-        available_interventions=interventions[:8],
+        available_interventions=interventions[:10],
         evidence_gaps=gaps,
-        last_searched=last_run.run_date.date().isoformat() if last_run else None,
+        last_searched=(
+            last_run.coverage_end_date.isoformat()
+            if last_run and last_run.coverage_end_date
+            else None
+        ),
         pending_candidates=pending,
         studies_included=[s.citation for s in matched],
     )
@@ -430,6 +529,15 @@ def gap_radar(session: Session = Depends(get_session)) -> GapRadarResponse:
     for s in studies:
         design_counts[s.design_type] = design_counts.get(s.design_type, 0) + 1
 
+    stream_counts: dict[str, int] = {}
+    directness_counts: dict[str, int] = {}
+    intervention_counts: dict[str, int] = {}
+    for s in studies:
+        stream_counts[s.registry_stream] = stream_counts.get(s.registry_stream, 0) + 1
+        directness_counts[s.outcome_directness] = directness_counts.get(s.outcome_directness, 0) + 1
+        if s.registry_stream == "intervention":
+            intervention_counts[s.intervention_class] = intervention_counts.get(s.intervention_class, 0) + 1
+
     gaps: list[GapItem] = []
 
     # Geographic gaps
@@ -439,10 +547,10 @@ def gap_radar(session: Session = Depends(get_session)) -> GapRadarResponse:
             domain="Geographic",
             label="US over-representation",
             description=f"{us_count} of {n} studies ({round(us_count/n*100)}%) are from the United States. "
-                        "Evidence from low- and middle-income countries is critically absent.",
+                        "The registry cannot assume that these findings transfer to other policy settings.",
             n_studies=us_count,
             priority="High",
-            suggested_action="Commission systematic searches targeting LMIC settings, Africa, and Latin America.",
+            suggested_action="Prioritize studies from low- and middle-income settings and test cross-setting transportability.",
         ))
 
     non_us = [c for c in geo if c != "United States"]
@@ -453,7 +561,7 @@ def gap_radar(session: Session = Depends(get_session)) -> GapRadarResponse:
             description=f"Only {len(non_us)} non-US countries represented. Causal mechanisms may differ by context.",
             n_studies=sum(geo[c] for c in non_us),
             priority="High",
-            suggested_action="Prioritize replication studies in UK, Canada, Brazil, South Africa, and India.",
+            suggested_action="Prioritize replication in countries that are absent from the current registry.",
         ))
 
     # Outcome gaps
@@ -495,10 +603,10 @@ def gap_radar(session: Session = Depends(get_session)) -> GapRadarResponse:
 
     # Method gaps
     rct_n = sum(1 for s in studies if "randomized" in s.design_type.casefold())
-    if rct_n < 3:
+    if rct_n < 5:
         gaps.append(GapItem(
             domain="Method",
-            label="Very few randomized trials",
+            label="Few randomized trials",
             description=f"Only {rct_n} RCTs in the registry. Randomization is rare for exposure studies "
                         "but feasible for intervention evaluations.",
             n_studies=rct_n,
@@ -544,12 +652,49 @@ def gap_radar(session: Session = Depends(get_session)) -> GapRadarResponse:
             suggested_action="Require gender-stratified analysis in future extractions and search filters.",
         ))
 
-    county_n = sum(1 for s in studies if "county" in s.geographic_scale.casefold() or "municipality" in s.geographic_scale.casefold())
+    direct_interventions = sum(
+        1
+        for s in studies
+        if s.registry_stream == "intervention"
+        and s.outcome_directness == "Direct mental-health outcome"
+    )
+    intervention_n = stream_counts.get("intervention", 0)
+    if direct_interventions < intervention_n:
+        gaps.append(GapItem(
+            domain="Outcome",
+            label="Intervention outcomes do not always measure mental health directly",
+            description=(
+                f"{direct_interventions} of {intervention_n} intervention records measure a direct "
+                "mental-health outcome. The remaining records assess exposure reduction, pathways, "
+                "or outcomes that require verification."
+            ),
+            n_studies=direct_interventions,
+            priority="High",
+            suggested_action=(
+                "Commission intervention studies that measure both violence exposure and validated "
+                "mental-health outcomes over time."
+            ),
+        ))
+
+    county_n = sum(
+        1
+        for s in studies
+        if "county" in s.geographic_scale.casefold()
+        or "municipality" in s.geographic_scale.casefold()
+    )
+    unclear_scale_n = sum(
+        1
+        for s in studies
+        if not s.geographic_scale
+        or "unclear" in s.geographic_scale.casefold()
+        or "variable" in s.geographic_scale.casefold()
+        or "verification" in s.geographic_scale.casefold()
+    )
     gaps.append(GapItem(
         domain="Geographic",
         label="Sub-city geographic precision varies",
         description=f"Only {county_n} studies use county or municipality-level exposure coding. "
-                    "8 studies have unclear or variable geographic scales.",
+                    f"{unclear_scale_n} studies have unclear or variable geographic scales.",
         n_studies=county_n,
         priority="Medium",
         suggested_action="Standardize geographic scale coding using a controlled vocabulary in all new extractions.",
@@ -562,6 +707,9 @@ def gap_radar(session: Session = Depends(get_session)) -> GapRadarResponse:
         geographic_breakdown=geo,
         outcome_breakdown=outcome_counts,
         design_breakdown=design_counts,
+        stream_breakdown=stream_counts,
+        directness_breakdown=directness_counts,
+        intervention_breakdown=intervention_counts,
     )
 
 
@@ -592,6 +740,12 @@ def export_json(session: Session = Depends(get_session)) -> Response:
             "quality_tier": s.quality_tier,
             "outcome_type": s.outcome_type,
             "effect_direction": s.effect_direction,
+            "evidence_role": s.evidence_role,
+            "intervention_class": s.intervention_class,
+            "outcome_directness": s.outcome_directness,
+            "decision_relevance": s.decision_relevance,
+            "source_review": s.source_review,
+            "search_coverage_end": s.search_coverage_end,
             "is_intervention": s.is_intervention,
             "doi": s.doi,
             "added_in_version": s.added_in_version,
@@ -611,7 +765,9 @@ def export_csv(session: Session = Depends(get_session)) -> Response:
     fields = [
         "study_id", "title", "citation", "publication_year", "country",
         "registry_stream", "design_type", "causal_tier", "quality_tier",
-        "outcome_type", "effect_direction", "is_intervention", "doi", "added_in_version",
+        "outcome_type", "effect_direction", "evidence_role", "intervention_class",
+        "outcome_directness", "decision_relevance", "source_review",
+        "search_coverage_end", "is_intervention", "doi", "added_in_version",
     ]
     buffer = io.StringIO()
     writer = csv.DictWriter(buffer, fieldnames=fields)
@@ -628,32 +784,32 @@ def export_csv(session: Session = Depends(get_session)) -> Response:
 # ── Relevance scoring ─────────────────────────────────────────────────────────
 
 _RELEVANCE_TIERS: list[tuple[float, list[str]]] = [
-    # Tier 1 — core population terms (highest signal)
+    # Tier 1: core population terms.
     (0.25, ["youth", "adolescent", "adolescents", "children", "child", "teen", "teenager",
             "young people", "pediatric", "school-age"]),
-    # Tier 2 — violence exposure terms
+    # Tier 2: violence exposure terms.
     (0.25, ["neighborhood violence", "community violence", "gun violence", "shooting",
             "street violence", "violent crime", "exposure to violence", "witnessing violence",
             "violence exposure", "urban violence"]),
-    # Tier 3 — mental health outcome terms
+    # Tier 3: mental health outcome terms.
     (0.20, ["mental health", "depression", "depressive", "anxiety", "ptsd", "post-traumatic",
             "stress", "trauma", "behavioral", "sleep", "internalizing", "externalizing",
             "suicide", "self-harm", "psychological"]),
-    # Tier 4 — causal/rigorous design terms (bonus)
+    # Tier 4: stronger causal design terms.
     (0.15, ["randomized", "rct", "difference-in-differences", "natural experiment",
             "instrumental variable", "fixed effects", "quasi-experimental", "longitudinal",
             "causal", "exogenous"]),
-    # Tier 5 — place/neighborhood context
+    # Tier 5: place and neighborhood context.
     (0.10, ["neighborhood", "community", "urban", "place-based", "census tract",
             "block group", "poverty", "disadvantaged", "concentrated disadvantage"]),
-    # Tier 6 — intervention terms
+    # Tier 6: intervention terms.
     (0.05, ["intervention", "program", "treatment", "therapy", "cbt", "prevention",
             "counseling", "housing", "voucher", "greening"]),
 ]
 
 
 def _score_relevance(title: str, abstract: str) -> float:
-    """Score a candidate 0–1 based on tiered keyword matching in title (2×) + abstract."""
+    """Score a candidate from 0 to 1 with tiered title and abstract terms."""
     text = (title + " " + title + " " + abstract).casefold()
     total = 0.0
     for weight, keywords in _RELEVANCE_TIERS:
@@ -716,7 +872,7 @@ def _study_ris(s) -> str:
 def export_bibtex(session: Session = Depends(get_session)) -> Response:
     studies = list(session.scalars(select(Study).where(Study.approval_status == "approved")).all())
     header = (
-        "% VICINITY Evidence Registry — BibTeX export\n"
+        "% VICINITY Evidence Registry: BibTeX export\n"
         "% Developer: J. Abbas, Rutgers University\n"
         f"% Exported: {datetime.now(timezone.utc).strftime('%Y-%m-%d')}\n\n"
     )
@@ -779,7 +935,7 @@ def _attempt_zenodo_deposition(version: str, study_count: int, frozen_json: str)
     try:
         headers_json = json.dumps({
             "metadata": {
-                "title": f"VICINITY Evidence Registry — Version {version}",
+                "title": f"VICINITY Evidence Registry: Version {version}",
                 "upload_type": "dataset",
                 "description": (
                     f"Versioned snapshot of the VICINITY Living Causal Evidence Observatory "
@@ -911,12 +1067,17 @@ def download_release(version: str, session: Session = Depends(get_session)) -> R
 
 @app.post("/api/reviewer/auth", response_model=ReviewerAuthResponse)
 def reviewer_auth(payload: ReviewerAuthRequest) -> ReviewerAuthResponse:
-    if payload.token != REVIEWER_TOKEN:
+    if not REVIEWER_TOKEN:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Reviewer access is not configured.",
+        )
+    if not secrets.compare_digest(payload.token, REVIEWER_TOKEN):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
     return ReviewerAuthResponse(
         authenticated=True,
-        name="Lead Reviewer",
-        role="lead",
+        name="Registry reviewer",
+        role="reviewer",
     )
 
 
@@ -929,20 +1090,32 @@ def reviewer_dashboard(
 ) -> DashboardResponse:
     studies = list(session.scalars(select(Study).where(Study.approval_status == "approved")).all())
 
-    now = datetime.now(timezone.utc)
-    month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-
+    pending_statuses = [
+        "discovered",
+        "awaiting_second_screen",
+        "screened",
+        "awaiting_second_fulltext",
+        "conflict",
+    ]
     pending = session.scalar(
         select(func.count()).select_from(LiteratureCandidate)
-        .where(LiteratureCandidate.status.in_(["discovered", "screened"]))
+        .where(LiteratureCandidate.status.in_(pending_statuses))
     ) or 0
     awaiting_screen = session.scalar(
         select(func.count()).select_from(LiteratureCandidate)
-        .where(LiteratureCandidate.status == "discovered")
+        .where(
+            LiteratureCandidate.status.in_(
+                ["discovered", "awaiting_second_screen", "conflict"]
+            )
+        )
     ) or 0
     awaiting_fulltext = session.scalar(
         select(func.count()).select_from(LiteratureCandidate)
-        .where(LiteratureCandidate.status == "screened")
+        .where(
+            LiteratureCandidate.status.in_(
+                ["screened", "awaiting_second_fulltext"]
+            )
+        )
     ) or 0
 
     # Count studies approved this month (proxy: added in current calendar month)
@@ -959,7 +1132,7 @@ def reviewer_dashboard(
     recent_candidates = list(
         session.scalars(
             select(LiteratureCandidate)
-            .where(LiteratureCandidate.status.in_(["discovered", "screened"]))
+            .where(LiteratureCandidate.status.in_(pending_statuses))
             .order_by(LiteratureCandidate.created_at.desc())
             .limit(20)
         ).all()
@@ -991,73 +1164,119 @@ def list_candidates(
     return list(session.scalars(q).all())
 
 
-@app.post("/api/reviewer/candidates/{candidate_id}/screen", status_code=status.HTTP_200_OK)
-def screen_candidate(
+def _aggregate_decisions(
+    candidate: LiteratureCandidate,
+    stage: str,
+    decisions: list[ReviewDecision],
+) -> str:
+    latest_by_reviewer: dict[str, ReviewDecision] = {}
+    for decision in decisions:
+        latest_by_reviewer[decision.reviewer_name.casefold()] = decision
+
+    independent = list(latest_by_reviewer.values())
+    if len(independent) < 2:
+        status_value = (
+            "awaiting_second_screen"
+            if stage == "screen"
+            else "awaiting_second_fulltext"
+        )
+    else:
+        values = {decision.decision for decision in independent}
+        if values == {"include"}:
+            status_value = "screened" if stage == "screen" else "full_text"
+        elif values == {"exclude"}:
+            status_value = "rejected"
+        else:
+            status_value = "conflict"
+
+    combined_reason = " | ".join(
+        f"{decision.reviewer_name}: {decision.reason}"
+        for decision in independent
+    )
+    combined_decision = (
+        independent[0].decision
+        if independent and len({item.decision for item in independent}) == 1
+        else "conflict"
+    )
+    if stage == "screen":
+        candidate.screen_decision = combined_decision
+        candidate.screen_reason = combined_reason
+    else:
+        candidate.fulltext_decision = combined_decision
+        candidate.fulltext_reason = combined_reason
+    candidate.status = status_value
+    candidate.updated_at = datetime.now(timezone.utc)
+    return status_value
+
+
+@app.post(
+    "/api/reviewer/candidates/{candidate_id}/decisions",
+    status_code=status.HTTP_200_OK,
+)
+def record_review_decision(
     candidate_id: int,
-    payload: ScreenDecision,
+    payload: ReviewDecisionCreate,
     session: Session = Depends(get_session),
     _: None = Depends(require_reviewer),
-) -> dict[str, str]:
+) -> dict:
     candidate = session.get(LiteratureCandidate, candidate_id)
     if candidate is None:
         raise HTTPException(status_code=404, detail="Candidate not found")
-    candidate.screen_decision = payload.decision
-    candidate.screen_reason = payload.reason
-    candidate.status = "screened" if payload.decision == "include" else "rejected"
-    candidate.updated_at = datetime.now(timezone.utc)
+    if payload.stage == "fulltext" and candidate.status not in {
+        "screened",
+        "awaiting_second_fulltext",
+        "conflict",
+    }:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Two screen reviewers must include the record before full-text review.",
+        )
+
+    normalized_reviewer = " ".join(payload.reviewer_name.split())
+    existing = session.scalar(
+        select(ReviewDecision).where(
+            ReviewDecision.candidate_id == candidate_id,
+            ReviewDecision.stage == payload.stage,
+            func.lower(ReviewDecision.reviewer_name) == normalized_reviewer.casefold(),
+        )
+    )
+    if existing:
+        existing.decision = payload.decision
+        existing.reason = payload.reason.strip()
+        existing.reviewer_name = normalized_reviewer
+        existing.created_at = datetime.now(timezone.utc)
+    else:
+        session.add(
+            ReviewDecision(
+                candidate_id=candidate_id,
+                stage=payload.stage,
+                decision=payload.decision,
+                reason=payload.reason.strip(),
+                reviewer_name=normalized_reviewer,
+            )
+        )
+    session.flush()
+
+    decisions = list(
+        session.scalars(
+            select(ReviewDecision)
+            .where(
+                ReviewDecision.candidate_id == candidate_id,
+                ReviewDecision.stage == payload.stage,
+            )
+            .order_by(ReviewDecision.created_at.asc())
+        ).all()
+    )
+    aggregate_status = _aggregate_decisions(candidate, payload.stage, decisions)
     session.commit()
-    return {"status": candidate.status, "message": "Screen decision recorded."}
-
-
-@app.post("/api/reviewer/candidates/{candidate_id}/fulltext", status_code=status.HTTP_200_OK)
-def fulltext_candidate(
-    candidate_id: int,
-    payload: FulltextDecision,
-    session: Session = Depends(get_session),
-    _: None = Depends(require_reviewer),
-) -> dict[str, str]:
-    candidate = session.get(LiteratureCandidate, candidate_id)
-    if candidate is None:
-        raise HTTPException(status_code=404, detail="Candidate not found")
-    candidate.fulltext_decision = payload.decision
-    candidate.fulltext_reason = payload.reason
-    candidate.status = "full_text" if payload.decision == "include" else "rejected"
-    candidate.updated_at = datetime.now(timezone.utc)
-    session.commit()
-    return {"status": candidate.status, "message": "Full-text decision recorded."}
-
-
-_OPENALEX_QUERY = (
-    '("neighborhood violence" OR "community violence" OR "gun violence" OR "exposure to violence") '
-    'AND ("mental health" OR "depression" OR "anxiety" OR "PTSD" OR "trauma") '
-    'AND ("youth" OR "adolescent" OR "children")'
-)
-
-_OPENALEX_FILTER = (
-    "concepts.display_name.search:mental health,"
-    "publication_year:2015-2026"
-)
-
-
-def _fetch_openalex_candidates(per_page: int = 25) -> list[dict]:
-    """Query the OpenAlex free API (no key required) for recent relevant works."""
-    params = urllib.parse.urlencode({
-        "search": (
-            "neighborhood violence youth mental health adolescent"
+    return {
+        "status": aggregate_status,
+        "stage": payload.stage,
+        "decision_count": len(
+            {decision.reviewer_name.casefold() for decision in decisions}
         ),
-        "filter": "publication_year:2018-2026",
-        "per-page": per_page,
-        "select": "id,title,authorships,publication_year,primary_location,doi,abstract_inverted_index",
-        "mailto": "j.abbas@rutgers.edu",
-    })
-    url = f"https://api.openalex.org/works?{params}"
-    try:
-        req = urllib.request.Request(url, headers={"User-Agent": "VICINITY/2.0 (mailto:j.abbas@rutgers.edu)"})
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            data = json.loads(resp.read().decode())
-        return data.get("results", [])
-    except Exception:
-        return []
+        "message": "Independent review decision recorded.",
+    }
 
 
 def _reconstruct_abstract(inverted: dict | None) -> str:
@@ -1074,104 +1293,414 @@ def trigger_search(
     _: None = Depends(require_reviewer),
 ) -> dict:
     """
-    Run a live literature surveillance search against OpenAlex (free, no key required).
-    Creates real LiteatureCandidate records from the API response. New candidates that
-    already exist in the DB (matched by DOI) are skipped to avoid duplicates.
+    Run source-derived literature surveillance for the uncovered date interval.
     """
-    databases = ["OpenAlex", "PubMed (manual)", "Crossref (manual)", "Europe PMC (manual)", "ERIC (manual)"]
+    return run_surveillance(session, triggered_by="manual")
 
-    raw_results = _fetch_openalex_candidates(per_page=25)
 
-    # Collect existing DOIs to skip duplicates
-    existing_dois: set[str] = set(
-        row[0] for row in session.execute(
-            select(LiteratureCandidate.doi).where(LiteratureCandidate.doi.isnot(None))
-        ).all()
+SURVEILLANCE_QUERY = (
+    '("neighborhood violence" OR "community violence" OR "gun violence" '
+    'OR "violent crime" OR "exposure to violence") '
+    'AND (youth OR adolescent OR adolescents OR child OR children) '
+    'AND ("mental health" OR depression OR anxiety OR PTSD OR trauma '
+    'OR intervention OR prevention)'
+)
+
+
+def _normalize_doi(value: str | None) -> str:
+    doi = (value or "").strip().casefold()
+    for prefix in ("https://doi.org/", "http://doi.org/", "doi:"):
+        if doi.startswith(prefix):
+            doi = doi[len(prefix):]
+    return doi.strip()
+
+
+def _title_key(title: str, year: int | None) -> str:
+    normalized = re.sub(r"[^a-z0-9]+", " ", title.casefold()).strip()
+    return f"{normalized}|{year or ''}"
+
+
+def _xml_text(node: ET.Element | None) -> str:
+    if node is None:
+        return ""
+    return " ".join("".join(node.itertext()).split())
+
+
+def _http_json(url: str, user_agent: str = "VICINITY/2.0") -> dict:
+    request = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": user_agent,
+            "Accept": "application/json",
+        },
     )
-    existing_study_dois: set[str] = set(
-        row[0] for row in session.execute(
-            select(Study.doi).where(Study.doi.isnot(None))
-        ).all()
+    with urllib.request.urlopen(request, timeout=25) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def _fetch_pubmed_candidates(
+    start_date: date,
+    end_date: date,
+    limit: int = 200,
+) -> list[dict]:
+    search_params = urllib.parse.urlencode(
+        {
+            "db": "pubmed",
+            "term": SURVEILLANCE_QUERY,
+            "retmode": "json",
+            "retmax": limit,
+            "datetype": "pdat",
+            "mindate": start_date.isoformat(),
+            "maxdate": end_date.isoformat(),
+        }
     )
-    skip_dois = existing_dois | existing_study_dois
+    search_data = _http_json(
+        f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?{search_params}",
+        "VICINITY/2.0 (j.abbas@rutgers.edu)",
+    )
+    identifiers = search_data.get("esearchresult", {}).get("idlist", [])
+    if not identifiers:
+        return []
 
-    candidates_found = len(raw_results)
-    new_items = []
+    fetch_params = urllib.parse.urlencode(
+        {
+            "db": "pubmed",
+            "id": ",".join(identifiers),
+            "retmode": "xml",
+        }
+    )
+    request = urllib.request.Request(
+        f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?{fetch_params}",
+        headers={"User-Agent": "VICINITY/2.0 (j.abbas@rutgers.edu)"},
+    )
+    with urllib.request.urlopen(request, timeout=25) as response:
+        root = ET.fromstring(response.read())
 
-    for work in raw_results:
-        doi = work.get("doi") or ""
-        if doi.startswith("https://doi.org/"):
-            doi = doi[len("https://doi.org/"):]
-        if doi and doi in skip_dois:
+    records: list[dict] = []
+    for article in root.findall(".//PubmedArticle"):
+        citation = article.find("./MedlineCitation")
+        article_node = citation.find("./Article") if citation is not None else None
+        if article_node is None:
             continue
+        pmid = _xml_text(citation.find("./PMID"))
+        title = _xml_text(article_node.find("./ArticleTitle"))
+        if not title:
+            continue
+        abstract = " ".join(
+            _xml_text(node)
+            for node in article_node.findall("./Abstract/AbstractText")
+        ).strip()
+        authors = []
+        for author in article_node.findall("./AuthorList/Author"):
+            collective = _xml_text(author.find("./CollectiveName"))
+            personal = " ".join(
+                part
+                for part in (
+                    _xml_text(author.find("./ForeName")),
+                    _xml_text(author.find("./LastName")),
+                )
+                if part
+            )
+            if collective or personal:
+                authors.append(collective or personal)
+        journal = _xml_text(article_node.find("./Journal/Title"))
+        year_text = (
+            _xml_text(article_node.find("./Journal/JournalIssue/PubDate/Year"))
+            or _xml_text(article_node.find("./Journal/JournalIssue/PubDate/MedlineDate"))
+        )
+        year_match = re.search(r"(19|20)\d{2}", year_text)
+        doi = ""
+        for identifier in article.findall("./PubmedData/ArticleIdList/ArticleId"):
+            if identifier.attrib.get("IdType") == "doi":
+                doi = _xml_text(identifier)
+                break
+        records.append(
+            {
+                "title": title,
+                "authors": "; ".join(authors[:8]) + (" et al." if len(authors) > 8 else ""),
+                "year": int(year_match.group()) if year_match else None,
+                "journal": journal,
+                "doi": _normalize_doi(doi),
+                "abstract": abstract,
+                "source_database": "PubMed",
+                "source_id": pmid,
+                "source_url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/" if pmid else "",
+            }
+        )
+    return records
 
+
+def _fetch_crossref_candidates(
+    start_date: date,
+    end_date: date,
+    limit: int = 200,
+) -> list[dict]:
+    params = urllib.parse.urlencode(
+        {
+            "query.bibliographic": (
+                "neighborhood community violence youth adolescent mental health "
+                "depression anxiety trauma intervention"
+            ),
+            "filter": (
+                f"from-pub-date:{start_date.isoformat()},"
+                f"until-pub-date:{end_date.isoformat()},type:journal-article"
+            ),
+            "rows": limit,
+            "select": "DOI,title,author,published,container-title,abstract,URL",
+            "mailto": "j.abbas@rutgers.edu",
+        }
+    )
+    data = _http_json(
+        f"https://api.crossref.org/works?{params}",
+        "VICINITY/2.0 (mailto:j.abbas@rutgers.edu)",
+    )
+    records: list[dict] = []
+    for item in data.get("message", {}).get("items", []):
+        title = " ".join(item.get("title") or []).strip()
+        if not title:
+            continue
+        authors = "; ".join(
+            " ".join(part for part in (author.get("given", ""), author.get("family", "")) if part)
+            for author in (item.get("author") or [])[:8]
+        )
+        date_parts = (item.get("published") or {}).get("date-parts") or []
+        year = date_parts[0][0] if date_parts and date_parts[0] else None
+        abstract = re.sub(r"<[^>]+>", " ", item.get("abstract") or "")
+        records.append(
+            {
+                "title": title,
+                "authors": authors,
+                "year": year,
+                "journal": " ".join(item.get("container-title") or []),
+                "doi": _normalize_doi(item.get("DOI")),
+                "abstract": " ".join(abstract.split()),
+                "source_database": "Crossref",
+                "source_id": item.get("DOI") or "",
+                "source_url": item.get("URL") or "",
+            }
+        )
+    return records
+
+
+def _fetch_openalex_interval(
+    start_date: date,
+    end_date: date,
+    limit: int = 200,
+) -> list[dict]:
+    api_key = os.getenv("OPENALEX_API_KEY", "").strip()
+    if not api_key:
+        return []
+    params = urllib.parse.urlencode(
+        {
+            "search": "neighborhood violence youth mental health intervention",
+            "filter": (
+                f"from_publication_date:{start_date.isoformat()},"
+                f"to_publication_date:{end_date.isoformat()}"
+            ),
+            "per-page": limit,
+            "api_key": api_key,
+            "select": (
+                "id,title,authorships,publication_year,primary_location,"
+                "doi,abstract_inverted_index"
+            ),
+        }
+    )
+    data = _http_json(f"https://api.openalex.org/works?{params}")
+    records: list[dict] = []
+    for work in data.get("results", []):
         title = work.get("title") or ""
         if not title:
             continue
-
-        authors_raw = work.get("authorships") or []
+        authorships = work.get("authorships") or []
         authors = "; ".join(
-            a["author"]["display_name"] for a in authors_raw[:4] if a.get("author")
+            entry.get("author", {}).get("display_name", "")
+            for entry in authorships[:8]
+            if entry.get("author", {}).get("display_name")
         )
-        if len(authors_raw) > 4:
-            authors += " et al."
-
-        year = work.get("publication_year")
         location = work.get("primary_location") or {}
         source = location.get("source") or {}
-        journal = source.get("display_name") or ""
-        abstract = _reconstruct_abstract(work.get("abstract_inverted_index"))
+        records.append(
+            {
+                "title": title,
+                "authors": authors,
+                "year": work.get("publication_year"),
+                "journal": source.get("display_name") or "",
+                "doi": _normalize_doi(work.get("doi")),
+                "abstract": _reconstruct_abstract(work.get("abstract_inverted_index")),
+                "source_database": "OpenAlex",
+                "source_id": work.get("id") or "",
+                "source_url": work.get("id") or "",
+            }
+        )
+    return records
 
-        new_items.append(LiteratureCandidate(
-            title=title[:500],
-            authors=authors[:300],
-            year=year,
-            journal=journal[:200],
-            doi=doi or None,
-            abstract=abstract[:2000] or None,
-            source_database="OpenAlex",
-            source_id=work.get("id") or None,
-            relevance_score=_score_relevance(title, abstract),
-            status="discovered",
-        ))
 
-    duplicates_removed = candidates_found - len(new_items)
+def run_surveillance(session: Session, triggered_by: str) -> dict:
+    latest_coverage = session.scalar(
+        select(func.max(SearchRun.coverage_end_date))
+        .where(SearchRun.status == "completed")
+    )
+    start_date = (latest_coverage or date(2025, 7, 31)) + timedelta(days=1)
+    end_date = date.today()
+    if start_date > end_date:
+        return {
+            "run_id": None,
+            "databases_searched": [],
+            "candidates_found": 0,
+            "duplicates_removed": 0,
+            "new_candidates": 0,
+            "status": "up_to_date",
+            "coverage_start": start_date.isoformat(),
+            "coverage_end": end_date.isoformat(),
+            "source": "No uncovered date interval",
+        }
 
+    source_fetchers = [
+        ("PubMed", _fetch_pubmed_candidates),
+        ("Crossref", _fetch_crossref_candidates),
+    ]
+    if os.getenv("OPENALEX_API_KEY", "").strip():
+        source_fetchers.append(("OpenAlex", _fetch_openalex_interval))
+
+    raw_records: list[dict] = []
+    searched: list[str] = []
+    errors: list[str] = []
+    for source_name, fetcher in source_fetchers:
+        try:
+            raw_records.extend(fetcher(start_date, end_date))
+            searched.append(source_name)
+        except (urllib.error.URLError, TimeoutError, ValueError, ET.ParseError) as error:
+            errors.append(f"{source_name}: {type(error).__name__}")
+        except Exception as error:
+            errors.append(f"{source_name}: {type(error).__name__}")
+
+    unique_records: dict[str, dict] = {}
+    for record in raw_records:
+        doi = _normalize_doi(record.get("doi"))
+        key = f"doi:{doi}" if doi else f"title:{_title_key(record['title'], record.get('year'))}"
+        existing = unique_records.get(key)
+        if not existing or len(record.get("abstract") or "") > len(existing.get("abstract") or ""):
+            record["doi"] = doi
+            unique_records[key] = record
+
+    existing_keys: set[str] = set()
+    for doi, title, year in session.execute(
+        select(LiteratureCandidate.doi, LiteratureCandidate.title, LiteratureCandidate.year)
+    ):
+        normalized_doi = _normalize_doi(doi)
+        existing_keys.add(
+            f"doi:{normalized_doi}"
+            if normalized_doi
+            else f"title:{_title_key(title, year)}"
+        )
+    for doi, title, year in session.execute(select(Study.doi, Study.title, Study.publication_year)):
+        normalized_doi = _normalize_doi(doi)
+        existing_keys.add(
+            f"doi:{normalized_doi}"
+            if normalized_doi
+            else f"title:{_title_key(title, year)}"
+        )
+
+    new_records: list[dict] = []
+    existing_duplicates = 0
+    for key, record in unique_records.items():
+        if key in existing_keys:
+            existing_duplicates += 1
+            continue
+        score = _score_relevance(record["title"], record.get("abstract") or "")
+        record["relevance_score"] = score
+        new_records.append(record)
+
+    duplicates_removed = (
+        len(raw_records) - len(unique_records) + existing_duplicates
+    )
+    if len(searched) == len(source_fetchers):
+        run_status = "completed"
+    elif searched:
+        run_status = "partial"
+    else:
+        run_status = "failed"
     run = SearchRun(
-        databases_searched=databases,
-        query_terms=_OPENALEX_QUERY,
-        candidates_found=candidates_found,
+        coverage_end_date=end_date if run_status == "completed" else None,
+        databases_searched=searched,
+        query_terms=SURVEILLANCE_QUERY,
+        candidates_found=len(raw_records),
         duplicates_removed=duplicates_removed,
-        new_candidates=len(new_items),
-        status="completed",
-        triggered_by="manual",
+        new_candidates=len(new_records),
+        status=run_status,
+        notes="; ".join(errors),
+        triggered_by=triggered_by,
     )
     session.add(run)
     session.flush()
 
-    for item in new_items:
-        item.search_run_id = run.id
-        session.add(item)
+    for record in new_records:
+        session.add(
+            LiteratureCandidate(
+                search_run_id=run.id,
+                title=record["title"][:1000],
+                authors=(record.get("authors") or "")[:1000],
+                year=record.get("year"),
+                journal=(record.get("journal") or "")[:500],
+                doi=record.get("doi") or None,
+                abstract=(record.get("abstract") or "")[:10000],
+                source_database=record["source_database"],
+                source_id=(record.get("source_id") or "")[:180],
+                source_url=(record.get("source_url") or "")[:2000],
+                relevance_score=record["relevance_score"],
+                status="discovered",
+            )
+        )
 
-    session.add(ChangeLog(
-        version="2.0",
-        change_type="surveillance",
-        summary=(
-            f"Live OpenAlex search completed. {candidates_found} results retrieved; "
-            f"{len(new_items)} new candidates added after deduplication."
-        ),
-        affected_studies=[],
-        study_count_before=0,
-        study_count_after=0,
-    ))
-
+    session.add(
+        ChangeLog(
+            version="2.0",
+            change_type="surveillance",
+            summary=(
+                f"Surveillance covered {start_date.isoformat()} through {end_date.isoformat()}. "
+                f"{len(raw_records)} source records yielded {len(new_records)} review candidates."
+            ),
+            affected_studies=[],
+            study_count_before=0,
+            study_count_after=0,
+        )
+    )
     session.commit()
     return {
         "run_id": run.id,
-        "databases_searched": databases,
-        "candidates_found": candidates_found,
+        "databases_searched": searched,
+        "candidates_found": len(raw_records),
         "duplicates_removed": duplicates_removed,
-        "new_candidates": len(new_items),
-        "status": "completed",
-        "source": "OpenAlex live API",
+        "new_candidates": len(new_records),
+        "status": run_status,
+        "coverage_start": start_date.isoformat(),
+        "coverage_end": end_date.isoformat(),
+        "source": ", ".join(searched) if searched else "No source completed",
+        "errors": errors,
     }
+
+
+def require_surveillance_token(
+    x_surveillance_token: Annotated[str | None, Header()] = None,
+) -> None:
+    if not SURVEILLANCE_TOKEN:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Scheduled surveillance is not configured.",
+        )
+    if not x_surveillance_token or not secrets.compare_digest(
+        x_surveillance_token,
+        SURVEILLANCE_TOKEN,
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid surveillance token.",
+        )
+
+
+@app.post("/api/surveillance/run", status_code=status.HTTP_201_CREATED)
+def scheduled_surveillance(
+    session: Session = Depends(get_session),
+    _: None = Depends(require_surveillance_token),
+) -> dict:
+    return run_surveillance(session, triggered_by="scheduled")

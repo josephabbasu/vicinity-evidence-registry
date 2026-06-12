@@ -1,8 +1,19 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
-from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, JSON, String, Text
+from sqlalchemy import (
+    Boolean,
+    Date,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    JSON,
+    String,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .database import Base
@@ -82,6 +93,17 @@ class Study(Base):
     )  # approved | pending | rejected
     registry_version: Mapped[int] = mapped_column(Integer, default=1)
     added_in_version: Mapped[str] = mapped_column(String(20), default="1.0")
+    evidence_role: Mapped[str] = mapped_column(String(80), default="Exposure consequence")
+    intervention_class: Mapped[str] = mapped_column(String(40), default="Not applicable")
+    outcome_directness: Mapped[str] = mapped_column(
+        String(80), default="Scope requires verification"
+    )
+    decision_relevance: Mapped[str] = mapped_column(
+        String(120), default="Research context"
+    )
+    source_review: Mapped[str] = mapped_column(String(160), default="")
+    search_coverage_end: Mapped[str] = mapped_column(String(10), default="2025-07-31")
+    source_row: Mapped[int | None] = mapped_column(Integer)
 
     effect_estimates: Mapped[list[EffectEstimate]] = relationship(
         "EffectEstimate", back_populates="study", cascade="all, delete-orphan"
@@ -139,6 +161,7 @@ class SearchRun(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     run_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    coverage_end_date: Mapped[date | None] = mapped_column(Date)
     databases_searched: Mapped[list[str]] = mapped_column(JSON)
     query_terms: Mapped[str] = mapped_column(Text)
     candidates_found: Mapped[int] = mapped_column(Integer, default=0)
@@ -170,8 +193,9 @@ class LiteratureCandidate(Base):
     abstract: Mapped[str] = mapped_column(Text, default="")
     source_database: Mapped[str] = mapped_column(String(80))
     source_id: Mapped[str] = mapped_column(String(180), default="")
+    source_url: Mapped[str] = mapped_column(Text, default="")
     relevance_score: Mapped[float | None] = mapped_column(Float)
-    # Workflow: discovered → screened → full_text → extracted → approved | rejected
+    # Workflow: discovered, screened, full text, extracted, approved or rejected.
     status: Mapped[str] = mapped_column(String(40), default="discovered", index=True)
     screen_decision: Mapped[str | None] = mapped_column(String(40))
     screen_reason: Mapped[str | None] = mapped_column(Text)
@@ -188,6 +212,35 @@ class LiteratureCandidate(Base):
 
     search_run: Mapped[SearchRun | None] = relationship(
         "SearchRun", back_populates="candidates"
+    )
+
+
+class ReviewDecision(Base):
+    """One independent screening or full-text decision."""
+
+    __tablename__ = "review_decisions"
+    __table_args__ = (
+        UniqueConstraint(
+            "candidate_id",
+            "stage",
+            "reviewer_name",
+            name="uq_candidate_stage_reviewer",
+        ),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    candidate_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("literature_candidates.id"),
+        index=True,
+    )
+    stage: Mapped[str] = mapped_column(String(40), index=True)
+    decision: Mapped[str] = mapped_column(String(40))
+    reason: Mapped[str] = mapped_column(Text)
+    reviewer_name: Mapped[str] = mapped_column(String(180))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
     )
 
 
@@ -208,7 +261,7 @@ class ChangeLog(Base):
 
 
 class Release(Base):
-    """Versioned snapshot of the registry — enables permanent DOI-linked citations."""
+    """Versioned registry snapshot for stable citation."""
 
     __tablename__ = "releases"
 

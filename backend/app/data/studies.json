@@ -102,7 +102,18 @@
       "se_clustering": "Clustered/robust SEs as specified by outcome; no IV first-stage.",
       "missing_data_method": "Administrative records; sample restrictions vary by outcome.",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 3
   },
   {
     "id": 4,
@@ -208,7 +219,18 @@
       "se_clustering": "Clustered at school-by-area level; wild-cluster bootstrap in robustness checks.",
       "missing_data_method": "School-area months included under prescription-count selection rule; no imputation noted.",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 4
   },
   {
     "id": 5,
@@ -314,7 +336,18 @@
       "se_clustering": "Not explicitly described in the text we have; results presented with uncertainty bands in event-study; likely ZIP-level variance adjustment—report as not stated if you need a strict field entry.",
       "missing_data_method": "Not discussed beyond sample exclusions; population denominators linearly interpolated between 2000 and 2010 Censuses.",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 5
   },
   {
     "id": 6,
@@ -420,7 +453,18 @@
       "se_clustering": "School outcomes clustered at school-cohort; survivors’ health robust SEs; family outcomes clustered on mother ID.",
       "missing_data_method": "Matching included categories for missing parental variables; otherwise not highlighted as an issue",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 6
   },
   {
     "id": 7,
@@ -526,7 +570,18 @@
       "se_clustering": "Adjusted for repeated observations/person-crime structure as reported.",
       "missing_data_method": "Listwise/complete-case analytic sample after follow-up restrictions.",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Associational context",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 7
   },
   {
     "id": 8,
@@ -633,7 +688,18 @@
       "se_clustering": "General framework states clustering at school level; Sandy Hook Table 2 notes clustering at district level",
       "missing_data_method": "Not a single unified method. For some Connecticut school-level proficiency analyses, suppressed values were imputed using an assumed value of five to maintain a full panel; for absenteeism, bottom-coded missing rates were replaced with the lowest observed percentage in other years to maintain a balanced panel, with sensitivity checks omitting those observations",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 8
   },
   {
     "id": 9,
@@ -744,7 +810,18 @@
       "se_clustering": "NR",
       "missing_data_method": "Complete-case analysis. Approximately 5% missing on any matching variable Multiple-Testing Adjustment: None. Confidence intervals were not adjusted for multiple comparisons",
       "multiple_testing_adjustment": "None. Confidence intervals were not adjusted for multiple comparisons"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Pathway or functional outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 9
   },
   {
     "id": 10,
@@ -855,7 +932,18 @@
       "se_clustering": "Standard errors clustered at the school-by-cohort level for long-run figures shown in the reviewed snippets",
       "missing_data_method": "Invalid identifiers exclude some students from long-run college and labor-market analyses. The paper also reports balanced and unbalanced panel checks and no evidence that differential attrition causes the short-run results",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Pathway or functional outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 10
   },
   {
     "id": 11,
@@ -965,7 +1053,18 @@
       "se_clustering": "NR.",
       "missing_data_method": "NR.",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Associational context",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 11
   },
   {
     "id": 12,
@@ -1072,7 +1171,18 @@
       "se_clustering": "State level",
       "missing_data_method": "Not reported (NR).",
       "multiple_testing_adjustment": "None reported; p-values and 95% CIs are cluster-adjusted only."
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Associational context",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 12
   },
   {
     "id": 13,
@@ -1177,7 +1287,18 @@
       "se_clustering": "Robust SEs clustered at individual.",
       "missing_data_method": "Complete-case per outcome (participants needed ?1 valid measure; no imputation).",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 13
   },
   {
     "id": 14,
@@ -1288,7 +1409,18 @@
       "se_clustering": "Standard errors clustered at school level",
       "missing_data_method": "Not reported",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Pathway or functional outcome",
+    "decision_relevance": "Associational context",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 14
   },
   {
     "id": 15,
@@ -1396,7 +1528,18 @@
       "se_clustering": "Not explicitly reported in the paper. (Given the design, the analysis likely used robust standard errors clustered at a neighborhood level to account for non-independence of observations within the same community. The reported significance levels. suggest that appropriate clustering or adjustment was applied, though the article does not state the exact clustering unit.)",
       "missing_data_method": "Not reported. The study did not describe handling of missing data, implying that analyses were likely based on cases with complete data (listwise deletion).",
       "multiple_testing_adjustment": "None reported. (The paper examined multiple outcome measures but did not mention any adjustment for multiple comparisons, likely focusing on conceptually related outcomes of cognitive performance without formal correction.)"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Pathway or functional outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 15
   },
   {
     "id": 16,
@@ -1504,7 +1647,18 @@
       "se_clustering": "Standard errors clustered at municipality level.",
       "missing_data_method": "Complete-case restrictions for non-missing PPVT, exposure, and covariates; no imputation reported.",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Pathway or functional outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 16
   },
   {
     "id": 17,
@@ -1614,7 +1768,18 @@
       "se_clustering": "Standard errors adjusted for clustering of children within schools",
       "missing_data_method": "Missing data handling not described in the extracted pages. method not reported.",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 17
   },
   {
     "id": 18,
@@ -1720,7 +1885,18 @@
       "se_clustering": "Standard errors adjusted for clustering of respondents within census tracts. The authors report that results are substantively similar when clustering by school",
       "missing_data_method": "Listwise deletion. cases missing key covariates or address information are dropped from the analytic sample.",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Scope requires verification",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 18
   },
   {
     "id": 19,
@@ -1829,7 +2005,18 @@
       "se_clustering": "Huber-White robust standard errors; clustering level not specified",
       "missing_data_method": "Multiple imputation by chained equations for covariates, with sensitivity analyses using listwise deletion for child outcomes (robustness checks showed similar results).",
       "multiple_testing_adjustment": "Sharpened False Discovery Rate (FDR) q-values following Anderson (2008) for extensive subgroup interaction tests. Only one of 270 interactions remained significant after adjustment."
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Pathway or functional outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 19
   },
   {
     "id": 20,
@@ -1934,7 +2121,18 @@
       "se_clustering": "Clustered standard errors at the block level in all models. Bootstrapped SEs for PSM estimators.",
       "missing_data_method": "Listwise deletion: analytic sample restricted to 404 children with complete data (2.9% missing).",
       "multiple_testing_adjustment": "None reported. Focus on a single primary outcome and one planned moderator."
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 20
   },
   {
     "id": 22,
@@ -2041,7 +2239,18 @@
       "se_clustering": "NR",
       "missing_data_method": "FIML",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 22
   },
   {
     "id": 23,
@@ -2149,7 +2358,18 @@
       "se_clustering": "NR",
       "missing_data_method": "MI(m=10)",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 23
   },
   {
     "id": 24,
@@ -2257,7 +2477,18 @@
       "se_clustering": "twin-pair",
       "missing_data_method": "NR",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 24
   },
   {
     "id": 25,
@@ -2364,7 +2595,18 @@
       "se_clustering": "robust",
       "missing_data_method": "NR",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 25
   },
   {
     "id": 26,
@@ -2471,7 +2713,18 @@
       "se_clustering": "twin-pair",
       "missing_data_method": "NR",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 26
   },
   {
     "id": 27,
@@ -2579,7 +2832,18 @@
       "se_clustering": "Other–state",
       "missing_data_method": "NR",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Associational context",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 27
   },
   {
     "id": 28,
@@ -2686,7 +2950,18 @@
       "se_clustering": "Multilevel models accounting for assessments nested within adolescents",
       "missing_data_method": "Not reported",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Associational context",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 28
   },
   {
     "id": 29,
@@ -2795,7 +3070,18 @@
       "se_clustering": "Not reported",
       "missing_data_method": "Not reported",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Pathway or functional outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 29
   },
   {
     "id": 30,
@@ -2902,7 +3188,18 @@
       "se_clustering": "Robust SEs scaled for overdispersion (Pearson); person FE (no multi-level clustering reported)",
       "missing_data_method": "Follow-up waves not completed were excluded for that wave; completed waves retained (no imputation described for main models)",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Pathway or functional outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 30
   },
   {
     "id": 31,
@@ -3009,7 +3306,18 @@
       "se_clustering": "Not specified beyond FE framework.",
       "missing_data_method": "Violence-exposure missing set to 0 as conservative approach; other missing handling not fully detailed.",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 31
   },
   {
     "id": 32,
@@ -3116,7 +3424,18 @@
       "se_clustering": "Standard errors clustered at the municipality level (as reported in the methods and table notes).",
       "missing_data_method": "The analytic sample excludes observations with missing key variables; no imputation procedure is described. Mark as “listwise deletion/complete case” based on this description.",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Pathway or functional outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 32
   },
   {
     "id": 33,
@@ -3223,7 +3542,18 @@
       "se_clustering": "Standard errors arise from the multilevel structure with random intercepts at family, school, and neighbourhood levels. The paper does not mention separate cluster-robust variance estimation. I would code “NR; multilevel random-effects SEs.",
       "missing_data_method": "Children who moved out of the nine large cities between ages 0 and 15 were excluded. Children without GPA because they did not apply to secondary education were excluded (2.3 percent). Children in very small schools (≤10 students) were excluded (0.2 percent).",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Pathway or functional outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 33
   },
   {
     "id": 34,
@@ -3331,7 +3661,18 @@
       "se_clustering": "Robust standard errors clustered at child level.",
       "missing_data_method": "Multiple imputation by chained equations; 30 imputed datasets; children without geographic identifier dropped for that wave.",
       "multiple_testing_adjustment": "No multiple-testing adjustment reported."
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Pathway or functional outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 34
   },
   {
     "id": 35,
@@ -3440,6 +3781,17 @@
       "se_clustering": "In sibling models, standard errors clustered on the individual",
       "missing_data_method": "NR",
       "multiple_testing_adjustment": "None reported"
-    }
+    },
+    "registry_stream": "exposure",
+    "approval_status": "approved",
+    "registry_version": 2,
+    "added_in_version": "1.0",
+    "evidence_role": "Exposure consequence",
+    "intervention_class": "Not applicable",
+    "outcome_directness": "Direct mental-health outcome",
+    "decision_relevance": "Causal evidence of harm",
+    "source_review": "Causal inference systematic review (Paper 1)",
+    "search_coverage_end": "2025-07-31",
+    "source_row": 35
   }
 ]
