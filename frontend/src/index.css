@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply m-0 bg-warm text-ink antialiased;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: Georgia, "Times New Roman", serif;
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-scarlet focus-visible:ring-offset-2;
+  }
+}
+
+@layer components {
+  .page-shell {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.22em] text-scarlet;
+  }
+
+  .card {
+    @apply rounded-2xl border border-navy/10 bg-white shadow-card;
+  }
+
+  .button-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-scarlet px-5 py-3 text-sm font-bold text-white transition hover:bg-[#a9002a];
+  }
+
+  .button-secondary {
+    @apply inline-flex items-center justify-center rounded-full border border-navy/20 bg-white px-5 py-3 text-sm font-bold text-navy transition hover:border-navy hover:bg-mist;
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-navy/20 bg-white px-3 py-2.5 text-sm text-ink placeholder:text-slate-400;
+  }
+
+  .label {
+    @apply mb-1.5 block text-sm font-bold text-navy;
+  }
+}
