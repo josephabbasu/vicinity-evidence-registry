@@ -40,6 +40,14 @@ class StudySummary(BaseModel):
     decision_relevance: str
 
 
+class TransferabilityScore(BaseModel):
+    setting_score: float
+    population_score: float
+    feasibility_score: float
+    total: float
+    label: str
+
+
 class StudyDetail(StudySummary):
     design_raw: str
     causal_tier_reason: str
@@ -78,6 +86,7 @@ class StudyDetail(StudySummary):
     search_coverage_end: str
     source_row: int | None
     effect_estimates: list[EffectEstimateOut]
+    transferability: TransferabilityScore | None = None
 
 
 class StudyListResponse(BaseModel):

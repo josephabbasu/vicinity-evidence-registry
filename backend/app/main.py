@@ -51,6 +51,7 @@ from .schemas import (
     StudySummary,
     SubmissionCreate,
     SubmissionCreated,
+    TransferabilityScore,
     UpdateOut,
 )
 from .migrations import run_additive_migrations
@@ -125,6 +126,70 @@ app.add_middleware(
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
+def _compute_transferability(study: Study) -> TransferabilityScore | None:
+    """Compute a 0-3 transferability score for intervention studies.
+
+    Three independent dimensions rated 0-1, each based on fields already
+    extracted in the source workbook.  The score is not stored — it is
+    recomputed on every detail request so it updates automatically when
+    workbook fields are corrected.
+    """
+    if not study.is_intervention:
+        return None
+
+    country = (study.country or "").strip()
+    if country in ("United States", "United States of America"):
+        setting_score = 1.0
+    elif country in ("Multiple countries", "International"):
+        setting_score = 0.7
+    elif country in ("United Kingdom", "Canada", "Australia",
+                     "Ireland", "Netherlands", "Germany", "France",
+                     "New Zealand", "Sweden", "Norway", "Denmark"):
+        setting_score = 0.5
+    else:
+        setting_score = 0.3
+
+    age_groups = study.age_groups or []
+    if any("10-17" in g or "Adolescent" in g for g in age_groups):
+        population_score = 1.0
+    elif not age_groups or any("Child" in g or "0-9" in g for g in age_groups):
+        population_score = 0.5
+    elif any("Adult" in g for g in age_groups):
+        population_score = 0.3
+    else:
+        population_score = 0.5
+
+    intervention_class = (study.intervention_class or "").strip()
+    design_lower = (study.design_type or "").casefold()
+    if intervention_class == "Psychosocial":
+        feasibility_score = 1.0
+    elif intervention_class == "Structural":
+        if "randomiz" in design_lower or "rct" in design_lower:
+            feasibility_score = 0.5
+        else:
+            feasibility_score = 0.7
+    else:
+        feasibility_score = 0.5
+
+    total = round(setting_score + population_score + feasibility_score, 2)
+    if total >= 2.5:
+        label = "Direct transfer"
+    elif total >= 1.8:
+        label = "Plausible transfer"
+    elif total >= 1.2:
+        label = "Uncertain transfer"
+    else:
+        label = "Limited transferability"
+
+    return TransferabilityScore(
+        setting_score=setting_score,
+        population_score=population_score,
+        feasibility_score=feasibility_score,
+        total=total,
+        label=label,
+    )
+
+
 def summary_from_study(study: Study) -> StudySummary:
     return StudySummary(
         **{col: getattr(study, col) for col in StudySummary.model_fields if col != "verification_count"},
@@ -136,7 +201,7 @@ def detail_from_study(study: Study) -> StudyDetail:
     values = {
         col: getattr(study, col)
         for col in StudyDetail.model_fields
-        if col not in ("verification_count", "effect_estimates")
+        if col not in ("verification_count", "effect_estimates", "transferability")
     }
     estimates = [
         EffectEstimateOut.model_validate(e) for e in (study.effect_estimates or [])
@@ -145,6 +210,7 @@ def detail_from_study(study: Study) -> StudyDetail:
         **values,
         verification_count=len(study.verification_flags or []),
         effect_estimates=estimates,
+        transferability=_compute_transferability(study),
     )
 
 
@@ -1118,10 +1184,19 @@ def reviewer_dashboard(
         )
     ) or 0
 
-    # Count studies approved this month (proxy: added in current calendar month)
+    now = datetime.now(timezone.utc)
+    first_of_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    def _created_at_aware(dt: datetime) -> datetime:
+        if dt is None:
+            return None
+        if dt.tzinfo is None:
+            return dt.replace(tzinfo=timezone.utc)
+        return dt
+
     approved_month = sum(
         1 for s in studies
-        if s.added_in_version == "2.0"
+        if _created_at_aware(s.created_at) and _created_at_aware(s.created_at) >= first_of_month
     )
 
     recent_runs = list(

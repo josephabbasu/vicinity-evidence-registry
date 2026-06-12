@@ -93,6 +93,7 @@ class Study(Base):
     )  # approved | pending | rejected
     registry_version: Mapped[int] = mapped_column(Integer, default=1)
     added_in_version: Mapped[str] = mapped_column(String(20), default="1.0")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, index=True)
     evidence_role: Mapped[str] = mapped_column(String(80), default="Exposure consequence")
     intervention_class: Mapped[str] = mapped_column(String(40), default="Not applicable")
     outcome_directness: Mapped[str] = mapped_column(

@@ -112,6 +112,7 @@ function Header({ reviewerToken }) {
         <nav aria-label="Primary" className="flex flex-wrap items-center gap-1">
           <NavLink to="/registry" className={navClass}>Registry</NavLink>
           <NavLink to="/ask" className={navClass}>Ask</NavLink>
+          <NavLink to="/scenarios" className={navClass}>Scenarios</NavLink>
           <NavLink to="/gaps" className={navClass}>Gap Radar</NavLink>
           <NavLink to="/changelog" className={navClass}>Changelog</NavLink>
           <NavLink to="/about" className={navClass}>About</NavLink>
@@ -158,6 +159,7 @@ function Footer() {
         <div className="text-sm leading-7 text-white/75">
           <p className="font-bold text-white">Resources</p>
           <Link to="/ask" className="block hover:text-white">Practitioner Query</Link>
+          <Link to="/scenarios" className="block hover:text-white">Decision Scenarios</Link>
           <Link to="/changelog" className="block hover:text-white">Public Changelog</Link>
           <Link to="/about" className="block hover:text-white">Protocol & Citation</Link>
           <Link to="/submit" className="block hover:text-white">Nominate a Study</Link>
@@ -846,6 +848,49 @@ function StudyDetailPage() {
               </a>
             </div>
           </div>
+          {study.transferability && (
+            <div className="card p-6">
+              <h2 className="text-xl font-bold text-navy">Transferability</h2>
+              <p className="mt-1 text-xs text-slate-500">For US urban adolescent contexts</p>
+              <div className="mt-4">
+                <div className={`rounded-xl border px-4 py-2 text-center font-bold text-sm ${
+                  study.transferability.label === "Direct transfer"
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                    : study.transferability.label === "Plausible transfer"
+                    ? "border-gold/30 bg-gold/10 text-amber-900"
+                    : study.transferability.label === "Uncertain transfer"
+                    ? "border-navy/20 bg-navy/5 text-navy"
+                    : "border-scarlet/20 bg-scarlet/5 text-scarlet"
+                }`}>
+                  {study.transferability.label}
+                </div>
+                <div className="mt-4 space-y-3">
+                  {[
+                    ["Setting match", study.transferability.setting_score],
+                    ["Population match", study.transferability.population_score],
+                    ["Implementation feasibility", study.transferability.feasibility_score],
+                  ].map(([label, score]) => (
+                    <div key={label}>
+                      <div className="flex items-center justify-between text-xs text-slate-600">
+                        <span>{label}</span>
+                        <span className="font-bold">{score.toFixed(1)}/1.0</span>
+                      </div>
+                      <div className="mt-1 h-1.5 w-full rounded-full bg-navy/10">
+                        <div
+                          className="h-1.5 rounded-full bg-scarlet"
+                          style={{ width: `${score * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-3 text-xs text-slate-400">
+                  Total: {study.transferability.total.toFixed(1)} / 3.0. Score reflects US urban
+                  adolescent practitioners. Verify against your local context before adoption.
+                </p>
+              </div>
+            </div>
+          )}
           {study.verification_flags?.length > 0 && (
             <div className="rounded-2xl border border-gold/40 bg-gold/10 p-6">
               <h2 className="text-xl font-bold text-navy">Verification queue</h2>
@@ -1398,6 +1443,252 @@ function ChangelogPage() {
 }
 
 
+// ── Decision profiles page ────────────────────────────────────────────────────
+
+const DECISION_PROFILES = [
+  {
+    id: "shooting-response",
+    icon: "🚨",
+    audience: "Crisis responders & school counselors",
+    title: "A shooting happened near our school this week.",
+    context:
+      "A school counselor or crisis responder needs to know what acute violence exposure does to adolescent mental health and what interventions are supported by evidence right now.",
+    query: { age_group: "adolescent", exposure_type: "shooting", exposure_window: "Acute", outcome_type: "mental health" },
+    accentClass: "border-t-4 border-t-scarlet",
+    buttonClass: "button-primary",
+  },
+  {
+    id: "greening-program",
+    icon: "🌿",
+    audience: "City planners & health directors",
+    title: "We are designing a neighborhood greening or housing program.",
+    context:
+      "A city official or community health director wants to know which structural, place-based interventions have the strongest evidence for reducing youth violence exposure.",
+    query: { age_group: "all", exposure_type: "general", outcome_type: "violence", exposure_window: "" },
+    accentClass: "border-t-4 border-t-emerald-500",
+    buttonClass: "button-primary",
+  },
+  {
+    id: "trauma-funding",
+    icon: "📋",
+    audience: "Program managers & administrators",
+    title: "I need to justify trauma counseling funding to city council.",
+    context:
+      "A program manager needs credible, peer-reviewed evidence that neighborhood violence causes PTSD and that psychosocial interventions reduce it — with causal certainty clearly stated.",
+    query: { age_group: "adolescent", exposure_type: "general", outcome_type: "PTSD", exposure_window: "Chronic" },
+    accentClass: "border-t-4 border-t-gold",
+    buttonClass: "button-primary",
+  },
+  {
+    id: "dissertation-anxiety",
+    icon: "🔬",
+    audience: "Doctoral researchers & faculty",
+    title: "I am designing a dissertation on anxiety and neighborhood violence.",
+    context:
+      "A PhD student or researcher wants to identify what evidence exists, what the gaps are, and where the strongest remaining causal questions lie for anxiety as an outcome.",
+    query: { age_group: "all", exposure_type: "general", outcome_type: "anxiety", exposure_window: "" },
+    accentClass: "border-t-4 border-t-purple-400",
+    buttonClass: "button-primary",
+  },
+];
+
+
+function ProfileEvidenceBrief({ brief }) {
+  const certLevel = brief.causal_certainty || "No directly matched evidence";
+  const certStyle = CERTAINTY_STYLES[certLevel] || CERTAINTY_STYLES["No directly matched evidence"];
+  return (
+    <div className="mt-6 space-y-4">
+      <div className="card p-6">
+        <p className="eyebrow">Evidence brief</p>
+        <h3 className="mt-2 text-2xl font-bold text-navy">{brief.query_description}</h3>
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="rounded-xl bg-navy/5 p-3 text-center">
+            <p className="text-3xl font-bold text-navy">{brief.study_count}</p>
+            <p className="mt-1 text-xs font-semibold text-slate-500">studies matched</p>
+          </div>
+          <div className="rounded-xl bg-emerald-50 p-3 text-center">
+            <p className="text-3xl font-bold text-emerald-800">{brief.credible_count}</p>
+            <p className="mt-1 text-xs font-semibold text-emerald-600">credible-tier</p>
+          </div>
+          <div className={`rounded-xl p-3 text-center ${
+            brief.dominant_direction === "Harmful" ? "bg-scarlet/10" :
+            brief.dominant_direction === "Protective" ? "bg-emerald-50" : "bg-gold/10"}`}>
+            <p className="text-xl font-bold text-navy">{brief.dominant_direction}</p>
+            <p className="mt-1 text-xs font-semibold text-slate-500">dominant effect</p>
+          </div>
+          <div className={`rounded-xl border p-3 text-center ${certStyle}`}>
+            <p className="text-sm font-bold leading-tight">{certLevel}</p>
+            <p className="mt-1 text-xs font-semibold">certainty</p>
+          </div>
+        </div>
+        <p className="mt-5 rounded-xl bg-navy/5 px-4 py-3 text-sm leading-6 text-slate-700">{brief.effect_note}</p>
+        <p className="mt-3 rounded-xl border border-gold/30 bg-gold/10 px-4 py-3 text-sm leading-6 text-amber-950">
+          <span className="font-bold">Limitations: </span>{brief.limitations}
+        </p>
+      </div>
+
+      {brief.available_interventions?.length > 0 && (
+        <div className="card p-6">
+          <p className="eyebrow">Available response options</p>
+          <h3 className="mt-1 text-xl font-bold text-navy">Interventions with evidence</h3>
+          <p className="mt-1 text-xs text-slate-500">
+            Distinct causal question from exposure effects. Outcome directness shown for each.
+          </p>
+          <div className="mt-4 space-y-2">
+            {brief.available_interventions.slice(0, 6).map((iv) => (
+              <Link
+                key={iv.slug}
+                to={`/studies/${iv.slug}`}
+                className="flex items-center justify-between rounded-xl border border-navy/10 bg-navy/3 p-3 hover:border-navy/30"
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-navy">{iv.citation}</p>
+                  <p className="mt-0.5 truncate text-xs text-slate-500">{iv.outcome_directness}</p>
+                </div>
+                <Badge tone={iv.causal_tier === "Credible" ? "green" : "gold"}>{iv.causal_tier}</Badge>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {brief.evidence_gaps?.length > 0 && (
+        <div className="card border-gold/30 p-6">
+          <p className="eyebrow">Evidence gaps for this profile</p>
+          <ul className="mt-3 space-y-2">
+            {brief.evidence_gaps.map((gap, i) => (
+              <li key={i} className="flex gap-3 text-sm leading-6 text-slate-700">
+                <span className="mt-0.5 shrink-0 font-bold text-gold">▲</span>
+                {gap}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {brief.last_searched && (
+        <p className="text-xs text-slate-400">
+          Registry last searched {brief.last_searched} ·{" "}
+          {brief.pending_candidates > 0
+            ? `${brief.pending_candidates} publications awaiting review`
+            : "All candidates reviewed"}
+        </p>
+      )}
+    </div>
+  );
+}
+
+
+function DecisionProfilesPage() {
+  const [active, setActive] = useState(null);
+  const [briefs, setBriefs] = useState({});
+  const [loading, setLoading] = useState({});
+  const [errors, setErrors] = useState({});
+
+  const runProfile = async (profile) => {
+    if (active === profile.id) { setActive(null); return; }
+    setActive(profile.id);
+    if (briefs[profile.id]) return;
+    setLoading((l) => ({ ...l, [profile.id]: true }));
+    try {
+      const result = await askEvidence(profile.query);
+      setBriefs((b) => ({ ...b, [profile.id]: result }));
+    } catch (err) {
+      setErrors((e) => ({ ...e, [profile.id]: err.message }));
+    } finally {
+      setLoading((l) => ({ ...l, [profile.id]: false }));
+    }
+  };
+
+  return (
+    <main>
+      <section className="bg-navy text-white">
+        <div className="page-shell py-16">
+          <p className="eyebrow text-gold">Decision scenario library</p>
+          <h1 className="mt-3 max-w-3xl text-5xl font-bold">
+            Start with your situation, not a search box.
+          </h1>
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-white/80">
+            Four practitioner and researcher scenarios, each pre-mapped to the right evidence
+            parameters. Select your situation to get an instant evidence brief — causal certainty,
+            available interventions, and evidence gaps — tailored to that decision context.
+          </p>
+        </div>
+      </section>
+
+      <div className="page-shell py-12">
+        <div className="grid gap-5 md:grid-cols-2">
+          {DECISION_PROFILES.map((profile) => (
+            <div key={profile.id} className="flex flex-col">
+              <button
+                type="button"
+                onClick={() => runProfile(profile)}
+                className={`card flex-1 p-7 text-left transition hover:-translate-y-1 hover:shadow-lg ${profile.accentClass} ${
+                  active === profile.id ? "ring-2 ring-navy ring-offset-2" : ""
+                }`}
+              >
+                <div className="flex items-start gap-4">
+                  <span className="text-4xl" role="img" aria-hidden="true">{profile.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                      {profile.audience}
+                    </p>
+                    <h2 className="mt-2 text-xl font-bold leading-tight text-navy">
+                      {profile.title}
+                    </h2>
+                    <p className="mt-3 text-sm leading-6 text-slate-600">{profile.context}</p>
+                  </div>
+                </div>
+                <div className="mt-5 flex items-center gap-2">
+                  <span className="rounded-full bg-navy/5 px-3 py-1 text-xs font-bold text-navy">
+                    {active === profile.id ? "Collapse" : "Get evidence brief"}
+                  </span>
+                  {briefs[profile.id] && active !== profile.id && (
+                    <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+                      {briefs[profile.id].study_count} studies matched
+                    </span>
+                  )}
+                </div>
+              </button>
+
+              {active === profile.id && (
+                <div className="rounded-b-2xl border-x border-b border-navy/10 bg-slate-50 p-6">
+                  {loading[profile.id] && (
+                    <div className="py-10 text-center">
+                      <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-navy/15 border-t-scarlet" />
+                      <p className="mt-3 text-sm font-semibold text-navy">Synthesizing evidence…</p>
+                    </div>
+                  )}
+                  {errors[profile.id] && (
+                    <p className="rounded-xl border border-scarlet/20 bg-scarlet/5 p-4 text-sm text-scarlet">
+                      {errors[profile.id]}
+                    </p>
+                  )}
+                  {briefs[profile.id] && !loading[profile.id] && (
+                    <ProfileEvidenceBrief brief={briefs[profile.id]} />
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-12 rounded-2xl border border-navy/10 bg-navy/3 p-7">
+          <h2 className="text-xl font-bold text-navy">Need a custom query?</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            The practitioner query interface lets you define any combination of population,
+            exposure type, exposure window, outcome, and country.
+          </p>
+          <Link to="/ask" className="button-primary mt-4">
+            Open the full query interface
+          </Link>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+
 // ── About page ────────────────────────────────────────────────────────────────
 
 function ReleasesSection() {
@@ -1470,6 +1761,89 @@ function AboutPage() {
             health easier to inspect, compare, and use. The registry keeps methodological
             distinctions visible because prevention decisions depend on them.
           </p>
+        </div>
+      </section>
+
+      {/* Scientific Leadership banner */}
+      <section className="border-b border-navy/10 bg-warm">
+        <div className="page-shell py-10">
+          <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-scarlet">Scientific leadership</p>
+              <h2 className="mt-2 text-2xl font-bold text-navy">
+                Joseph Abbas · PhD Candidate, Prevention Science
+              </h2>
+              <p className="mt-2 leading-7 text-slate-700">
+                Joseph Abbas is the principal investigator, data architect, and scientific steward
+                of VICINITY. He designed and led both systematic reviews, developed the registry
+                architecture, the evidence classification framework, the dual-reviewer workflow,
+                and the living-surveillance pipeline.
+                This work was completed at <span className="font-bold">Rutgers University-Camden</span>,
+                where the Department of Public Policy and Administration supports research at the
+                intersection of prevention science, urban equity, and public health.
+              </p>
+              <p className="mt-3 text-sm text-slate-500">
+                PROSPERO registration: CRD420251076481 · Search coverage through July 31, 2025
+              </p>
+            </div>
+            <div className="shrink-0">
+              <div className="rounded-2xl border border-navy/15 bg-navy p-6 text-center text-white">
+                <p className="text-xs font-bold uppercase tracking-wider text-gold">Institution</p>
+                <p className="mt-3 text-lg font-bold">Rutgers</p>
+                <p className="text-sm text-white/70">University-Camden</p>
+                <div className="mt-4 border-t border-white/15 pt-4 text-xs text-white/60 leading-5">
+                  Department of Public Policy<br />and Administration
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What makes VICINITY groundbreaking */}
+      <section className="border-b border-navy/10">
+        <div className="page-shell py-10">
+          <p className="eyebrow">Field contribution</p>
+          <h2 className="mt-2 text-2xl font-bold text-navy">What makes VICINITY groundbreaking</h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                title: "Causal question separation",
+                body: "VICINITY is the only public registry that explicitly separates 'what harm occurs' from 'what interventions help' as distinct causal streams — preventing the most common error in violence-prevention policy.",
+                tone: "border-t-scarlet",
+              },
+              {
+                title: "Outcome directness enforcement",
+                body: "Every intervention study is classified by whether it measured mental health directly. A crime-reduction program is never described as a mental-health benefit unless the study measured it.",
+                tone: "border-t-emerald-500",
+              },
+              {
+                title: "Dual independent review",
+                body: "Every incoming candidate requires two named reviewers to agree at screening and full-text stages. Conflicts are recorded and held unresolved — the same standard Cochrane applies.",
+                tone: "border-t-gold",
+              },
+              {
+                title: "Transferability scoring",
+                body: "Each intervention study carries an automatically computed transferability score across three dimensions: setting similarity, population match, and implementation feasibility.",
+                tone: "border-t-sky-400",
+              },
+              {
+                title: "Evidence Gap Radar",
+                body: "The registry automatically computes geographic, outcome, method, and population gaps from live data. Gaps update every time a new study enters — turning the absence of evidence into a visible signal.",
+                tone: "border-t-purple-400",
+              },
+              {
+                title: "Decision scenario library",
+                body: "Four named practitioner and researcher scenarios translate query parameters into pre-built evidence briefs — answering the questions real practitioners ask before they know what to search for.",
+                tone: "border-t-navy",
+              },
+            ].map((item) => (
+              <div key={item.title} className={`card border-t-4 ${item.tone} p-6`}>
+                <h3 className="font-bold text-navy">{item.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{item.body}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -2385,6 +2759,7 @@ export default function App() {
         <Route path="/gaps" element={<GapRadarPage />} />
         <Route path="/changelog" element={<ChangelogPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/scenarios" element={<DecisionProfilesPage />} />
         <Route path="/submit" element={<SubmitPage />} />
         <Route path="/reviewer" element={<ReviewerPage />} />
         <Route path="/implementation" element={<ImplementationPage />} />
