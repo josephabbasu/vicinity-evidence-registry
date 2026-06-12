@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, DateTime, Float, Integer, JSON, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, JSON, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .database import Base
 
@@ -72,6 +72,158 @@ class Study(Base):
     featured: Mapped[bool] = mapped_column(Boolean, default=False)
     verification_flags: Mapped[list[str]] = mapped_column(JSON)
     raw_fields: Mapped[dict[str, str]] = mapped_column(JSON)
+
+    # V2: stream classification and workflow
+    registry_stream: Mapped[str] = mapped_column(
+        String(40), default="exposure", index=True
+    )  # exposure | intervention | implementation
+    approval_status: Mapped[str] = mapped_column(
+        String(40), default="approved", index=True
+    )  # approved | pending | rejected
+    registry_version: Mapped[int] = mapped_column(Integer, default=1)
+    added_in_version: Mapped[str] = mapped_column(String(20), default="1.0")
+
+    effect_estimates: Mapped[list[EffectEstimate]] = relationship(
+        "EffectEstimate", back_populates="study", cascade="all, delete-orphan"
+    )
+
+
+class EffectEstimate(Base):
+    """One row per distinct effect reported in a study.
+
+    A single study can report effects for multiple subpopulations, outcomes,
+    and follow-up windows. Storing at this granularity prevents selective
+    reporting and enables meta-analytic synthesis.
+    """
+
+    __tablename__ = "effect_estimates"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    study_id: Mapped[int] = mapped_column(Integer, ForeignKey("studies.id"), index=True)
+    outcome_label: Mapped[str] = mapped_column(String(200))
+    outcome_instrument: Mapped[str] = mapped_column(Text, default="")
+    population_subgroup: Mapped[str] = mapped_column(Text, default="Full sample")
+    exposure_contrast: Mapped[str] = mapped_column(Text, default="")
+    follow_up_period: Mapped[str] = mapped_column(String(120), default="")
+    estimate_type: Mapped[str] = mapped_column(String(80), default="")  # β, OR, IRR, d
+    point_estimate: Mapped[float | None] = mapped_column(Float)
+    standard_error: Mapped[float | None] = mapped_column(Float)
+    ci_lower: Mapped[float | None] = mapped_column(Float)
+    ci_upper: Mapped[float | None] = mapped_column(Float)
+    p_value: Mapped[float | None] = mapped_column(Float)
+    adjustment_variables: Mapped[str] = mapped_column(Text, default="")
+    causal_estimand: Mapped[str] = mapped_column(Text, default="")
+    source_table: Mapped[str] = mapped_column(String(80), default="")
+    rob_rating: Mapped[str] = mapped_column(String(40), default="")
+    is_primary: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+
+    study: Mapped[Study] = relationship("Study", back_populates="effect_estimates")
+
+
+class Reviewer(Base):
+    __tablename__ = "reviewers"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String(180))
+    email: Mapped[str] = mapped_column(String(220), unique=True)
+    role: Mapped[str] = mapped_column(String(40), default="reviewer")  # reviewer | lead
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+
+
+class SearchRun(Base):
+    """Tracks each monthly automated literature surveillance run."""
+
+    __tablename__ = "search_runs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    run_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    databases_searched: Mapped[list[str]] = mapped_column(JSON)
+    query_terms: Mapped[str] = mapped_column(Text)
+    candidates_found: Mapped[int] = mapped_column(Integer, default=0)
+    duplicates_removed: Mapped[int] = mapped_column(Integer, default=0)
+    new_candidates: Mapped[int] = mapped_column(Integer, default=0)
+    status: Mapped[str] = mapped_column(String(40), default="completed")
+    notes: Mapped[str] = mapped_column(Text, default="")
+    triggered_by: Mapped[str] = mapped_column(String(80), default="scheduled")
+
+    candidates: Mapped[list[LiteratureCandidate]] = relationship(
+        "LiteratureCandidate", back_populates="search_run"
+    )
+
+
+class LiteratureCandidate(Base):
+    """A publication discovered through automated surveillance, awaiting dual review."""
+
+    __tablename__ = "literature_candidates"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    search_run_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("search_runs.id"), nullable=True
+    )
+    title: Mapped[str] = mapped_column(Text)
+    authors: Mapped[str] = mapped_column(Text)
+    year: Mapped[int | None] = mapped_column(Integer)
+    journal: Mapped[str] = mapped_column(Text)
+    doi: Mapped[str | None] = mapped_column(String(180))
+    abstract: Mapped[str] = mapped_column(Text, default="")
+    source_database: Mapped[str] = mapped_column(String(80))
+    source_id: Mapped[str] = mapped_column(String(180), default="")
+    relevance_score: Mapped[float | None] = mapped_column(Float)
+    # Workflow: discovered → screened → full_text → extracted → approved | rejected
+    status: Mapped[str] = mapped_column(String(40), default="discovered", index=True)
+    screen_decision: Mapped[str | None] = mapped_column(String(40))
+    screen_reason: Mapped[str | None] = mapped_column(Text)
+    screen_reviewer_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("reviewers.id"), nullable=True
+    )
+    fulltext_decision: Mapped[str | None] = mapped_column(String(40))
+    fulltext_reason: Mapped[str | None] = mapped_column(Text)
+    fulltext_reviewer_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("reviewers.id"), nullable=True
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+
+    search_run: Mapped[SearchRun | None] = relationship(
+        "SearchRun", back_populates="candidates"
+    )
+
+
+class ChangeLog(Base):
+    """Public audit trail of every registry update, enabling reproducible citations."""
+
+    __tablename__ = "changelog"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    version: Mapped[str] = mapped_column(String(20))
+    change_type: Mapped[str] = mapped_column(String(40))
+    # addition | correction | retraction | methodology | surveillance
+    summary: Mapped[str] = mapped_column(Text)
+    affected_studies: Mapped[list[str]] = mapped_column(JSON, default=list)
+    study_count_before: Mapped[int] = mapped_column(Integer, default=0)
+    study_count_after: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+
+
+class Release(Base):
+    """Versioned snapshot of the registry — enables permanent DOI-linked citations."""
+
+    __tablename__ = "releases"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    version: Mapped[str] = mapped_column(String(20), unique=True)
+    release_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    study_count: Mapped[int] = mapped_column(Integer, default=0)
+    exposure_count: Mapped[int] = mapped_column(Integer, default=0)
+    intervention_count: Mapped[int] = mapped_column(Integer, default=0)
+    credible_count: Mapped[int] = mapped_column(Integer, default=0)
+    doi: Mapped[str | None] = mapped_column(String(200))
+    zenodo_record_id: Mapped[str | None] = mapped_column(String(80))
+    frozen_json: Mapped[str | None] = mapped_column(Text)
+    notes: Mapped[str] = mapped_column(Text, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
 
 
 class Submission(Base):
