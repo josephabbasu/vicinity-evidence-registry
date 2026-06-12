@@ -7,5 +7,6 @@ dist/
 .env
 *.db
 *.sqlite3
+*.log
 backend/app/data/vicinity.db
 frontend/.vite/
