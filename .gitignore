@@ -5,6 +5,7 @@ __pycache__/
 node_modules/
 dist/
 .env
+.tools/
 *.db
 *.sqlite3
 *.log
