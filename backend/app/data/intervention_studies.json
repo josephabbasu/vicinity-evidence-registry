@@ -110,7 +110,8 @@
     "decision_relevance": "Supports exposure-reduction decisions",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 3
+    "source_row": 3,
+    "id": 36
   },
   {
     "slug": "iv-anderson-et-al-2013",
@@ -223,7 +224,8 @@
     "decision_relevance": "Conditional or mixed evidence",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 4
+    "source_row": 4,
+    "id": 37
   },
   {
     "slug": "iv-branas-et-al-2011",
@@ -336,7 +338,8 @@
     "decision_relevance": "Conditional or mixed evidence",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 5
+    "source_row": 5,
+    "id": 38
   },
   {
     "slug": "iv-branas-et-al-2018",
@@ -449,7 +452,8 @@
     "decision_relevance": "Mechanistic or implementation insight",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 6
+    "source_row": 6,
+    "id": 39
   },
   {
     "slug": "iv-gonzalez-komisarow-2020",
@@ -562,7 +566,8 @@
     "decision_relevance": "Supports exposure-reduction decisions",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 7
+    "source_row": 7,
+    "id": 40
   },
   {
     "slug": "iv-chalfin-et-al-2022",
@@ -675,7 +680,8 @@
     "decision_relevance": "Supports exposure-reduction decisions",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 8
+    "source_row": 8,
+    "id": 41
   },
   {
     "slug": "iv-leventhal-brooks-gunn-2003",
@@ -788,7 +794,8 @@
     "decision_relevance": "Supports consideration with contextual adaptation",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 9
+    "source_row": 9,
+    "id": 42
   },
   {
     "slug": "iv-kling-ludwig-katz-2005",
@@ -901,7 +908,8 @@
     "decision_relevance": "Mechanistic or implementation insight",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 10
+    "source_row": 10,
+    "id": 43
   },
   {
     "slug": "iv-kling-et-al-2007",
@@ -1014,7 +1022,8 @@
     "decision_relevance": "Supports consideration with contextual adaptation",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 11
+    "source_row": 11,
+    "id": 44
   },
   {
     "slug": "iv-kondo-2016",
@@ -1127,7 +1136,8 @@
     "decision_relevance": "Conditional or mixed evidence",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 12
+    "source_row": 12,
+    "id": 45
   },
   {
     "slug": "iv-osypuk-et-al-2012a",
@@ -1240,7 +1250,8 @@
     "decision_relevance": "Conditional or mixed evidence",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 13
+    "source_row": 13,
+    "id": 46
   },
   {
     "slug": "iv-osypuk-et-al-2012b",
@@ -1353,7 +1364,8 @@
     "decision_relevance": "Conditional or mixed evidence",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 14
+    "source_row": 14,
+    "id": 47
   },
   {
     "slug": "iv-nguyen-et-al-2016",
@@ -1466,7 +1478,8 @@
     "decision_relevance": "Conditional or mixed evidence",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 15
+    "source_row": 15,
+    "id": 48
   },
   {
     "slug": "iv-schmidt-et-al-2020",
@@ -1579,7 +1592,8 @@
     "decision_relevance": "Conditional or mixed evidence",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 16
+    "source_row": 16,
+    "id": 49
   },
   {
     "slug": "iv-south-et-al-2015",
@@ -1692,7 +1706,8 @@
     "decision_relevance": "Supports consideration with contextual adaptation",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 17
+    "source_row": 17,
+    "id": 50
   },
   {
     "slug": "iv-pollack-et-al-2021",
@@ -1806,7 +1821,8 @@
     "decision_relevance": "Conditional or mixed evidence",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 18
+    "source_row": 18,
+    "id": 51
   },
   {
     "slug": "iv-kim-et-al-2023",
@@ -1920,7 +1936,8 @@
     "decision_relevance": "Mechanistic or implementation insight",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 19
+    "source_row": 19,
+    "id": 52
   },
   {
     "slug": "iv-ludwig-et-al-2013",
@@ -2033,7 +2050,8 @@
     "decision_relevance": "Supports consideration with contextual adaptation",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 20
+    "source_row": 20,
+    "id": 53
   },
   {
     "slug": "iv-south-et-al-2023",
@@ -2146,7 +2164,8 @@
     "decision_relevance": "Supports exposure-reduction decisions",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 21
+    "source_row": 21,
+    "id": 54
   },
   {
     "slug": "iv-langley-2015",
@@ -2258,7 +2277,8 @@
     "decision_relevance": "Conditional or mixed evidence",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 23
+    "source_row": 23,
+    "id": 55
   },
   {
     "slug": "iv-santiago-et-al-2018",
@@ -2370,7 +2390,8 @@
     "decision_relevance": "Conditional or mixed evidence",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 24
+    "source_row": 24,
+    "id": 56
   },
   {
     "slug": "iv-guerra-taylor-arredondo-2024",
@@ -2482,7 +2503,8 @@
     "decision_relevance": "Supports consideration with contextual adaptation",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 25
+    "source_row": 25,
+    "id": 57
   },
   {
     "slug": "iv-van-rosmalen-nooijens-et-al-2017",
@@ -2595,7 +2617,8 @@
     "decision_relevance": "Supports consideration with contextual adaptation",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 26
+    "source_row": 26,
+    "id": 58
   },
   {
     "slug": "iv-jaycox-et-al-2009",
@@ -2707,7 +2730,8 @@
     "decision_relevance": "Supports consideration with contextual adaptation",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 27
+    "source_row": 27,
+    "id": 59
   },
   {
     "slug": "iv-carrion-et-al-2013",
@@ -2820,7 +2844,8 @@
     "decision_relevance": "Supports consideration with contextual adaptation",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 28
+    "source_row": 28,
+    "id": 60
   },
   {
     "slug": "iv-stein-et-al-2003",
@@ -2932,6 +2957,7 @@
     "decision_relevance": "Supports consideration with contextual adaptation",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 29
+    "source_row": 29,
+    "id": 61
   }
 ]

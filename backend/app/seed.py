@@ -39,9 +39,7 @@ def _load_records(path: Path) -> list[dict]:
 
 
 def _study_values(record: dict) -> dict:
-    values = dict(record)
-    values.pop("id", None)
-    return values
+    return dict(record)
 
 
 def _upsert_study(session: Session, record: dict) -> Study:

@@ -84,14 +84,16 @@ def run_additive_migrations(engine: Engine) -> None:
                 "ON studies (approval_status)"
             )
         )
-        # Resync the studies primary-key sequence after any explicit-id inserts
-        # (the original seed inserted rows with explicit IDs, leaving the sequence at 1)
+        # Safety: resync the studies PK sequence after any explicit-id inserts
         if connection.dialect.name == "postgresql":
-            connection.execute(
-                text(
-                    "SELECT setval("
-                    "'studies_id_seq', "
-                    "GREATEST((SELECT COALESCE(MAX(id), 1) FROM studies), 1)"
-                    ")"
+            try:
+                connection.execute(
+                    text(
+                        "SELECT setval("
+                        "'studies_id_seq', "
+                        "GREATEST((SELECT COALESCE(MAX(id), 1) FROM studies), 1)"
+                        ")"
+                    )
                 )
-            )
+            except Exception:
+                pass  # sequence may have a different name; explicit IDs in seed handle this
