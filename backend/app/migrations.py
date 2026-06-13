@@ -90,8 +90,8 @@ def run_additive_migrations(engine: Engine) -> None:
             connection.execute(
                 text(
                     "SELECT setval("
-                    "pg_get_serial_sequence('studies', 'id'), "
-                    "GREATEST((SELECT MAX(id) FROM studies), 1)"
+                    "'studies_id_seq', "
+                    "GREATEST((SELECT COALESCE(MAX(id), 1) FROM studies), 1)"
                     ")"
                 )
             )
