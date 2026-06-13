@@ -84,3 +84,14 @@ def run_additive_migrations(engine: Engine) -> None:
                 "ON studies (approval_status)"
             )
         )
+        # Resync the studies primary-key sequence after any explicit-id inserts
+        # (the original seed inserted rows with explicit IDs, leaving the sequence at 1)
+        if connection.dialect.name == "postgresql":
+            connection.execute(
+                text(
+                    "SELECT setval("
+                    "pg_get_serial_sequence('studies', 'id'), "
+                    "GREATEST((SELECT MAX(id) FROM studies), 1)"
+                    ")"
+                )
+            )
