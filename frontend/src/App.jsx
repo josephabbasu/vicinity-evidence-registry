@@ -1826,11 +1826,11 @@ function AboutPage() {
         </div>
       </section>
 
-      {/* What makes VICINITY groundbreaking */}
+      {/* What distinguishes VICINITY */}
       <section className="border-b border-navy/10">
         <div className="page-shell py-10">
           <p className="eyebrow">Field contribution</p>
-          <h2 className="mt-2 text-2xl font-bold text-navy">What makes VICINITY groundbreaking</h2>
+          <h2 className="mt-2 text-2xl font-bold text-navy">What distinguishes VICINITY</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {[
               {
@@ -1954,10 +1954,6 @@ function AboutPage() {
                   Scientific concept, systematic reviews, data architecture, registry development,
                   and stewardship.
                 </p>
-              </div>
-              <div>
-                <p className="text-sm font-bold text-navy">Software implementation support</p>
-                <p className="mt-1 text-slate-700">OpenAI Codex</p>
               </div>
               <div>
                 <p className="text-sm font-bold text-navy">Systematic review registration</p>
