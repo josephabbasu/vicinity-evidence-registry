@@ -394,6 +394,7 @@ function HomePage() {
               key={card.stream}
               type="button"
               onClick={() => navigate(card.to)}
+              aria-label={card.cta}
               className={`card p-7 text-left transition hover:-translate-y-1 hover:shadow-lg ${card.accent}`}
             >
               {card.count !== null && (
@@ -1052,9 +1053,9 @@ function AskPage() {
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-white/80">
             Specify the population, exposure type, and outcome. VICINITY returns a synthesized
-            evidence brief with causal certainty, available interventions, and known evidence gaps.
-            This interface answers a different question than the registry browser. It synthesizes,
-            not just lists.
+            evidence brief with a rule-based certainty rating, matched interventions, and known evidence gaps.
+            This interface answers a different question than the registry browser — it filters and
+            classifies by design strength, not just lists records.
           </p>
         </div>
       </section>
@@ -1172,7 +1173,7 @@ function AskPage() {
                     </div>
                     <div className="rounded-2xl bg-emerald-50 p-4 text-center">
                       <p className="text-3xl font-bold text-emerald-800">{brief.credible_count}</p>
-                      <p className="mt-1 text-xs font-semibold text-emerald-600">credible-tier</p>
+                      <p className="mt-1 text-xs font-semibold text-emerald-600">design-identified</p>
                     </div>
                     <div className={`rounded-2xl p-4 text-center ${
                       brief.dominant_direction === "Harmful" ? "bg-scarlet/10" :
@@ -1182,13 +1183,13 @@ function AskPage() {
                     </div>
                     <div className={`rounded-2xl border p-4 text-center ${certStyle}`}>
                       <p className="text-lg font-bold">{certLevel}</p>
-                      <p className="mt-1 text-xs font-semibold">certainty</p>
+                      <p className="mt-1 text-xs font-semibold">design strength</p>
                     </div>
                   </div>
 
                   <div className="mt-7 space-y-4">
                     <div className="rounded-xl bg-navy/5 p-5">
-                      <p className="text-sm font-bold text-navy">Causal certainty</p>
+                      <p className="text-sm font-bold text-navy">Design-strength rating</p>
                       <p className="mt-2 text-sm leading-6 text-slate-700">{brief.causal_certainty}</p>
                     </div>
                     <div className="rounded-xl bg-navy/5 p-5">
@@ -1589,7 +1590,7 @@ const DECISION_PROFILES = [
     audience: "Program managers & administrators",
     title: "I need to justify trauma counseling funding to city council.",
     context:
-      "A program manager needs credible, peer-reviewed evidence that neighborhood violence causes PTSD and that psychosocial interventions reduce it — with causal certainty clearly stated.",
+      "A program manager needs evidence that neighborhood violence is associated with PTSD and that psychosocial interventions have demonstrated benefit — with design strength and limitations clearly stated.",
     query: { age_group: "adolescent", exposure_type: "general", outcome_type: "PTSD", exposure_window: "Chronic" },
     accentClass: "border-t-4 border-t-gold",
     buttonClass: "button-primary",
@@ -1725,8 +1726,8 @@ function DecisionProfilesPage() {
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-white/80">
             Four practitioner and researcher scenarios, each pre-mapped to the right evidence
-            parameters. Select your situation to get an instant evidence brief — causal certainty,
-            available interventions, and evidence gaps — tailored to that decision context.
+            parameters. Select your situation to retrieve a structured evidence brief — design-strength
+            rating, matched interventions, and evidence gaps — pre-filtered for that decision context.
           </p>
         </div>
       </section>
@@ -1829,7 +1830,7 @@ function ReleasesSection() {
                 <p className="text-lg font-bold text-navy">Version {r.version}</p>
                 <p className="mt-1 text-sm text-slate-500">
                   {new Date(r.release_date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
-                  {" · "}{r.study_count} studies · {r.credible_count} credible-tier
+                  {" · "}{r.study_count} studies · {r.credible_count} design-identified
                 </p>
                 {r.doi && (
                   <p className="mt-2 font-mono text-xs text-slate-600 break-all">
@@ -1924,7 +1925,7 @@ function AboutPage() {
             {[
               {
                 title: "Causal question separation",
-                body: "VICINITY is the only public registry that explicitly separates 'what harm occurs' from 'what interventions help' as distinct causal streams — preventing the most common error in violence-prevention policy.",
+                body: "To our knowledge, VICINITY is the first domain-specific evidence observatory in this field to explicitly separate 'what harm occurs' from 'what interventions help' as distinct causal streams — preventing the most common error in violence-prevention policy translation.",
                 tone: "border-t-scarlet",
               },
               {
@@ -1939,7 +1940,7 @@ function AboutPage() {
               },
               {
                 title: "Transferability scoring",
-                body: "Each intervention study carries an automatically computed transferability score across three dimensions: setting similarity, population match, and implementation feasibility.",
+                body: "Each intervention study carries reviewer-assessed transferability fields across three dimensions: setting similarity, population match, and implementation feasibility. Scores reflect reviewer judgment, not algorithmic computation.",
                 tone: "border-t-sky-400",
               },
               {
@@ -2073,9 +2074,9 @@ function AboutPage() {
               <li>Live evidence gap radar</li>
               <li>Practitioner query interface</li>
               <li>Private reviewer dashboard</li>
-              <li>Monthly surveillance pipeline</li>
+              <li>Scheduled surveillance pipeline</li>
               <li>Public changelog</li>
-              <li>CSV and JSON export</li>
+              <li>JSON export (CSV via registry download)</li>
             </ul>
           </div>
 
