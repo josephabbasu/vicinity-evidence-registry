@@ -2245,7 +2245,8 @@ function ReviewerDashboard({ token, onLogout }) {
           <p className="mt-1 text-sm text-emerald-700">
             Coverage: {triggerResult.coverage_start} to {triggerResult.coverage_end}.
             {" "}{triggerResult.candidates_found} records retrieved.
-            {" "}{triggerResult.new_candidates} entered review.
+            {" "}{triggerResult.prioritized_candidates ?? triggerResult.new_candidates} entered priority screening.
+            {triggerResult.triage_low != null && ` ${triggerResult.triage_low} remain in low-priority triage.`}
             {" "}Sources: {triggerResult.source || "No source completed"}.
           </p>
         </div>
@@ -2254,7 +2255,9 @@ function ReviewerDashboard({ token, onLogout }) {
         <div className="mt-4 rounded-xl border border-sky-200 bg-sky-50 p-4">
           <p className="font-bold text-sky-800">Relevance scores updated</p>
           <p className="mt-1 text-sm text-sky-700">
-            {rescoreResult.rescored} of {rescoreResult.total} candidates rescored using keyword-weighted algorithm.
+            {rescoreResult.rescored} records changed.
+            {" "}{rescoreResult.prioritized} require priority screening.
+            {" "}{rescoreResult.triage_low} remain stored in low-priority triage.
           </p>
         </div>
       )}
@@ -2402,6 +2405,9 @@ function ReviewerDashboard({ token, onLogout }) {
             <div className="card p-10 text-center">
               <p className="font-bold text-navy">No candidates in queue.</p>
               <p className="mt-2 text-sm text-slate-500">Trigger a surveillance run to discover new publications.</p>
+              <p className="mt-2 text-xs text-slate-400">
+                Lower-scoring source records remain stored outside the priority queue.
+              </p>
             </div>
           )}
           {candidates.map((c) => (

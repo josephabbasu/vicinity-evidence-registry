@@ -55,7 +55,7 @@ PubMed and Crossref serve as the default sources. OpenAlex becomes active when t
 
 The service stores source identifiers and source URLs. It deduplicates records by DOI. It uses normalized title and year when a DOI is absent.
 
-The relevance score ranks candidate records. It does not include or exclude a study.
+The relevance score ranks candidate records. Records below `0.65` remain stored in a low-priority triage state. The score does not include or exclude a study.
 
 ## Independent Review
 

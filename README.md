@@ -66,7 +66,7 @@ The surveillance service searches PubMed and Crossref. It can also search OpenAl
 
 The service searches only the uncovered interval after the latest completed search. It deduplicates by DOI. It uses normalized title and year when a DOI is unavailable.
 
-Automated relevance scoring prioritizes records for human review. The score never determines inclusion.
+Automated relevance scoring prioritizes records for human review. Records below the priority threshold remain stored as `triage_low`. The score never determines eligibility or inclusion.
 
 The scheduled endpoint is:
 

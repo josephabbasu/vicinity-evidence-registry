@@ -60,6 +60,7 @@ from .seed import seed_database
 
 REVIEWER_TOKEN = os.getenv("REVIEWER_TOKEN", "").strip()
 SURVEILLANCE_TOKEN = os.getenv("SURVEILLANCE_TOKEN", "").strip()
+SCREENING_PRIORITY_THRESHOLD = 0.65
 
 
 def get_session():
@@ -889,7 +890,7 @@ def rescore_candidates(
     session: Session = Depends(get_session),
     _: None = Depends(require_reviewer),
 ) -> dict:
-    """Recompute relevance scores for all candidates using the keyword-weighted scorer."""
+    """Recompute scores and separate priority screening from low-priority triage."""
     candidates = list(session.scalars(select(LiteratureCandidate)).all())
     updated = 0
     for c in candidates:
@@ -897,8 +898,34 @@ def rescore_candidates(
         if c.relevance_score != score:
             c.relevance_score = score
             updated += 1
+        if c.status in {"discovered", "triage_low"}:
+            next_status = (
+                "discovered"
+                if score >= SCREENING_PRIORITY_THRESHOLD
+                else "triage_low"
+            )
+            if c.status != next_status:
+                c.status = next_status
+                updated += 1
     session.commit()
-    return {"rescored": updated, "total": len(candidates)}
+    prioritized = sum(
+        c.status in {
+            "discovered",
+            "awaiting_second_screen",
+            "screened",
+            "awaiting_second_fulltext",
+            "conflict",
+        }
+        for c in candidates
+    )
+    triage_low = sum(c.status == "triage_low" for c in candidates)
+    return {
+        "rescored": updated,
+        "total": len(candidates),
+        "prioritized": prioritized,
+        "triage_low": triage_low,
+        "threshold": SCREENING_PRIORITY_THRESHOLD,
+    }
 
 
 # ── Citation export ───────────────────────────────────────────────────────────
@@ -1229,6 +1256,7 @@ def reviewer_dashboard(
 @app.get("/api/reviewer/candidates", response_model=list[CandidateOut])
 def list_candidates(
     status_filter: str | None = Query(default=None, alias="status"),
+    include_low_priority: bool = False,
     limit: int = Query(default=50, ge=1, le=200),
     session: Session = Depends(get_session),
     _: None = Depends(require_reviewer),
@@ -1236,6 +1264,18 @@ def list_candidates(
     q = select(LiteratureCandidate).order_by(LiteratureCandidate.created_at.desc()).limit(limit)
     if status_filter:
         q = q.where(LiteratureCandidate.status == status_filter)
+    elif not include_low_priority:
+        q = q.where(
+            LiteratureCandidate.status.in_(
+                [
+                    "discovered",
+                    "awaiting_second_screen",
+                    "screened",
+                    "awaiting_second_fulltext",
+                    "conflict",
+                ]
+            )
+        )
     return list(session.scalars(q).all())
 
 
@@ -1684,6 +1724,11 @@ def run_surveillance(session: Session, triggered_by: str) -> dict:
             continue
         score = _score_relevance(record["title"], record.get("abstract") or "")
         record["relevance_score"] = score
+        record["status"] = (
+            "discovered"
+            if score >= SCREENING_PRIORITY_THRESHOLD
+            else "triage_low"
+        )
         new_records.append(record)
 
     duplicates_removed = (
@@ -1723,7 +1768,7 @@ def run_surveillance(session: Session, triggered_by: str) -> dict:
                 source_id=(record.get("source_id") or "")[:180],
                 source_url=(record.get("source_url") or "")[:2000],
                 relevance_score=record["relevance_score"],
-                status="discovered",
+                status=record["status"],
             )
         )
 
@@ -1733,7 +1778,9 @@ def run_surveillance(session: Session, triggered_by: str) -> dict:
             change_type="surveillance",
             summary=(
                 f"Surveillance covered {start_date.isoformat()} through {end_date.isoformat()}. "
-                f"{len(raw_records)} source records yielded {len(new_records)} review candidates."
+                f"{len(raw_records)} source records yielded {len(new_records)} new records. "
+                f"{sum(record['status'] == 'discovered' for record in new_records)} "
+                "met the priority-screening threshold."
             ),
             affected_studies=[],
             study_count_before=0,
@@ -1747,6 +1794,14 @@ def run_surveillance(session: Session, triggered_by: str) -> dict:
         "candidates_found": len(raw_records),
         "duplicates_removed": duplicates_removed,
         "new_candidates": len(new_records),
+        "prioritized_candidates": sum(
+            record["status"] == "discovered"
+            for record in new_records
+        ),
+        "triage_low": sum(
+            record["status"] == "triage_low"
+            for record in new_records
+        ),
         "status": run_status,
         "coverage_start": start_date.isoformat(),
         "coverage_end": end_date.isoformat(),
