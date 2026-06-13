@@ -76,9 +76,9 @@ def compute_causal_certainty(
     if not matched:
         certainty = "No directly matched evidence"
     elif len(credible) >= 3 and len(credible) >= len(matched) * 0.5:
-        certainty = "Convergent credible evidence"
+        certainty = "Convergent design-supported evidence"
     elif credible:
-        certainty = "Credible evidence with important limitations"
+        certainty = "Design-supported evidence with important limitations"
     else:
         certainty = "Associational evidence only"
     return credible, dominant, certainty

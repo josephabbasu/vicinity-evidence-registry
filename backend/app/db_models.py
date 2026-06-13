@@ -116,6 +116,12 @@ class Study(Base):
         DateTime(timezone=True), default=utc_now, onupdate=utc_now
     )
 
+    # Scientific review status (distinct from normalization notes)
+    verification_status: Mapped[str] = mapped_column(
+        String(40), default="verified", index=True
+    )  # verified | needs_review | in_extraction | excluded
+    normalization_notes: Mapped[list[str]] = mapped_column(JSON, default=list)
+
     # Design transparency and transferability
     identification_assumptions: Mapped[str] = mapped_column(Text, default="")
     diagnostics_reported: Mapped[str] = mapped_column(Text, default="")

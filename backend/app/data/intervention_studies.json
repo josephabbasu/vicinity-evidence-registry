@@ -56,14 +56,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Aliprantis & Hartley 2015",
       "study_title": "Blowing it up and knocking it down: The local and city-wide effects of demolishing high concentration public housing on crime",
@@ -117,7 +110,16 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-anderson-et-al-2013",
@@ -176,14 +178,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Anderson et al. 2013",
       "study_title": "Reducing Crime by Shaping the Built Environment with Zoning: An Empirical Study of Los Angeles",
@@ -237,7 +232,16 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-branas-et-al-2011",
@@ -296,14 +300,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Branas et al. (2011).",
       "study_title": "A Difference-in-Differences Analysis of Health, Safety, and Greening Vacant Urban Space",
@@ -357,7 +354,16 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-branas-et-al-2018",
@@ -416,14 +422,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Branas et al., (2018)",
       "study_title": "Citywide cluster randomized trial to restore blighted vacant land and its effects on violence, crime, and fear",
@@ -477,7 +476,16 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-gonzalez-komisarow-2020",
@@ -536,14 +544,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Gonzalez & Komisarow (2020)",
       "study_title": "Community Monitoring and Crime: Evidence from Chicago’s Safe Passage Program",
@@ -597,7 +598,16 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-chalfin-et-al-2022",
@@ -656,14 +666,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Chalfin et al., 2022",
       "study_title": "Reducing Crime Through Environmental Design: Evidence from a Randomized Experiment of Street Lighting in New York City",
@@ -717,7 +720,16 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-leventhal-brooks-gunn-2003",
@@ -776,14 +788,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Leventhal & Brooks-Gunn (2003)",
       "study_title": "Moving to Opportunity: an Experimental Study of Neighborhood Effects on Mental Health.",
@@ -837,7 +842,16 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-kling-ludwig-katz-2005",
@@ -897,13 +911,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Kling, Ludwig, & Katz (2005)",
       "study_title": "Neighborhood Effects on Crime for Female and Male Youth: Evidence from a Randomized Housing Voucher Experiment.",
@@ -957,7 +965,15 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-kling-et-al-2007",
@@ -1017,13 +1033,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Kling et al. (2007)",
       "study_title": "Experimental Analysis of Neighborhood Effects",
@@ -1077,7 +1087,15 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-kondo-2016",
@@ -1136,14 +1154,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Kondo_2016",
       "study_title": "Effects of Greening and Community Reuse of Vacant Lots on Crime",
@@ -1197,7 +1208,16 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-osypuk-et-al-2012a",
@@ -1257,13 +1277,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Osypuk et al., (2012a)",
       "study_title": "Gender and Crime Victimization Modify Neighborhood Effects on Adolescent Mental Health",
@@ -1317,7 +1331,15 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-osypuk-et-al-2012b",
@@ -1377,13 +1399,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Osypuk et al. (2012b)",
       "study_title": "Differential Mental Health Effects of Neighborhood Relocation Among Youth in Vulnerable Families: Results From a Randomized Trial",
@@ -1437,7 +1453,15 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-nguyen-et-al-2016",
@@ -1497,13 +1521,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Nguyen et al., (2016)",
       "study_title": "Heterogeneous Effects of Housing Vouchers on the Mental Health of US Adolescents",
@@ -1557,7 +1575,15 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-schmidt-et-al-2020",
@@ -1617,13 +1643,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Schmidt et al., (2020)",
       "study_title": "Do changes in neighborhood social context mediate the effects of the Moving to Opportunity experiment on adolescent mental health?",
@@ -1677,7 +1697,15 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-south-et-al-2015",
@@ -1736,14 +1764,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "South et al., 2015",
       "study_title": "Neighborhood Blight, Stress, and Health: A Walking Trial of Urban Greening and Ambulatory Heart Rate",
@@ -1797,7 +1818,16 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-pollack-et-al-2021",
@@ -1857,14 +1887,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Pollack et al., 2021",
       "study_title": "Using the Moving to Opportunity Experiment to Investigate the Long-Term Impact of Neighborhoods on Healthcare Use by Specific Clinical Conditions and Type of Service",
@@ -1918,7 +1941,16 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-kim-et-al-2023",
@@ -1978,12 +2010,6 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome directness was classified from the extracted outcome narrative.",
       "The relationship between the outcome and youth mental health requires verification."
     ],
     "raw_fields": {
@@ -2028,7 +2054,7 @@
     "added_in_version": "2.0",
     "evidence_role": "Exposure reduction",
     "intervention_class": "Structural",
-    "outcome_directness": "Scope requires verification",
+    "outcome_directness": "Pathway or functional outcome",
     "decision_relevance": "Mechanistic or implementation insight",
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
@@ -2039,7 +2065,16 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-ludwig-et-al-2013",
@@ -2099,13 +2134,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Ludwig et al., 2013",
       "study_title": "Long-Term Neighborhood Effects on Low-Income Families: Evidence from Moving to Opportunity",
@@ -2159,7 +2188,15 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-south-et-al-2023",
@@ -2218,14 +2255,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "South et al. 2023.",
       "study_title": "Effect of Abandoned Housing Interventions on Gun Violence, Perceptions of Safety, and Substance Use in Black Neighborhoods. A Citywide Cluster Randomized Trial",
@@ -2279,7 +2309,16 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-langley-2015",
@@ -2338,13 +2377,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Langley 2015",
       "study_title": "Bounce Back: Effectiveness of an Elementary School-Based Intervention for Multicultural Children Exposed to Traumatic Events",
@@ -2398,7 +2431,15 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-santiago-et-al-2018",
@@ -2457,13 +2498,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Santiago et al. 2018",
       "study_title": "Implementing the Bounce Back Trauma Intervention in Urban Elementary Schools: A Real-World Replication Trial",
@@ -2517,7 +2552,15 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-guerra-taylor-arredondo-2024",
@@ -2576,13 +2619,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Guerra, Taylor, & Arredondo 2024",
       "study_title": "Effect of three group interventions on psychosocial functioning in adolescents exposed to interpersonal violence in Chile: A pilot clinical trial",
@@ -2636,7 +2673,15 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-van-rosmalen-nooijens-et-al-2017",
@@ -2696,13 +2741,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "van Rosmalen-Nooijens et al., 2017",
       "study_title": "Young People, Adult Worries: Randomized Controlled Trial and Feasibility Study of the Internet-Based Self-Support Method “Feel the ViBe” for Adolescents and Young Adults Exposed to Family Violence",
@@ -2756,7 +2795,15 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-jaycox-et-al-2009",
@@ -2815,13 +2862,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Jaycox et al., 2009.",
       "study_title": "Support for Students Exposed to Trauma: A Pilot Study.",
@@ -2875,7 +2916,15 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-carrion-et-al-2013",
@@ -2935,13 +2984,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Carrion et al., 2013",
       "study_title": "Cue-Centered Treatment for Youth Exposed to Interpersonal Violence: A Randomized Controlled Trial",
@@ -2995,7 +3038,15 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   },
   {
     "slug": "iv-stein-et-al-2003",
@@ -3054,13 +3105,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Outcome directness was classified from the extracted outcome narrative."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Stein et al., (2003)",
       "study_title": "A Mental Health Intervention for Schoolchildren Exposed to Violence: A Randomized Controlled Trial",
@@ -3114,6 +3159,14 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Outcome directness was classified from the extracted outcome narrative."
+    ]
   }
 ]

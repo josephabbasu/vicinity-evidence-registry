@@ -15,6 +15,8 @@ STUDY_COLUMNS = {
     "source_review": "VARCHAR(160) DEFAULT ''",
     "search_coverage_end": "VARCHAR(10) DEFAULT '2025-07-31'",
     "source_row": "INTEGER",
+    "verification_status": "VARCHAR(40) DEFAULT 'verified'",
+    "normalization_notes": "JSON DEFAULT '[]'",
     "identification_assumptions": "TEXT DEFAULT ''",
     "diagnostics_reported": "TEXT DEFAULT ''",
     "transferability_setting": "VARCHAR(80) DEFAULT 'Needs verification'",

@@ -85,6 +85,8 @@ class StudyDetail(StudySummary):
     source_review: str
     search_coverage_end: str
     source_row: int | None
+    verification_status: str = "verified"
+    normalization_notes: list[str] = []
     identification_assumptions: str = ""
     diagnostics_reported: str = ""
     transferability_setting: str = "Needs verification"

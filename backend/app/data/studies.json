@@ -57,18 +57,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "gender_race_ethnicity: source text reports missing or unclear information"
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Ang (2021)",
       "study_title": "The Effects of Police Violence on Inner-City Students",
@@ -119,7 +108,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "gender_race_ethnicity: source text reports missing or unclear information"
+    ]
   },
   {
     "id": 4,
@@ -181,17 +183,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Rossin-Slater et al., (2020)",
       "study_title": "Local exposure to school shootings and youth antidepressant use",
@@ -242,7 +234,19 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field."
+    ]
   },
   {
     "id": 5,
@@ -302,19 +306,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "gender_race_ethnicity: source text reports missing or unclear information",
-      "se_clustering: source text reports missing or unclear information"
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Gujral et al., ( 2023)",
       "study_title": "The community impact of school-shootings on stress-related emergency department visits",
@@ -365,7 +357,21 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "gender_race_ethnicity: source text reports missing or unclear information",
+      "se_clustering: source text reports missing or unclear information"
+    ]
   },
   {
     "id": 6,
@@ -426,18 +432,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "gender_race_ethnicity: source text reports missing or unclear information"
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Bharadwaj et al. (2021)",
       "study_title": "Surviving a mass shooting",
@@ -488,7 +483,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "gender_race_ethnicity: source text reports missing or unclear information"
+    ]
   },
   {
     "id": 7,
@@ -550,16 +558,7 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Causal tier remains associational because the source does not clearly meet the registry's credible-tier rule.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field."
+      "Causal tier remains associational because the source does not clearly meet the registry's credible-tier rule."
     ],
     "raw_fields": {
       "study_id": "McCoy et al., (2015)",
@@ -611,7 +610,19 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field."
+    ]
   },
   {
     "id": 8,
@@ -673,16 +684,6 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "estimand: source text reports NR",
       "mediators_mechanisms: source text reports NR"
     ],
     "raw_fields": {
@@ -735,7 +736,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "estimand: source text reports NR"
+    ]
   },
   {
     "id": 9,
@@ -798,9 +812,7 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "No formal parallel-trends test reported; estimates treated as suggestive per manuscript.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook."
+      "No formal parallel-trends test reported; estimates treated as suggestive per manuscript."
     ],
     "raw_fields": {
       "study_id": "Karandinos et al. (2026)",
@@ -852,7 +864,12 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook."
+    ]
   },
   {
     "id": 10,
@@ -915,19 +932,8 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
       "The primary outcome may fall outside a strict direct mental-health inclusion rule.",
       "did_parallel_trends: source text reports NR",
-      "estimand: source text reports NR",
-      "gender_race_ethnicity: source text reports missing or unclear information",
       "mediators_mechanisms: source text reports NR"
     ],
     "raw_fields": {
@@ -980,7 +986,21 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "estimand: source text reports NR",
+      "gender_race_ethnicity: source text reports missing or unclear information"
+    ]
   },
   {
     "id": 11,
@@ -1042,16 +1062,7 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
       "Causal tier remains associational because the source does not clearly meet the registry's credible-tier rule.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
       "mediators_mechanisms: source text reports NR",
       "missing_data_method: source text reports NR",
       "se_clustering: source text reports NR",
@@ -1107,7 +1118,19 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field."
+    ]
   },
   {
     "id": 12,
@@ -1169,16 +1192,7 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
       "Causal tier remains associational because the source does not clearly meet the registry's credible-tier rule.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
       "missing_data_method: source text reports missing or unclear information"
     ],
     "raw_fields": {
@@ -1231,7 +1245,19 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field."
+    ]
   },
   {
     "id": 13,
@@ -1292,17 +1318,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Heissel et al.,( 2018)",
       "study_title": "Violence and Vigilance: The Acute Effects of Community Violent Crime on Sleep and Cortisol",
@@ -1353,7 +1369,19 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field."
+    ]
   },
   {
     "id": 14,
@@ -1372,8 +1400,8 @@
     ],
     "design_type": "Difference-in-differences",
     "design_raw": "Quasi-experimental OLS with neighborhood×grade fixed effects; contrasts within neighborhood between schools exposed vs unexposed to a recent homicide; school-clustered SEs",
-    "causal_tier": "Associational",
-    "causal_tier_reason": "The source uses neighborhood-by-year fixed effects in a difference-in-differences framework comparing test scores before and after nearby homicides, with placebo tests using future incidents confirming null pre-trends.",
+    "causal_tier": "Credible",
+    "causal_tier_reason": "Credible: Difference-in-differences with pre-trend diagnostic. The source uses neighborhood-by-year fixed effects in a difference-in-differences framework comparing test scores before and after nearby homicides, with placebo tests using future incidents confirming null pre-trends.",
     "quality_tier": "Low risk",
     "risk_of_bias_raw": "Low",
     "exposure_type": "Objective",
@@ -1415,21 +1443,10 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
       "Causal tier remains associational because the source does not clearly meet the registry's credible-tier rule.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
       "The primary outcome may fall outside a strict direct mental-health inclusion rule.",
       "estimand: source text reports missing or unclear information",
-      "gender_race_ethnicity: source text reports missing or unclear information",
-      "missing_data_method: source text reports missing or unclear information",
-      "survey_weights: source text reports missing or unclear information"
+      "missing_data_method: source text reports missing or unclear information"
     ],
     "raw_fields": {
       "study_id": "Cristancho et al., (2024)",
@@ -1481,7 +1498,21 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "gender_race_ethnicity: source text reports missing or unclear information",
+      "survey_weights: source text reports missing or unclear information"
+    ]
   },
   {
     "id": 15,
@@ -1543,18 +1574,8 @@
     "source_url": null,
     "featured": true,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
       "The primary outcome may fall outside a strict direct mental-health inclusion rule.",
-      "missing_data_method: source text reports missing or unclear information",
-      "survey_weights: source text reports missing or unclear information"
+      "missing_data_method: source text reports missing or unclear information"
     ],
     "raw_fields": {
       "study_id": "Sharkey (2010)",
@@ -1606,7 +1627,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "survey_weights: source text reports missing or unclear information"
+    ]
   },
   {
     "id": 16,
@@ -1669,15 +1703,6 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
       "The primary outcome may fall outside a strict direct mental-health inclusion rule.",
       "The source does not support a normalized JBI-style quality tier."
     ],
@@ -1731,7 +1756,19 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field."
+    ]
   },
   {
     "id": 17,
@@ -1794,19 +1831,8 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
       "age_range: source text reports missing or unclear information",
-      "gender_race_ethnicity: source text reports missing or unclear information",
-      "missing_data_method: source text reports missing or unclear information",
-      "survey_weights: source text reports missing or unclear information"
+      "missing_data_method: source text reports missing or unclear information"
     ],
     "raw_fields": {
       "study_id": "Molano et al. (2018)",
@@ -1858,7 +1884,21 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "gender_race_ethnicity: source text reports missing or unclear information",
+      "survey_weights: source text reports missing or unclear information"
+    ]
   },
   {
     "id": 18,
@@ -1919,17 +1959,7 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "The primary outcome may fall outside a strict direct mental-health inclusion rule.",
-      "survey_weights: source text reports missing or unclear information"
+      "The primary outcome may fall outside a strict direct mental-health inclusion rule."
     ],
     "raw_fields": {
       "study_id": "Vogel et al. (2024)",
@@ -1981,7 +2011,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "survey_weights: source text reports missing or unclear information"
+    ]
   },
   {
     "id": 19,
@@ -2044,18 +2087,7 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "The source does not support a normalized JBI-style quality tier.",
-      "gender_race_ethnicity: source text reports missing or unclear information",
-      "se_clustering: source text reports missing or unclear information"
+      "The source does not support a normalized JBI-style quality tier."
     ],
     "raw_fields": {
       "study_id": "McCoy et al. (2024)",
@@ -2107,7 +2139,21 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "gender_race_ethnicity: source text reports missing or unclear information",
+      "se_clustering: source text reports missing or unclear information"
+    ]
   },
   {
     "id": 20,
@@ -2168,17 +2214,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field."
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Cuartas & Leventhal (2020)",
       "study_title": "Exposure to community violence and children’s mental health: A quasi-experimental examination.",
@@ -2229,7 +2265,19 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field."
+    ]
   },
   {
     "id": 22,
@@ -2291,16 +2339,6 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "estimand: source text reports NR",
       "se_clustering: source text reports NR"
     ],
     "raw_fields": {
@@ -2353,7 +2391,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "estimand: source text reports NR"
+    ]
   },
   {
     "id": 23,
@@ -2416,16 +2467,6 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "estimand: source text reports NR",
       "se_clustering: source text reports NR"
     ],
     "raw_fields": {
@@ -2478,7 +2519,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "estimand: source text reports NR"
+    ]
   },
   {
     "id": 24,
@@ -2541,16 +2595,6 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "estimand: source text reports NR",
       "missing_data_method: source text reports NR"
     ],
     "raw_fields": {
@@ -2603,7 +2647,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "estimand: source text reports NR"
+    ]
   },
   {
     "id": 25,
@@ -2664,16 +2721,6 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "estimand: source text reports NR",
       "missing_data_method: source text reports NR",
       "outcome_unit_scale: source text reports NR"
     ],
@@ -2727,7 +2774,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "estimand: source text reports NR"
+    ]
   },
   {
     "id": 26,
@@ -2789,16 +2849,6 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "estimand: source text reports NR",
       "missing_data_method: source text reports NR"
     ],
     "raw_fields": {
@@ -2851,7 +2901,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "estimand: source text reports NR"
+    ]
   },
   {
     "id": 27,
@@ -2913,17 +2976,7 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
       "Causal tier remains associational because the source does not clearly meet the registry's credible-tier rule.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "estimand: source text reports NR",
       "missing_data_method: source text reports NR"
     ],
     "raw_fields": {
@@ -2976,7 +3029,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "estimand: source text reports NR"
+    ]
   },
   {
     "id": 28,
@@ -3037,16 +3103,7 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
       "Causal tier remains associational because the source does not clearly meet the registry's credible-tier rule.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
       "estimand: source text reports missing or unclear information",
       "missing_data_method: source text reports missing or unclear information"
     ],
@@ -3100,7 +3157,19 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field."
+    ]
   },
   {
     "id": 29,
@@ -3162,19 +3231,9 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
       "The primary outcome may fall outside a strict direct mental-health inclusion rule.",
       "estimand: source text reports missing or unclear information",
-      "missing_data_method: source text reports missing or unclear information",
-      "se_clustering: source text reports missing or unclear information"
+      "missing_data_method: source text reports missing or unclear information"
     ],
     "raw_fields": {
       "study_id": "Finegood et al.,( 2024)",
@@ -3226,7 +3285,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "se_clustering: source text reports missing or unclear information"
+    ]
   },
   {
     "id": 30,
@@ -3288,17 +3360,7 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "The primary outcome may fall outside a strict direct mental-health inclusion rule.",
-      "survey_weights: source text reports missing or unclear information"
+      "The primary outcome may fall outside a strict direct mental-health inclusion rule."
     ],
     "raw_fields": {
       "study_id": "Lyons et al., (2024)",
@@ -3350,7 +3412,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "survey_weights: source text reports missing or unclear information"
+    ]
   },
   {
     "id": 31,
@@ -3411,19 +3486,7 @@
     "doi": null,
     "source_url": null,
     "featured": false,
-    "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "se_clustering: source text reports missing or unclear information",
-      "survey_weights: source text reports missing or unclear information"
-    ],
+    "verification_flags": [],
     "raw_fields": {
       "study_id": "Voith, Gromoske, & Holmes (2014)",
       "study_title": "Effects of Cumulative Violence Exposure on Children’s Trauma and Depression Symptoms: A Social Ecological Examination Using Fixed Effects Regression",
@@ -3474,7 +3537,21 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "se_clustering: source text reports missing or unclear information",
+      "survey_weights: source text reports missing or unclear information"
+    ]
   },
   {
     "id": 32,
@@ -3536,17 +3613,7 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "The primary outcome may fall outside a strict direct mental-health inclusion rule.",
-      "survey_weights: source text reports missing or unclear information"
+      "The primary outcome may fall outside a strict direct mental-health inclusion rule."
     ],
     "raw_fields": {
       "study_id": "Quintana-Navarrete (2025)",
@@ -3598,7 +3665,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "survey_weights: source text reports missing or unclear information"
+    ]
   },
   {
     "id": 33,
@@ -3659,18 +3739,8 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
       "The primary outcome may fall outside a strict direct mental-health inclusion rule.",
-      "estimand: source text reports missing or unclear information",
-      "gender_race_ethnicity: source text reports missing or unclear information"
+      "estimand: source text reports missing or unclear information"
     ],
     "raw_fields": {
       "study_id": "Tarkiainen et al. (2024)",
@@ -3722,7 +3792,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "gender_race_ethnicity: source text reports missing or unclear information"
+    ]
   },
   {
     "id": 34,
@@ -3784,18 +3867,8 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds were derived from free-text age information.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
       "The primary outcome may fall outside a strict direct mental-health inclusion rule.",
-      "age_range: source text reports NR",
-      "estimand: source text reports NR"
+      "age_range: source text reports NR"
     ],
     "raw_fields": {
       "study_id": "Miller et al.,( 2024)",
@@ -3847,7 +3920,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds were derived from free-text age information.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "estimand: source text reports NR"
+    ]
   },
   {
     "id": 35,
@@ -3908,17 +3994,6 @@
     "source_url": null,
     "featured": false,
     "verification_flags": [
-      "A standardized effect size is not provided in a dedicated source column.",
-      "Confidence interval bounds are not provided in dedicated source columns.",
-      "DOI or source URL is not provided in the source workbook.",
-      "Full journal citation is not provided in a dedicated source column.",
-      "Geographic scale was normalized from a narrative exposure-window field.",
-      "Intervention type is not provided in the 32-study source workbook.",
-      "Numeric age bounds could not be parsed from the source age field.",
-      "Outcome type was normalized from narrative outcome fields.",
-      "Quality tier was normalized from a narrative risk-of-bias field.",
-      "estimand: source text reports NR",
-      "gender_race_ethnicity: source text reports missing or unclear information",
       "mediators_mechanisms: source text reports NR",
       "missing_data_method: source text reports NR",
       "moderators: source text reports NR"
@@ -3973,6 +4048,20 @@
     "transferability_setting": "Needs verification",
     "transferability_population": "Needs verification",
     "transferability_feasibility": "Needs verification",
-    "transferability_overall": "Needs verification"
+    "transferability_overall": "Needs verification",
+    "verification_status": "verified",
+    "normalization_notes": [
+      "A standardized effect size is not provided in a dedicated source column.",
+      "Confidence interval bounds are not provided in dedicated source columns.",
+      "DOI or source URL is not provided in the source workbook.",
+      "Full journal citation is not provided in a dedicated source column.",
+      "Geographic scale was normalized from a narrative exposure-window field.",
+      "Intervention type is not provided in the 32-study source workbook.",
+      "Numeric age bounds could not be parsed from the source age field.",
+      "Outcome type was normalized from narrative outcome fields.",
+      "Quality tier was normalized from a narrative risk-of-bias field.",
+      "estimand: source text reports NR",
+      "gender_race_ethnicity: source text reports missing or unclear information"
+    ]
   }
 ]
