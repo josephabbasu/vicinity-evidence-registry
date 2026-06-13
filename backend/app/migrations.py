@@ -15,6 +15,9 @@ STUDY_COLUMNS = {
     "source_review": "VARCHAR(160) DEFAULT ''",
     "search_coverage_end": "VARCHAR(10) DEFAULT '2025-07-31'",
     "source_row": "INTEGER",
+    "is_active": "BOOLEAN DEFAULT TRUE",
+    "automation_status": "VARCHAR(40) DEFAULT 'manual'",
+    "ingestion_candidate_id": "INTEGER",
 }
 
 # created_at for studies is dialect-specific — added in run_additive_migrations
@@ -25,6 +28,10 @@ SEARCH_RUN_COLUMNS = {
 
 CANDIDATE_COLUMNS = {
     "source_url": "TEXT DEFAULT ''",
+}
+
+ELIGIBILITY_COLUMNS = {
+    "source": "VARCHAR(80) DEFAULT ''",
 }
 
 
@@ -53,24 +60,42 @@ def run_additive_migrations(engine: Engine) -> None:
 
     with engine.begin() as connection:
         _add_missing_columns(connection, "studies", STUDY_COLUMNS)
-        # Add created_at to studies with the correct dialect-specific syntax
+        # Add study timestamps with the correct dialect-specific syntax.
         inspector = inspect(connection)
         if "studies" in inspector.get_table_names():
             existing = {c["name"] for c in inspector.get_columns("studies")}
-            if "created_at" not in existing:
-                dialect = connection.dialect.name
-                if dialect == "postgresql":
-                    definition = "TIMESTAMPTZ DEFAULT NOW()"
-                else:
-                    definition = "DATETIME DEFAULT CURRENT_TIMESTAMP"
+            dialect = connection.dialect.name
+            if dialect == "postgresql":
+                definition = "TIMESTAMPTZ DEFAULT NOW()"
+            else:
+                definition = "DATETIME"
+            for timestamp_column in ("created_at", "updated_at"):
+                if timestamp_column in existing:
+                    continue
                 connection.execute(
-                    text(f'ALTER TABLE "studies" ADD COLUMN "created_at" {definition}')
+                    text(
+                        f'ALTER TABLE "studies" '
+                        f'ADD COLUMN "{timestamp_column}" {definition}'
+                    )
                 )
+                if dialect == "sqlite":
+                    connection.execute(
+                        text(
+                            f'UPDATE "studies" SET "{timestamp_column}" = '
+                            "CURRENT_TIMESTAMP "
+                            f'WHERE "{timestamp_column}" IS NULL'
+                        )
+                    )
         _add_missing_columns(connection, "search_runs", SEARCH_RUN_COLUMNS)
         _add_missing_columns(
             connection,
             "literature_candidates",
             CANDIDATE_COLUMNS,
+        )
+        _add_missing_columns(
+            connection,
+            "eligibility_results",
+            ELIGIBILITY_COLUMNS,
         )
         connection.execute(
             text(
@@ -82,6 +107,24 @@ def run_additive_migrations(engine: Engine) -> None:
             text(
                 "CREATE INDEX IF NOT EXISTS ix_studies_approval_status "
                 "ON studies (approval_status)"
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_studies_is_active "
+                "ON studies (is_active)"
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_studies_automation_status "
+                "ON studies (automation_status)"
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_studies_ingestion_candidate_id "
+                "ON studies (ingestion_candidate_id)"
             )
         )
         # Widen intervention_type from VARCHAR(80) to TEXT — some values exceed 80 chars

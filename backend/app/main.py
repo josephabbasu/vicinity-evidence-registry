@@ -20,15 +20,18 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .database import Base, SessionLocal, engine
+from .admin import router as admin_router
 from .db_models import (
     ChangeLog,
     EffectEstimate,
+    IngestionRun,
     LiteratureCandidate,
     ReviewDecision,
     RegistryUpdate,
     Release,
     SearchRun,
     Study,
+    StudyCandidate,
     Submission,
 )
 from .schemas import (
@@ -39,7 +42,6 @@ from .schemas import (
     EffectEstimateOut,
     GapItem,
     GapRadarResponse,
-    InterventionSummary,
     PractitionerQuery,
     ReviewerAuthRequest,
     ReviewerAuthResponse,
@@ -56,6 +58,7 @@ from .schemas import (
 )
 from .migrations import run_additive_migrations
 from .seed import seed_database
+from .synthesis.engine import build_evidence_brief
 
 
 REVIEWER_TOKEN = os.getenv("REVIEWER_TOKEN", "").strip()
@@ -96,6 +99,13 @@ def allowed_origins() -> list[str]:
     return sorted(set(origins))
 
 
+def active_studies_query():
+    return select(Study).where(
+        Study.approval_status == "approved",
+        Study.is_active.is_(True),
+    )
+
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     Base.metadata.create_all(bind=engine)
@@ -123,6 +133,7 @@ app.add_middleware(
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
+app.include_router(admin_router)
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -279,12 +290,17 @@ def health() -> dict[str, str]:
 
 @app.get("/api/stats", response_model=StatsResponse)
 def stats(session: Session = Depends(get_session)) -> StatsResponse:
-    studies = list(session.scalars(select(Study).where(Study.approval_status == "approved")).all())
+    studies = list(session.scalars(active_studies_query()).all())
     years = [s.publication_year for s in studies if s.publication_year]
     last_run = session.scalar(
         select(SearchRun)
         .where(SearchRun.coverage_end_date.is_not(None))
         .order_by(SearchRun.coverage_end_date.desc())
+    )
+    ingestion_run = session.scalar(
+        select(IngestionRun)
+        .where(IngestionRun.completed_at.is_not(None))
+        .order_by(IngestionRun.completed_at.desc())
     )
     pending_statuses = [
         "discovered",
@@ -297,6 +313,16 @@ def stats(session: Session = Depends(get_session)) -> StatsResponse:
         select(func.count()).select_from(LiteratureCandidate)
         .where(LiteratureCandidate.status.in_(pending_statuses))
     ) or 0
+    pending += session.scalar(
+        select(func.count())
+        .select_from(StudyCandidate)
+        .where(StudyCandidate.status == "review")
+    ) or 0
+    search_dates = []
+    if last_run and last_run.coverage_end_date:
+        search_dates.append(last_run.coverage_end_date.isoformat())
+    if ingestion_run and ingestion_run.completed_at:
+        search_dates.append(ingestion_run.completed_at.date().isoformat())
     return StatsResponse(
         study_count=len(studies),
         exposure_count=sum(s.registry_stream == "exposure" for s in studies),
@@ -306,11 +332,7 @@ def stats(session: Session = Depends(get_session)) -> StatsResponse:
         associational_count=sum(s.causal_tier == "Associational" for s in studies),
         latest_year=max(years) if years else None,
         updated_date=date.today().isoformat(),
-        last_search_date=(
-            last_run.coverage_end_date.isoformat()
-            if last_run and last_run.coverage_end_date
-            else None
-        ),
+        last_search_date=max(search_dates) if search_dates else None,
         pending_candidates=pending,
         direct_mental_health_count=sum(
             s.outcome_directness == "Direct mental-health outcome"
@@ -358,8 +380,7 @@ def list_studies(
 ) -> StudyListResponse:
     studies = list(
         session.scalars(
-            select(Study)
-            .where(Study.approval_status == "approved")
+            active_studies_query()
             .order_by(Study.publication_year.desc(), Study.study_id.asc())
         ).all()
     )
@@ -375,7 +396,9 @@ def list_studies(
 
 @app.get("/api/studies/{slug}", response_model=StudyDetail)
 def get_study(slug: str, session: Session = Depends(get_session)) -> StudyDetail:
-    study = session.scalar(select(Study).where(Study.slug == slug))
+    study = session.scalar(
+        active_studies_query().where(Study.slug == slug)
+    )
     if study is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Study not found")
     return detail_from_study(study)
@@ -408,180 +431,14 @@ def create_submission(payload: SubmissionCreate, session: Session = Depends(get_
 
 @app.post("/api/ask", response_model=EvidenceBrief)
 def ask(query: PractitionerQuery, session: Session = Depends(get_session)) -> EvidenceBrief:
-    all_studies = list(
-        session.scalars(select(Study).where(Study.approval_status == "approved")).all()
-    )
-
-    # Match exposure studies
-    exposure_studies = [s for s in all_studies if s.registry_stream == "exposure"]
-    matched = exposure_studies[:]
-
-    if query.age_group and query.age_group != "all":
-        age_map = {
-            "adolescent": ["Adolescents 10-17"],
-            "child": ["Children 0-9"],
-            "adult": ["Young adults 18-29", "Adults 30+"],
-        }
-        groups = age_map.get(query.age_group, [])
-        if groups:
-            matched = [s for s in matched if any(g in s.age_groups for g in groups)]
-
-    if query.exposure_type and query.exposure_type != "general":
-        needle = query.exposure_type.casefold()
-        matched = [
-            s for s in matched
-            if needle in f"{s.exposure_type} {s.exposure_measure} {s.exposure_window_raw}".casefold()
-        ]
-
-    if query.outcome_type:
-        needle = query.outcome_type.casefold()
-        matched = [
-            s for s in matched
-            if needle in f"{s.outcome_type} {s.outcomes} {s.outcome_measure}".casefold()
-        ]
-
-    if query.country:
-        matched = [s for s in matched if s.country == query.country]
-
-    if query.exposure_window:
-        matched = [s for s in matched if query.exposure_window.casefold() in s.exposure_window.casefold()]
-
-    credible = [s for s in matched if s.causal_tier == "Credible"]
-    directions = [s.effect_direction for s in matched if s.effect_direction not in ("", "Needs verification")]
-    dominant = max(set(directions), key=directions.count) if directions else "Insufficient data"
-
-    if not matched:
-        certainty = "No directly matched evidence"
-    elif len(credible) >= 3 and len(credible) >= len(matched) * 0.5:
-        certainty = "Convergent credible evidence"
-    elif credible:
-        certainty = "Credible evidence with important limitations"
-    else:
-        certainty = "Associational evidence only"
-
-    intervention_studies = [s for s in all_studies if s.registry_stream == "intervention"]
-    if query.age_group and query.age_group != "all":
-        groups = age_map.get(query.age_group, [])
-        if groups:
-            intervention_studies = [
-                s for s in intervention_studies
-                if any(g in s.age_groups for g in groups)
-            ]
-    if query.outcome_type:
-        needle = query.outcome_type.casefold()
-        direct_matches = [
-            s for s in intervention_studies
-            if needle in f"{s.outcome_type} {s.outcomes} {s.outcome_measure}".casefold()
-        ]
-        if direct_matches:
-            intervention_studies = direct_matches
-    intervention_studies.sort(
-        key=lambda s: (
-            s.outcome_directness != "Direct mental-health outcome",
-            s.causal_tier != "Credible",
-            -(s.publication_year or 0),
-        )
-    )
-    interventions = [
-        InterventionSummary(
-            citation=s.citation,
-            title=s.title,
-            intervention_type=s.intervention_type or "Not classified",
-            effect_direction=s.effect_direction,
-            causal_tier=s.causal_tier,
-            slug=s.slug,
-            evidence_role=s.evidence_role,
-            outcome_directness=s.outcome_directness,
-            decision_relevance=s.decision_relevance,
-        )
-        for s in intervention_studies
-    ]
-
-    parts = []
-    if query.age_group and query.age_group != "all":
-        parts.append(query.age_group + "s")
-    else:
-        parts.append("youth and young adults")
-    if query.exposure_type and query.exposure_type != "general":
-        parts.append(f"exposed to {query.exposure_type}")
-    if query.exposure_window:
-        parts.append(f"with {query.exposure_window} exposure")
-    if query.outcome_type:
-        parts.append(f"on {query.outcome_type}")
-    if query.country:
-        parts.append(f"in {query.country}")
-    description = "Evidence for " + " ".join(parts) if parts else "All matched evidence"
-
-    gaps: list[str] = []
-    if len(matched) == 0:
-        gaps.append("No approved exposure study matches this exact combination.")
-    if len(credible) == 0 and matched:
-        gaps.append("No credible-tier study matched. The result relies on associational evidence.")
-    if matched and not any(s.country not in ("United States", "Multiple countries") for s in matched):
-        gaps.append("The matched evidence does not include a clearly identified non-US setting.")
-    if not any("anxiety" in s.outcome_type.casefold() for s in matched):
-        gaps.append("Anxiety outcomes are underrepresented in the matched set.")
-    if not any("suicide" in s.outcomes.casefold() for s in matched):
-        gaps.append("Suicidality outcomes are absent from matched studies.")
-
-    last_run = session.scalar(
-        select(SearchRun)
-        .where(SearchRun.coverage_end_date.is_not(None))
-        .order_by(SearchRun.coverage_end_date.desc())
-    )
-    pending = session.scalar(
-        select(func.count()).select_from(LiteratureCandidate)
-        .where(
-            LiteratureCandidate.status.in_(
-                [
-                    "discovered",
-                    "awaiting_second_screen",
-                    "screened",
-                    "awaiting_second_fulltext",
-                    "conflict",
-                ]
-            )
-        )
-    ) or 0
-
-    return EvidenceBrief(
-        query_description=description,
-        study_count=len(matched),
-        credible_count=len(credible),
-        dominant_direction=dominant,
-        causal_certainty=certainty,
-        effect_note=(
-            f"{len(matched)} studies matched. "
-            f"{len([s for s in matched if s.effect_direction == 'Harmful'])} show harmful effects, "
-            f"{len([s for s in matched if s.effect_direction == 'Protective'])} protective. "
-            "Effect sizes vary; standardized estimates are missing from most source records."
-        ),
-        population_note=(
-            f"Matched studies span {len({s.country for s in matched})} countries. "
-            "Most originate from the United States. Generalizability to other settings requires caution."
-        ),
-        limitations=(
-            "The evidence base relies heavily on US urban samples. "
-            "Most studies lack structured effect-size fields. "
-            "The registry does not estimate a pooled effect. Publication bias remains possible."
-        ),
-        available_interventions=interventions[:10],
-        evidence_gaps=gaps,
-        last_searched=(
-            last_run.coverage_end_date.isoformat()
-            if last_run and last_run.coverage_end_date
-            else None
-        ),
-        pending_candidates=pending,
-        studies_included=[s.citation for s in matched],
-    )
+    return build_evidence_brief(session, query)
 
 
 # ── Evidence gap radar ────────────────────────────────────────────────────────
 
 @app.get("/api/gaps", response_model=GapRadarResponse)
 def gap_radar(session: Session = Depends(get_session)) -> GapRadarResponse:
-    studies = list(session.scalars(select(Study).where(Study.approval_status == "approved")).all())
+    studies = list(session.scalars(active_studies_query()).all())
     n = len(studies)
 
     geo = {}
@@ -793,7 +650,7 @@ def changelog(session: Session = Depends(get_session)) -> list[ChangeLog]:
 
 @app.get("/api/export/studies.json")
 def export_json(session: Session = Depends(get_session)) -> Response:
-    studies = list(session.scalars(select(Study).where(Study.approval_status == "approved")).all())
+    studies = list(session.scalars(active_studies_query()).all())
     payload = [
         {
             "study_id": s.study_id,
@@ -828,7 +685,7 @@ def export_json(session: Session = Depends(get_session)) -> Response:
 
 @app.get("/api/export/studies.csv")
 def export_csv(session: Session = Depends(get_session)) -> Response:
-    studies = list(session.scalars(select(Study).where(Study.approval_status == "approved")).all())
+    studies = list(session.scalars(active_studies_query()).all())
     fields = [
         "study_id", "title", "citation", "publication_year", "country",
         "registry_stream", "design_type", "causal_tier", "quality_tier",
@@ -963,7 +820,7 @@ def _study_ris(s) -> str:
 
 @app.get("/api/export/studies.bib")
 def export_bibtex(session: Session = Depends(get_session)) -> Response:
-    studies = list(session.scalars(select(Study).where(Study.approval_status == "approved")).all())
+    studies = list(session.scalars(active_studies_query()).all())
     header = (
         "% VICINITY Evidence Registry: BibTeX export\n"
         "% Developer: J. Abbas, Rutgers University\n"
@@ -979,7 +836,7 @@ def export_bibtex(session: Session = Depends(get_session)) -> Response:
 
 @app.get("/api/export/studies.ris")
 def export_ris(session: Session = Depends(get_session)) -> Response:
-    studies = list(session.scalars(select(Study).where(Study.approval_status == "approved")).all())
+    studies = list(session.scalars(active_studies_query()).all())
     header = (
         "Provider: VICINITY Evidence Registry\n"
         "Content: text/plain; charset=\"utf-8\"\n\n"
@@ -1100,7 +957,7 @@ def create_release(
     if existing:
         raise HTTPException(status_code=409, detail=f"Release {version} already exists")
 
-    studies = list(session.scalars(select(Study).where(Study.approval_status == "approved")).all())
+    studies = list(session.scalars(active_studies_query()).all())
     frozen = [
         {
             "study_id": s.study_id,
@@ -1181,7 +1038,7 @@ def reviewer_dashboard(
     session: Session = Depends(get_session),
     _: None = Depends(require_reviewer),
 ) -> DashboardResponse:
-    studies = list(session.scalars(select(Study).where(Study.approval_status == "approved")).all())
+    studies = list(session.scalars(active_studies_query()).all())
 
     pending_statuses = [
         "discovered",
@@ -1219,7 +1076,7 @@ def reviewer_dashboard(
             approved_month = conn.execute(
                 _text(
                     "SELECT COUNT(*) FROM studies "
-                    "WHERE approval_status = 'approved' "
+                    "WHERE approval_status = 'approved' AND is_active = TRUE "
                     "AND created_at >= date_trunc('month', NOW())"
                 )
             ).scalar() or 0

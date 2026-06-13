@@ -14,11 +14,14 @@ import {
   API_DOCS_URL,
   askEvidence,
   createRelease,
+  decideAutomationCandidate,
   exportUrl,
+  getAutomationCandidates,
   getCandidates,
   getChangelog,
   getDashboard,
   getGaps,
+  getIngestionStatus,
   getReleases,
   getStats,
   getStudies,
@@ -28,6 +31,7 @@ import {
   recordDecision,
   rescoreCandidates,
   reviewerLogin,
+  runLivingIngestion,
   submitStudy,
   triggerSearch,
 } from "./api";
@@ -923,8 +927,13 @@ function AskPage() {
     country: "",
   });
   const [brief, setBrief] = useState(null);
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    getStats().then(setStats).catch(() => {});
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -962,6 +971,22 @@ function AskPage() {
       </section>
 
       <div className="page-shell py-12">
+        {stats && (
+          <div className="mb-8 grid gap-3 rounded-2xl border border-navy/10 bg-white p-5 shadow-sm sm:grid-cols-3">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Active evidence base</p>
+              <p className="mt-1 text-xl font-bold text-navy">{stats.study_count} studies</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Last source search</p>
+              <p className="mt-1 text-xl font-bold text-navy">{stats.last_search_date || "Not recorded"}</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Awaiting review</p>
+              <p className="mt-1 text-xl font-bold text-navy">{stats.pending_candidates} records</p>
+            </div>
+          </div>
+        )}
         <div className="grid gap-10 lg:grid-cols-[380px_1fr] lg:items-start">
           <form onSubmit={handleSubmit} className="card space-y-5 p-7">
             <h2 className="text-xl font-bold text-navy">Define your query</h2>
@@ -2099,10 +2124,14 @@ function SubmitPage() {
 function ReviewerDashboard({ token, onLogout }) {
   const [dashboard, setDashboard] = useState(null);
   const [candidates, setCandidates] = useState([]);
+  const [automationCandidates, setAutomationCandidates] = useState([]);
+  const [ingestionStatus, setIngestionStatus] = useState(null);
   const [error, setError] = useState("");
   const [tab, setTab] = useState("overview");
   const [triggerResult, setTriggerResult] = useState(null);
   const [triggering, setTriggering] = useState(false);
+  const [runningIngestion, setRunningIngestion] = useState(false);
+  const [livingRunResult, setLivingRunResult] = useState(null);
   const [rescoring, setRescoring] = useState(false);
   const [rescoreResult, setRescoreResult] = useState(null);
   const [releaseVersion, setReleaseVersion] = useState("");
@@ -2116,6 +2145,10 @@ function ReviewerDashboard({ token, onLogout }) {
   const reload = useCallback(() => {
     getDashboard(token).then(setDashboard).catch((err) => setError(err.message));
     getCandidates(token).then(setCandidates).catch((err) => setError(err.message));
+    getAutomationCandidates(token)
+      .then((data) => setAutomationCandidates(data.candidates))
+      .catch((err) => setError(err.message));
+    getIngestionStatus(token).then(setIngestionStatus).catch((err) => setError(err.message));
   }, [token]);
 
   useEffect(() => { reload(); }, [reload]);
@@ -2144,6 +2177,42 @@ function ReviewerDashboard({ token, onLogout }) {
       setError(err.message);
     } finally {
       setRescoring(false);
+    }
+  };
+
+  const handleLivingIngestion = async () => {
+    setRunningIngestion(true);
+    setLivingRunResult(null);
+    try {
+      const result = await runLivingIngestion(token);
+      setLivingRunResult(result);
+      reload();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setRunningIngestion(false);
+    }
+  };
+
+  const handleAutomationDecision = async (candidateId, decision) => {
+    const normalizedName = reviewerName.trim();
+    if (!normalizedName) {
+      window.alert("Enter your reviewer name before recording a decision.");
+      return;
+    }
+    const reason = window.prompt(`Reason for "${decision}" decision:`) || "";
+    if (!reason.trim()) return;
+    try {
+      await decideAutomationCandidate(
+        token,
+        candidateId,
+        decision,
+        reason.trim(),
+        normalizedName,
+      );
+      reload();
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -2233,6 +2302,14 @@ function ReviewerDashboard({ token, onLogout }) {
           >
             {rescoring ? "Scoring…" : "Rescore candidates"}
           </button>
+          <button
+            type="button"
+            onClick={handleLivingIngestion}
+            disabled={runningIngestion}
+            className="button-secondary disabled:opacity-60"
+          >
+            {runningIngestion ? "Ingesting sources..." : "Run living ingestion"}
+          </button>
           <button type="button" onClick={onLogout} className="button-secondary">
             Log out
           </button>
@@ -2261,6 +2338,17 @@ function ReviewerDashboard({ token, onLogout }) {
           </p>
         </div>
       )}
+      {livingRunResult && (
+        <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+          <p className="font-bold text-emerald-800">Living evidence run completed</p>
+          <p className="mt-1 text-sm text-emerald-700">
+            {livingRunResult.discovered_count} records discovered.
+            {" "}{livingRunResult.eligible_count} eligible.
+            {" "}{livingRunResult.review_count} require review.
+            {" "}{livingRunResult.registered_count} new studies registered.
+          </p>
+        </div>
+      )}
 
       {/* Stats overview */}
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
@@ -2273,8 +2361,13 @@ function ReviewerDashboard({ token, onLogout }) {
       </div>
 
       {/* Tabs */}
-      <div className="mt-8 flex gap-1 border-b border-navy/10">
-        {[["overview", "Overview"], ["candidates", "Candidate queue"], ["runs", "Search runs"]].map(([key, label]) => (
+      <div className="mt-8 flex flex-wrap gap-1 border-b border-navy/10">
+        {[
+          ["overview", "Overview"],
+          ["candidates", "Candidate queue"],
+          ["automation", "Automated screening"],
+          ["runs", "Search runs"],
+        ].map(([key, label]) => (
           <button
             key={key}
             type="button"
@@ -2287,6 +2380,11 @@ function ReviewerDashboard({ token, onLogout }) {
             {key === "candidates" && dashboard.pending_candidates > 0 && (
               <span className="ml-2 rounded-full bg-scarlet px-1.5 py-0.5 text-xs text-white">
                 {dashboard.pending_candidates}
+              </span>
+            )}
+            {key === "automation" && automationCandidates.length > 0 && (
+              <span className="ml-2 rounded-full bg-scarlet px-1.5 py-0.5 text-xs text-white">
+                {automationCandidates.length}
               </span>
             )}
           </button>
@@ -2509,6 +2607,111 @@ function ReviewerDashboard({ token, onLogout }) {
                   {c.fulltext_reason && <>. {c.fulltext_reason}</>}
                 </p>
               )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {tab === "automation" && (
+        <div className="mt-6 space-y-5">
+          {ingestionStatus && (
+            <div className="card p-6">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <h2 className="text-xl font-bold text-navy">Living evidence status</h2>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Strict matches register automatically. Borderline records remain here.
+                  </p>
+                </div>
+                <Badge tone={ingestionStatus.latest_run?.status === "completed" ? "green" : "gold"}>
+                  {ingestionStatus.latest_run?.status || "No run"}
+                </Badge>
+              </div>
+              <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                {Object.entries(ingestionStatus.source_configuration).map(([source, configured]) => (
+                  <div key={source} className="rounded-xl bg-navy/5 p-3">
+                    <p className="text-xs font-bold uppercase text-slate-500">
+                      {source.replace("_", " ")}
+                    </p>
+                    <p className={`mt-1 text-sm font-bold ${
+                      configured ? "text-emerald-700" : "text-amber-700"
+                    }`}>
+                      {configured ? "Ready" : "Configuration needed"}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {automationCandidates.length === 0 && (
+            <div className="card p-10 text-center">
+              <p className="font-bold text-navy">No borderline records require review.</p>
+              <p className="mt-2 text-sm text-slate-500">
+                The audit API still retains eligible, ineligible, and duplicate records.
+              </p>
+            </div>
+          )}
+
+          {automationCandidates.map((candidate) => (
+            <div key={candidate.id} className="card p-6">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <p className="font-bold leading-tight text-navy">{candidate.title}</p>
+                  <p className="mt-1 text-sm text-slate-600">{candidate.authors}</p>
+                  <p className="mt-1 text-xs text-slate-500">
+                    {candidate.year || "Year not reported"} · {candidate.journal || candidate.source}
+                    {candidate.doi && <> · <span className="font-mono">{candidate.doi}</span></>}
+                  </p>
+                </div>
+                <Badge tone="gold">{candidate.eligibility?.decision || candidate.status}</Badge>
+              </div>
+              {candidate.abstract && (
+                <p className="mt-4 text-sm leading-6 text-slate-600">{candidate.abstract}</p>
+              )}
+              {candidate.eligibility && (
+                <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-5">
+                  {[
+                    ["Relevance", candidate.eligibility.relevance_score],
+                    ["Population", candidate.eligibility.population_score],
+                    ["Exposure", candidate.eligibility.exposure_score],
+                    ["Outcome", candidate.eligibility.outcome_score],
+                    ["Design", candidate.eligibility.design_score],
+                  ].map(([label, value]) => (
+                    <div key={label} className="rounded-xl bg-navy/5 p-3 text-center">
+                      <p className="text-lg font-bold text-navy">{Number(value).toFixed(2)}</p>
+                      <p className="text-xs text-slate-500">{label}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <p className="mt-4 text-sm text-slate-600">{candidate.eligibility?.notes}</p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {[
+                  ["eligible", "Approve eligible", "bg-emerald-100 text-emerald-800"],
+                  ["ineligible", "Mark ineligible", "bg-scarlet/10 text-scarlet"],
+                  ["review", "Keep in review", "bg-gold/15 text-amber-900"],
+                ].map(([decision, label, classes]) => (
+                  <button
+                    key={decision}
+                    type="button"
+                    onClick={() => handleAutomationDecision(candidate.id, decision)}
+                    className={`rounded-full px-4 py-2 text-xs font-bold ${classes}`}
+                  >
+                    {label}
+                  </button>
+                ))}
+                {candidate.source_url && (
+                  <a
+                    href={candidate.source_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-full border border-navy/15 px-4 py-2 text-xs font-bold text-navy"
+                  >
+                    Open source
+                  </a>
+                )}
+              </div>
             </div>
           ))}
         </div>

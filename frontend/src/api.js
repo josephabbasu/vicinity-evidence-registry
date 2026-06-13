@@ -121,6 +121,33 @@ export function rescoreCandidates(token) {
   });
 }
 
+export function getIngestionStatus(token) {
+  return request("/admin/status/ingestion", { headers: authHeaders(token) });
+}
+
+export function getAutomationCandidates(token, decision = "review") {
+  const params = decision ? `?decision=${encodeURIComponent(decision)}` : "";
+  return request(`/admin/ingestion/candidates${params}`, {
+    headers: authHeaders(token),
+  });
+}
+
+export function runLivingIngestion(token) {
+  return request("/admin/ingestion/run", {
+    method: "POST",
+    headers: authHeaders(token),
+    body: JSON.stringify({ triggered_by: "reviewer-dashboard" }),
+  });
+}
+
+export function decideAutomationCandidate(token, id, decision, reason, reviewer) {
+  return request(`/admin/ingestion/candidates/${id}/decision`, {
+    method: "POST",
+    headers: authHeaders(token),
+    body: JSON.stringify({ decision, reason, reviewer }),
+  });
+}
+
 export function releaseDownloadUrl(version) {
   return `${API_BASE}/api/releases/${encodeURIComponent(version)}/download`;
 }

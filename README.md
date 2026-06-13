@@ -62,17 +62,19 @@ VICINITY applies the following rules.
 
 ## Living Surveillance
 
-The surveillance service searches PubMed and Crossref. It can also search OpenAlex when `OPENALEX_API_KEY` is configured.
+The living-evidence service ingests Zotero, PubMed, Crossref, OpenAlex, and Semantic Scholar records. It normalizes metadata. It deduplicates candidates. It applies a transparent eligibility classifier.
 
-The service searches only the uncovered interval after the latest completed search. It deduplicates by DOI. It uses normalized title and year when a DOI is unavailable.
+The service searches only the uncovered interval after the latest successful source run. It saves a separate cursor for each source.
 
-Automated relevance scoring prioritizes records for human review. Records below the priority threshold remain stored as `triage_low`. The score never determines eligibility or inclusion.
+Strict matches can enter the active registry automatically. Borderline records enter a human review queue. Clear exclusions remain available for audit.
 
 The scheduled endpoint is:
 
-`POST /api/surveillance/run`
+`POST /admin/ingestion/run`
 
-The request must include `X-Surveillance-Token`.
+The request must include `X-Ingestion-Token`. Reviewer bearer tokens can also access all administration endpoints.
+
+Read [the living-evidence architecture and governance guide](docs/living_evidence.md).
 
 ## Stack
 

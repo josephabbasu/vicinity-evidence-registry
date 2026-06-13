@@ -19,6 +19,30 @@ services:
           name: vicinity-evidence-registry
           type: web
           property: host
+      - key: AUTO_REGISTER_ELIGIBLE
+        value: "true"
+      - key: INGESTION_LOOKBACK_DAYS
+        value: "7"
+      - key: REVIEWER_TOKEN
+        sync: false
+      - key: INGESTION_TOKEN
+        sync: false
+      - key: ZOTERO_API_KEY
+        sync: false
+      - key: ZOTERO_LIBRARY_TYPE
+        value: user
+      - key: ZOTERO_LIBRARY_ID
+        sync: false
+      - key: ZOTERO_COLLECTION_ID
+        sync: false
+      - key: NCBI_API_KEY
+        sync: false
+      - key: CROSSREF_MAILTO
+        sync: false
+      - key: OPENALEX_API_KEY
+        sync: false
+      - key: SEMANTIC_SCHOLAR_API_KEY
+        sync: false
 
   - type: web
     name: vicinity-evidence-registry

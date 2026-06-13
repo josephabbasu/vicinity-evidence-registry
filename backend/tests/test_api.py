@@ -1,4 +1,5 @@
 import os
+import shutil
 from pathlib import Path
 
 
@@ -11,10 +12,13 @@ os.environ["REVIEWER_TOKEN"] = "test-reviewer-token"
 os.environ["SURVEILLANCE_TOKEN"] = "test-surveillance-token"
 
 from fastapi.testclient import TestClient
-from sqlalchemy import select
+from sqlalchemy import create_engine, inspect, select
 
 from app.database import SessionLocal
 from app.db_models import LiteratureCandidate, Study
+from app.ingestion.models import FetchBatch, NormalizedCandidate
+from app.ingestion.pipeline import IngestionPipeline
+from app.migrations import run_additive_migrations
 from app import main as main_module
 from app.main import app
 
@@ -274,3 +278,178 @@ def test_submission_enters_review_queue() -> None:
         response = client.post("/api/submissions", json=payload)
         assert response.status_code == 201
         assert response.json()["status"] == "pending"
+
+
+def test_living_evidence_registration_synthesis_and_deactivation() -> None:
+    class FixtureClient:
+        configured = True
+
+        def fetch_new_items(self, cursor):
+            return FetchBatch(
+                items=[
+                    NormalizedCandidate(
+                        source="fixture",
+                        source_id="living-1",
+                        title=(
+                            "Difference-in-differences study of neighborhood gun "
+                            "violence and adolescent mental health"
+                        ),
+                        authors="Researcher One",
+                        year=2026,
+                        journal="Living Evidence Journal",
+                        doi="10.0000/living-evidence-test",
+                        abstract=(
+                            "This natural experiment studied adolescents exposed "
+                            "to community shootings. Outcomes included depression "
+                            "and anxiety."
+                        ),
+                        source_url="https://example.org/living-1",
+                    )
+                ],
+                next_cursor="2026-06-13",
+            )
+
+    with TestClient(app) as client:
+        with SessionLocal() as session:
+            run = IngestionPipeline(
+                session,
+                clients={"fixture": FixtureClient()},
+                auto_register=True,
+            ).run("test", ["fixture"])
+            assert run.status == "completed"
+            assert run.eligible_count == 1
+            assert run.registered_count == 1
+
+        status_response = client.get("/admin/status/ingestion", headers=AUTH)
+        assert status_response.status_code == 200
+        assert status_response.json()["latest_run"]["id"] == run.id
+
+        candidates = client.get("/admin/ingestion/candidates", headers=AUTH)
+        assert candidates.status_code == 200
+        candidate = next(
+            item
+            for item in candidates.json()["candidates"]
+            if item["source_id"] == "living-1"
+        )
+        assert candidate["eligibility"]["decision"] == "eligible"
+        assert candidate["registered_study_id"]
+
+        filtered = client.get(
+            "/admin/ingestion/candidates",
+            headers=AUTH,
+            params={
+                "decision": "eligible",
+                "source": "fixture",
+                "date_from": "2020-01-01T00:00:00Z",
+            },
+        )
+        assert filtered.status_code == 200
+        assert filtered.json()["total"] == 1
+
+        runs = client.get("/admin/ingestion/runs", headers=AUTH)
+        assert runs.status_code == 200
+        assert runs.json()[0]["id"] == run.id
+        events = client.get(
+            f"/admin/ingestion/runs/{run.id}/events",
+            headers=AUTH,
+        )
+        assert events.status_code == 200
+        assert any(event["source"] == "fixture" for event in events.json())
+
+        detail = client.get(
+            f"/admin/ingestion/candidates/{candidate['id']}",
+            headers=AUTH,
+        )
+        assert detail.status_code == 200
+        assert detail.json()["history"][0]["model_version"] == "1.0"
+
+        rerun = client.post(
+            f"/admin/ingestion/candidates/{candidate['id']}/rerun",
+            headers=AUTH,
+        )
+        assert rerun.status_code == 200
+        assert len(rerun.json()["history"]) == 2
+
+        brief = client.post(
+            "/api/ask",
+            json={"age_group": "adolescent", "outcome_type": "depression"},
+        )
+        assert brief.status_code == 200
+        assert any(
+            "Difference-in-differences study" in citation
+            for citation in brief.json()["studies_included"]
+        )
+
+        study_id = candidate["registered_study_id"]
+        deactivated = client.post(
+            f"/admin/registry/studies/{study_id}/deactivate",
+            headers=AUTH,
+            json={
+                "reviewer": "Integration Test",
+                "reason": "Verify that inactive studies leave public synthesis.",
+            },
+        )
+        assert deactivated.status_code == 200
+        assert deactivated.json()["is_active"] is False
+
+        override = client.post(
+            f"/admin/ingestion/candidates/{candidate['id']}/decision",
+            headers=AUTH,
+            json={
+                "decision": "ineligible",
+                "reviewer": "Integration Test",
+                "reason": "The test records a human override without deleting history.",
+            },
+        )
+        assert override.status_code == 200
+        assert override.json()["eligibility"]["decision"] == "ineligible"
+        assert override.json()["eligibility"]["overridden_by"] == "Integration Test"
+        assert len(override.json()["history"]) == 3
+
+        after = client.post(
+            "/api/ask",
+            json={"age_group": "adolescent", "outcome_type": "depression"},
+        )
+        assert all(
+            "Difference-in-differences study" not in citation
+            for citation in after.json()["studies_included"]
+        )
+
+
+def test_additive_migration_upgrades_existing_registry_copy(tmp_path) -> None:
+    source = Path(__file__).resolve().parents[1] / "app" / "data" / "vicinity.db"
+    target = tmp_path / "existing-registry.db"
+    shutil.copyfile(source, target)
+    migration_engine = create_engine(f"sqlite:///{target.as_posix()}")
+    run_additive_migrations(migration_engine)
+    study_columns = {
+        column["name"] for column in inspect(migration_engine).get_columns("studies")
+    }
+    assert {
+        "is_active",
+        "automation_status",
+        "ingestion_candidate_id",
+        "created_at",
+        "updated_at",
+    }.issubset(study_columns)
+
+
+def test_background_ingestion_endpoint_queues_work() -> None:
+    with TestClient(app) as client:
+        response = client.post(
+            "/admin/ingestion/run",
+            headers=AUTH,
+            json={
+                "sources": ["unknown-test-source"],
+                "triggered_by": "background-test",
+                "background": True,
+            },
+        )
+        assert response.status_code == 200
+        assert response.json()["status"] == "queued"
+        with SessionLocal() as session:
+            run = session.get(
+                main_module.IngestionRun,
+                response.json()["id"],
+            )
+            assert run.status == "completed"

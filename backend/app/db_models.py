@@ -104,6 +104,17 @@ class Study(Base):
     source_review: Mapped[str] = mapped_column(String(160), default="")
     search_coverage_end: Mapped[str] = mapped_column(String(10), default="2025-07-31")
     source_row: Mapped[int | None] = mapped_column(Integer)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
+    automation_status: Mapped[str] = mapped_column(
+        String(40), default="manual", index=True
+    )
+    ingestion_candidate_id: Mapped[int | None] = mapped_column(Integer, index=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utc_now
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utc_now, onupdate=utc_now
+    )
 
     effect_estimates: Mapped[list[EffectEstimate]] = relationship(
         "EffectEstimate", back_populates="study", cascade="all, delete-orphan"
@@ -212,6 +223,131 @@ class LiteratureCandidate(Base):
 
     search_run: Mapped[SearchRun | None] = relationship(
         "SearchRun", back_populates="candidates"
+    )
+
+
+class IngestionRun(Base):
+    """One automated living-evidence ingestion run."""
+
+    __tablename__ = "ingestion_runs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    started_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utc_now, index=True
+    )
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    status: Mapped[str] = mapped_column(String(40), default="running", index=True)
+    triggered_by: Mapped[str] = mapped_column(String(80), default="scheduled")
+    sources: Mapped[list[str]] = mapped_column(JSON, default=list)
+    discovered_count: Mapped[int] = mapped_column(Integer, default=0)
+    staged_count: Mapped[int] = mapped_column(Integer, default=0)
+    duplicate_count: Mapped[int] = mapped_column(Integer, default=0)
+    eligible_count: Mapped[int] = mapped_column(Integer, default=0)
+    review_count: Mapped[int] = mapped_column(Integer, default=0)
+    ineligible_count: Mapped[int] = mapped_column(Integer, default=0)
+    registered_count: Mapped[int] = mapped_column(Integer, default=0)
+    error_count: Mapped[int] = mapped_column(Integer, default=0)
+    errors: Mapped[list[dict]] = mapped_column(JSON, default=list)
+    cursor_state: Mapped[dict] = mapped_column(JSON, default=dict)
+
+
+class IngestionCursor(Base):
+    """The last successfully processed cursor for one source."""
+
+    __tablename__ = "ingestion_cursors"
+
+    source: Mapped[str] = mapped_column(String(80), primary_key=True)
+    cursor_value: Mapped[str] = mapped_column(Text, default="")
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utc_now, onupdate=utc_now
+    )
+
+
+class StudyCandidate(Base):
+    """A normalized source record staged for automated eligibility screening."""
+
+    __tablename__ = "study_candidates"
+    __table_args__ = (
+        UniqueConstraint("source", "source_id", name="uq_study_candidate_source_id"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    ingestion_run_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("ingestion_runs.id"), nullable=True, index=True
+    )
+    source: Mapped[str] = mapped_column(String(80), index=True)
+    source_id: Mapped[str] = mapped_column(String(300))
+    source_version: Mapped[int | None] = mapped_column(Integer)
+    raw_metadata: Mapped[dict] = mapped_column(JSON, default=dict)
+    title: Mapped[str] = mapped_column(Text)
+    authors: Mapped[str] = mapped_column(Text, default="")
+    year: Mapped[int | None] = mapped_column(Integer, index=True)
+    journal: Mapped[str] = mapped_column(Text, default="")
+    doi: Mapped[str | None] = mapped_column(String(180), index=True)
+    abstract: Mapped[str] = mapped_column(Text, default="")
+    keywords: Mapped[list[str]] = mapped_column(JSON, default=list)
+    source_url: Mapped[str] = mapped_column(Text, default="")
+    pdf_url: Mapped[str] = mapped_column(Text, default="")
+    dedupe_key: Mapped[str] = mapped_column(String(500), index=True)
+    duplicate_of_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("study_candidates.id"), nullable=True, index=True
+    )
+    status: Mapped[str] = mapped_column(String(40), default="staged", index=True)
+    registered_study_id: Mapped[int | None] = mapped_column(Integer, index=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utc_now
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utc_now, onupdate=utc_now
+    )
+
+
+class EligibilityResult(Base):
+    """A versioned automated or human eligibility decision."""
+
+    __tablename__ = "eligibility_results"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    candidate_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("study_candidates.id"), index=True
+    )
+    source: Mapped[str] = mapped_column(String(80), index=True)
+    is_current: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
+    model_name: Mapped[str] = mapped_column(String(120))
+    model_version: Mapped[str] = mapped_column(String(40))
+    decision: Mapped[str] = mapped_column(String(40), index=True)
+    relevance_score: Mapped[float] = mapped_column(Float)
+    population_score: Mapped[float] = mapped_column(Float)
+    exposure_score: Mapped[float] = mapped_column(Float)
+    outcome_score: Mapped[float] = mapped_column(Float)
+    design_score: Mapped[float] = mapped_column(Float)
+    notes: Mapped[str] = mapped_column(Text, default="")
+    rule_trace: Mapped[dict] = mapped_column(JSON, default=dict)
+    overridden_by: Mapped[str | None] = mapped_column(String(180))
+    override_reason: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utc_now, index=True
+    )
+
+
+class IngestionEvent(Base):
+    """A structured event emitted while an ingestion run executes."""
+
+    __tablename__ = "ingestion_events"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    run_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("ingestion_runs.id"), index=True
+    )
+    candidate_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("study_candidates.id"), nullable=True, index=True
+    )
+    source: Mapped[str] = mapped_column(String(80), default="")
+    level: Mapped[str] = mapped_column(String(20), default="info", index=True)
+    message: Mapped[str] = mapped_column(Text)
+    details: Mapped[dict] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utc_now, index=True
     )
 
 

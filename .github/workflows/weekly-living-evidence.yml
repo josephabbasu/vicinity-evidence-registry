@@ -1,0 +1,21 @@
+name: Weekly living evidence ingestion
+
+on:
+  schedule:
+    - cron: "17 12 * * 1"
+  workflow_dispatch:
+
+jobs:
+  ingestion:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run VICINITY living evidence ingestion
+        env:
+          INGESTION_TOKEN: ${{ secrets.VICINITY_SURVEILLANCE_TOKEN }}
+        run: |
+          curl --fail-with-body --retry 3 --retry-delay 20 \
+            --request POST \
+            --header "Content-Type: application/json" \
+            --header "X-Ingestion-Token: ${INGESTION_TOKEN}" \
+            --data '{"triggered_by":"github-actions-weekly","background":true}' \
+            https://vicinity-evidence-api.onrender.com/admin/ingestion/run
