@@ -84,6 +84,15 @@ def run_additive_migrations(engine: Engine) -> None:
                 "ON studies (approval_status)"
             )
         )
+        # Widen intervention_type from VARCHAR(80) to TEXT — some values exceed 80 chars
+        if connection.dialect.name == "postgresql":
+            connection.execute(
+                text(
+                    'ALTER TABLE "studies" '
+                    'ALTER COLUMN "intervention_type" TYPE TEXT'
+                )
+            )
+
         # Safety: resync the studies PK sequence after any explicit-id inserts
         if connection.dialect.name == "postgresql":
             try:

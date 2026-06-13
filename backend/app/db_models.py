@@ -76,7 +76,7 @@ class Study(Base):
     strengths_limitations: Mapped[str] = mapped_column(Text)
     policy_practice_implications: Mapped[str] = mapped_column(Text)
     reviewer_notes: Mapped[str] = mapped_column(Text)
-    intervention_type: Mapped[str] = mapped_column(String(80))
+    intervention_type: Mapped[str] = mapped_column(Text)
     is_intervention: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
     doi: Mapped[str | None] = mapped_column(String(180))
     source_url: Mapped[str | None] = mapped_column(Text)
@@ -93,7 +93,6 @@ class Study(Base):
     )  # approved | pending | rejected
     registry_version: Mapped[int] = mapped_column(Integer, default=1)
     added_in_version: Mapped[str] = mapped_column(String(20), default="1.0")
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, index=True)
     evidence_role: Mapped[str] = mapped_column(String(80), default="Exposure consequence")
     intervention_class: Mapped[str] = mapped_column(String(40), default="Not applicable")
     outcome_directness: Mapped[str] = mapped_column(
