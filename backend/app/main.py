@@ -1184,20 +1184,20 @@ def reviewer_dashboard(
         )
     ) or 0
 
-    now = datetime.now(timezone.utc)
-    first_of_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-
-    def _created_at_aware(dt: datetime) -> datetime:
-        if dt is None:
-            return None
-        if dt.tzinfo is None:
-            return dt.replace(tzinfo=timezone.utc)
-        return dt
-
-    approved_month = sum(
-        1 for s in studies
-        if _created_at_aware(s.created_at) and _created_at_aware(s.created_at) >= first_of_month
-    )
+    approved_month = 0
+    try:
+        from sqlalchemy import text as _text
+        conn = session.connection()
+        if conn.dialect.name == "postgresql":
+            approved_month = conn.execute(
+                _text(
+                    "SELECT COUNT(*) FROM studies "
+                    "WHERE approval_status = 'approved' "
+                    "AND created_at >= date_trunc('month', NOW())"
+                )
+            ).scalar() or 0
+    except Exception:
+        approved_month = 0
 
     recent_runs = list(
         session.scalars(

@@ -15,8 +15,9 @@ STUDY_COLUMNS = {
     "source_review": "VARCHAR(160) DEFAULT ''",
     "search_coverage_end": "VARCHAR(10) DEFAULT '2025-07-31'",
     "source_row": "INTEGER",
-    "created_at": "TIMESTAMPTZ DEFAULT NOW()",
 }
+
+# created_at for studies is dialect-specific — added in run_additive_migrations
 
 SEARCH_RUN_COLUMNS = {
     "coverage_end_date": "DATE",
@@ -52,6 +53,19 @@ def run_additive_migrations(engine: Engine) -> None:
 
     with engine.begin() as connection:
         _add_missing_columns(connection, "studies", STUDY_COLUMNS)
+        # Add created_at to studies with the correct dialect-specific syntax
+        inspector = inspect(connection)
+        if "studies" in inspector.get_table_names():
+            existing = {c["name"] for c in inspector.get_columns("studies")}
+            if "created_at" not in existing:
+                dialect = connection.dialect.name
+                if dialect == "postgresql":
+                    definition = "TIMESTAMPTZ DEFAULT NOW()"
+                else:
+                    definition = "DATETIME DEFAULT CURRENT_TIMESTAMP"
+                connection.execute(
+                    text(f'ALTER TABLE "studies" ADD COLUMN "created_at" {definition}')
+                )
         _add_missing_columns(connection, "search_runs", SEARCH_RUN_COLUMNS)
         _add_missing_columns(
             connection,
