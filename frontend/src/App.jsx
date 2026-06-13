@@ -1780,7 +1780,7 @@ function AboutPage() {
                 architecture, the evidence classification framework, the dual-reviewer workflow,
                 and the living-surveillance pipeline.
                 This work was completed at <span className="font-bold">Rutgers University-Camden</span>,
-                where the Department of Public Policy and Administration supports research at the
+                where the Department of Prevention Science supports research at the
                 intersection of prevention science, urban equity, and public health.
               </p>
               <p className="mt-3 text-sm text-slate-500">
@@ -1793,7 +1793,7 @@ function AboutPage() {
                 <p className="mt-3 text-lg font-bold">Rutgers</p>
                 <p className="text-sm text-white/70">University-Camden</p>
                 <div className="mt-4 border-t border-white/15 pt-4 text-xs text-white/60 leading-5">
-                  Department of Public Policy<br />and Administration
+                  Department of Prevention Science
                 </div>
               </div>
             </div>
