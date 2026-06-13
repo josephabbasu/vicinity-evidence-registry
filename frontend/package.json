@@ -10,7 +10,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint src --max-warnings=0"
+    "lint": "eslint src --max-warnings=0",
+    "validate:data": "node ../scripts/validate-vicinity-data.js"
   },
   "dependencies": {
     "react": "^18.3.1",

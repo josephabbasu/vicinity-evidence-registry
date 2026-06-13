@@ -85,6 +85,12 @@ class StudyDetail(StudySummary):
     source_review: str
     search_coverage_end: str
     source_row: int | None
+    identification_assumptions: str = ""
+    diagnostics_reported: str = ""
+    transferability_setting: str = "Needs verification"
+    transferability_population: str = "Needs verification"
+    transferability_feasibility: str = "Needs verification"
+    transferability_overall: str = "Needs verification"
     effect_estimates: list[EffectEstimateOut]
     transferability: TransferabilityScore | None = None
 

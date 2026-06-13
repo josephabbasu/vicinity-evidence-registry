@@ -111,7 +111,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 3,
-    "id": 36
+    "id": 36,
+    "identification_assumptions": "Parallel trends assumption: treated and control units would have followed parallel trends absent the shock.",
+    "diagnostics_reported": "Pre-trends test required",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-anderson-et-al-2013",
@@ -225,7 +231,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 4,
-    "id": 37
+    "id": 37,
+    "identification_assumptions": "Parallel trends assumption: treated and control units would have followed parallel trends absent the shock.",
+    "diagnostics_reported": "Pre-trends test required",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-branas-et-al-2011",
@@ -339,7 +351,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 5,
-    "id": 38
+    "id": 38,
+    "identification_assumptions": "Parallel trends assumption: treated and control units would have followed parallel trends absent the shock.",
+    "diagnostics_reported": "Pre-trends test required",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-branas-et-al-2018",
@@ -453,7 +471,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 6,
-    "id": 39
+    "id": 39,
+    "identification_assumptions": "Random cluster assignment: cluster-level balance assumed.",
+    "diagnostics_reported": "Cluster-level balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-gonzalez-komisarow-2020",
@@ -567,7 +591,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 7,
-    "id": 40
+    "id": 40,
+    "identification_assumptions": "Parallel trends assumption: treated and control units would have followed parallel trends absent the shock.",
+    "diagnostics_reported": "Pre-trends test required",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-chalfin-et-al-2022",
@@ -681,7 +711,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 8,
-    "id": 41
+    "id": 41,
+    "identification_assumptions": "Random cluster assignment: cluster-level balance assumed.",
+    "diagnostics_reported": "Cluster-level balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-leventhal-brooks-gunn-2003",
@@ -795,7 +831,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 9,
-    "id": 42
+    "id": 42,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-kling-ludwig-katz-2005",
@@ -909,7 +951,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 10,
-    "id": 43
+    "id": 43,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-kling-et-al-2007",
@@ -1023,7 +1071,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 11,
-    "id": 44
+    "id": 44,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-kondo-2016",
@@ -1137,7 +1191,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 12,
-    "id": 45
+    "id": 45,
+    "identification_assumptions": "Parallel trends assumption: treated and control units would have followed parallel trends absent the shock.",
+    "diagnostics_reported": "Pre-trends test required",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-osypuk-et-al-2012a",
@@ -1251,7 +1311,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 13,
-    "id": 46
+    "id": 46,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-osypuk-et-al-2012b",
@@ -1365,7 +1431,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 14,
-    "id": 47
+    "id": 47,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-nguyen-et-al-2016",
@@ -1479,7 +1551,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 15,
-    "id": 48
+    "id": 48,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-schmidt-et-al-2020",
@@ -1593,7 +1671,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 16,
-    "id": 49
+    "id": 49,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-south-et-al-2015",
@@ -1707,7 +1791,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 17,
-    "id": 50
+    "id": 50,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-pollack-et-al-2021",
@@ -1822,7 +1912,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 18,
-    "id": 51
+    "id": 51,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-kim-et-al-2023",
@@ -1937,7 +2033,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 19,
-    "id": 52
+    "id": 52,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-ludwig-et-al-2013",
@@ -2051,7 +2153,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 20,
-    "id": 53
+    "id": 53,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-south-et-al-2023",
@@ -2165,7 +2273,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 21,
-    "id": 54
+    "id": 54,
+    "identification_assumptions": "Random cluster assignment: cluster-level balance assumed.",
+    "diagnostics_reported": "Cluster-level balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-langley-2015",
@@ -2278,7 +2392,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 23,
-    "id": 55
+    "id": 55,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-santiago-et-al-2018",
@@ -2391,7 +2511,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 24,
-    "id": 56
+    "id": 56,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-guerra-taylor-arredondo-2024",
@@ -2504,7 +2630,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 25,
-    "id": 57
+    "id": 57,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-van-rosmalen-nooijens-et-al-2017",
@@ -2618,7 +2750,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 26,
-    "id": 58
+    "id": 58,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-jaycox-et-al-2009",
@@ -2731,7 +2869,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 27,
-    "id": 59
+    "id": 59,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-carrion-et-al-2013",
@@ -2845,7 +2989,13 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 28,
-    "id": 60
+    "id": 60,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "slug": "iv-stein-et-al-2003",
@@ -2958,6 +3108,12 @@
     "source_review": "Intervention systematic review (Paper 2)",
     "search_coverage_end": "2025-07-31",
     "source_row": 29,
-    "id": 61
+    "id": 61,
+    "identification_assumptions": "Random assignment: treatment and control groups equivalent at baseline.",
+    "diagnostics_reported": "Balance checks, CONSORT reporting",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   }
 ]

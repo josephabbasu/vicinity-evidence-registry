@@ -113,7 +113,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 3
+    "source_row": 3,
+    "identification_assumptions": "Parallel trends assumption: treated and control units would have followed parallel trends absent the shock.",
+    "diagnostics_reported": "Pre-trends test required",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 4,
@@ -230,7 +236,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 4
+    "source_row": 4,
+    "identification_assumptions": "Parallel trends assumption: treated and control units would have followed parallel trends absent the shock.",
+    "diagnostics_reported": "Pre-trends test required",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 5,
@@ -347,7 +359,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 5
+    "source_row": 5,
+    "identification_assumptions": "Parallel trends assumption: treated and control units would have followed parallel trends absent the shock.",
+    "diagnostics_reported": "Pre-trends test required",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 6,
@@ -464,7 +482,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 6
+    "source_row": 6,
+    "identification_assumptions": "Parallel trends assumption: treated and control units would have followed parallel trends absent the shock.",
+    "diagnostics_reported": "Pre-trends test required",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 7,
@@ -581,7 +605,13 @@
     "decision_relevance": "Associational context",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 7
+    "source_row": 7,
+    "identification_assumptions": "",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 8,
@@ -699,7 +729,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 8
+    "source_row": 8,
+    "identification_assumptions": "Parallel trends assumption: treated and control units would have followed parallel trends absent the shock.",
+    "diagnostics_reported": "Pre-trends test required",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 9,
@@ -810,7 +846,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 9
+    "source_row": 9,
+    "identification_assumptions": "Parallel trends assumption: treated and control units would have followed parallel trends absent the shock.",
+    "diagnostics_reported": "Pre-trends test required",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 10,
@@ -932,7 +974,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 10
+    "source_row": 10,
+    "identification_assumptions": "Parallel trends assumption: treated and control units would have followed parallel trends absent the shock.",
+    "diagnostics_reported": "Pre-trends test required",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 11,
@@ -1053,7 +1101,13 @@
     "decision_relevance": "Associational context",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 11
+    "source_row": 11,
+    "identification_assumptions": "",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 12,
@@ -1171,7 +1225,13 @@
     "decision_relevance": "Associational context",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 12
+    "source_row": 12,
+    "identification_assumptions": "",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 13,
@@ -1287,7 +1347,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 13
+    "source_row": 13,
+    "identification_assumptions": "Stable unmeasured confounders assumption: within-unit comparisons remove time-invariant confounders.",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 14,
@@ -1409,7 +1475,13 @@
     "decision_relevance": "Associational context",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 14
+    "source_row": 14,
+    "identification_assumptions": "Parallel trends assumption: treated and control units would have followed parallel trends absent the shock.",
+    "diagnostics_reported": "Pre-trends test required",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 15,
@@ -1528,7 +1600,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 15
+    "source_row": 15,
+    "identification_assumptions": "As-if random assignment of treatment by external shock.",
+    "diagnostics_reported": "Placebo tests, balance on pre-period trends",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 16,
@@ -1647,7 +1725,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 16
+    "source_row": 16,
+    "identification_assumptions": "As-if random assignment of treatment by external shock.",
+    "diagnostics_reported": "Placebo tests, balance on pre-period trends",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 17,
@@ -1768,7 +1852,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 17
+    "source_row": 17,
+    "identification_assumptions": "Parallel trends assumption: treated and control units would have followed parallel trends absent the shock.",
+    "diagnostics_reported": "Pre-trends test required",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 18,
@@ -1885,7 +1975,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 18
+    "source_row": 18,
+    "identification_assumptions": "As-if random assignment of treatment by external shock.",
+    "diagnostics_reported": "Placebo tests, balance on pre-period trends",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 19,
@@ -2005,7 +2101,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 19
+    "source_row": 19,
+    "identification_assumptions": "As-if random assignment of treatment by external shock.",
+    "diagnostics_reported": "Placebo tests, balance on pre-period trends",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 20,
@@ -2121,7 +2223,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 20
+    "source_row": 20,
+    "identification_assumptions": "As-if random assignment of treatment by external shock.",
+    "diagnostics_reported": "Placebo tests, balance on pre-period trends",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 22,
@@ -2239,7 +2347,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 22
+    "source_row": 22,
+    "identification_assumptions": "Stable unmeasured confounders assumption: within-unit comparisons remove time-invariant confounders.",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 23,
@@ -2358,7 +2472,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 23
+    "source_row": 23,
+    "identification_assumptions": "",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 24,
@@ -2477,7 +2597,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 24
+    "source_row": 24,
+    "identification_assumptions": "",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 25,
@@ -2595,7 +2721,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 25
+    "source_row": 25,
+    "identification_assumptions": "",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 26,
@@ -2713,7 +2845,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 26
+    "source_row": 26,
+    "identification_assumptions": "",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 27,
@@ -2832,7 +2970,13 @@
     "decision_relevance": "Associational context",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 27
+    "source_row": 27,
+    "identification_assumptions": "",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 28,
@@ -2950,7 +3094,13 @@
     "decision_relevance": "Associational context",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 28
+    "source_row": 28,
+    "identification_assumptions": "",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 29,
@@ -3070,7 +3220,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 29
+    "source_row": 29,
+    "identification_assumptions": "Stable unmeasured confounders assumption: within-unit comparisons remove time-invariant confounders.",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 30,
@@ -3188,7 +3344,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 30
+    "source_row": 30,
+    "identification_assumptions": "Stable unmeasured confounders assumption: within-unit comparisons remove time-invariant confounders.",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 31,
@@ -3306,7 +3468,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 31
+    "source_row": 31,
+    "identification_assumptions": "Stable unmeasured confounders assumption: within-unit comparisons remove time-invariant confounders.",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 32,
@@ -3424,7 +3592,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 32
+    "source_row": 32,
+    "identification_assumptions": "Stable unmeasured confounders assumption: within-unit comparisons remove time-invariant confounders.",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 33,
@@ -3542,7 +3716,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 33
+    "source_row": 33,
+    "identification_assumptions": "",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 34,
@@ -3661,7 +3841,13 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 34
+    "source_row": 34,
+    "identification_assumptions": "Stable unmeasured confounders assumption: within-unit comparisons remove time-invariant confounders.",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   },
   {
     "id": 35,
@@ -3781,6 +3967,12 @@
     "decision_relevance": "Causal evidence of harm",
     "source_review": "Causal inference systematic review (Paper 1)",
     "search_coverage_end": "2025-07-31",
-    "source_row": 35
+    "source_row": 35,
+    "identification_assumptions": "",
+    "diagnostics_reported": "",
+    "transferability_setting": "Needs verification",
+    "transferability_population": "Needs verification",
+    "transferability_feasibility": "Needs verification",
+    "transferability_overall": "Needs verification"
   }
 ]

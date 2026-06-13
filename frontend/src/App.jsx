@@ -97,6 +97,37 @@ const CHANGE_TYPE_STYLES = {
 };
 
 
+// ── Claim safety utilities ────────────────────────────────────────────────────
+
+function formatMissing(value) {
+  if (value === null || value === undefined || value === "" || value === "NA" || value === "N/A") {
+    return <span className="text-amber-700 font-semibold italic">MISSING — needs verification</span>;
+  }
+  return value;
+}
+
+function classifyClaimSafety(study) {
+  if (!study) return null;
+  const isIntervention = study.registry_stream === "intervention";
+  const directness = (study.outcome_directness || "").toLowerCase();
+  const noDirectMH = isIntervention && !directness.includes("direct");
+  if (noDirectMH && directness && directness !== "scope requires verification") {
+    return {
+      level: "restricted",
+      message: "Mental health not directly measured in this study. Do not describe this intervention as improving youth mental health without direct outcome evidence.",
+    };
+  }
+  if (study.outcome_directness === "Scope requires verification") {
+    return { level: "review", message: "Outcome directness needs verification before public claim." };
+  }
+  const flagCount = Array.isArray(study.verification_flags) ? study.verification_flags.length : 0;
+  if (flagCount > 2) {
+    return { level: "review", message: `${flagCount} fields need verification. Use with caution.` };
+  }
+  return { level: "ok", message: "Eligible for cautious evidence summary." };
+}
+
+
 // ── Shared components ─────────────────────────────────────────────────────────
 
 function Header({ reviewerToken }) {
@@ -116,9 +147,12 @@ function Header({ reviewerToken }) {
         </Link>
         <nav aria-label="Primary" className="flex flex-wrap items-center gap-1">
           <NavLink to="/registry" className={navClass}>Registry</NavLink>
+          <NavLink to="/streams" className={navClass}>Streams</NavLink>
+          <NavLink to="/outcome-directness" className={navClass}>Directness</NavLink>
           <NavLink to="/ask" className={navClass}>Ask</NavLink>
           <NavLink to="/scenarios" className={navClass}>Scenarios</NavLink>
           <NavLink to="/gaps" className={navClass}>Gap Radar</NavLink>
+          <NavLink to="/methods" className={navClass}>Methods</NavLink>
           <NavLink to="/changelog" className={navClass}>Changelog</NavLink>
           <NavLink to="/about" className={navClass}>About</NavLink>
           <NavLink to="/submit" className={navClass}>Submit</NavLink>
@@ -278,6 +312,16 @@ function HomePage() {
 
   return (
     <>
+      {/* Public beta notice */}
+      <div className="bg-amber-50 border-b border-amber-200">
+        <div className="page-shell py-3 flex flex-wrap items-center gap-3">
+          <span className="rounded bg-amber-200 px-2 py-0.5 text-xs font-bold text-amber-900 uppercase tracking-wide">Public Beta</span>
+          <p className="text-xs text-amber-800">
+            Evidence records are verified by independent reviewers before display. VICINITY summarizes research evidence — it does not diagnose individuals, predict individual risk, or prescribe clinical treatment.
+          </p>
+        </div>
+      </div>
+
       {/* Hero */}
       <section className="overflow-hidden bg-navy text-white">
         <div className="page-shell relative grid gap-10 py-20 lg:grid-cols-[1.35fr_0.65fr] lg:py-28">
@@ -309,7 +353,7 @@ function HomePage() {
             <div className="mt-7 grid grid-cols-2 gap-4 border-t border-white/15 pt-6">
               <div>
                 <p className="text-2xl font-bold">{stats.credible_count}</p>
-                <p className="text-xs text-white/65">credible-tier studies</p>
+                <p className="text-xs text-white/65">design-identified studies</p>
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.intervention_count}</p>
@@ -478,6 +522,7 @@ function FilterSelect({ label, name, value, options, onChange }) {
 
 function StudyCard({ study }) {
   const directionStyle = DIRECTION_STYLES[study.effect_direction] || DIRECTION_STYLES["Needs verification"];
+  const safety = classifyClaimSafety(study);
   return (
     <article className="card p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -491,19 +536,29 @@ function StudyCard({ study }) {
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
         <Badge>{study.design_type}</Badge>
-        <Badge tone={study.causal_tier === "Credible" ? "green" : "gold"}>{study.causal_tier}</Badge>
+        <Badge tone={study.causal_tier === "Credible" ? "green" : "gold"}>
+          {study.causal_tier === "Credible" ? "Design-identified" : study.causal_tier}
+        </Badge>
         <Badge tone="red">{study.quality_tier}</Badge>
         <StreamBadge stream={study.registry_stream} />
         {study.registry_stream === "intervention" && (
           <Badge tone="sky">{study.intervention_class}</Badge>
         )}
       </div>
+      {safety && safety.level === "restricted" && (
+        <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 px-4 py-2.5 flex gap-2 items-start">
+          <span className="text-amber-600 shrink-0 mt-0.5 text-xs">⚠</span>
+          <p className="text-xs text-amber-800 leading-5">{safety.message}</p>
+        </div>
+      )}
       <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-3">
         <div><dt className="font-bold text-navy">Population</dt><dd className="mt-1 text-slate-600">{study.age_range}</dd></div>
         <div><dt className="font-bold text-navy">Outcome</dt><dd className="mt-1 text-slate-600">{study.outcome_type}</dd></div>
         <div>
           <dt className="font-bold text-navy">Outcome directness</dt>
-          <dd className="mt-1 text-slate-600">{study.outcome_directness}</dd>
+          <dd className={`mt-1 ${study.outcome_directness?.includes("verification") ? "text-amber-700 font-semibold" : "text-slate-600"}`}>
+            {study.outcome_directness || "Needs verification"}
+          </dd>
         </div>
       </dl>
       <p className="mt-4 rounded-xl bg-navy/5 px-4 py-3 text-sm text-slate-700">
@@ -663,7 +718,7 @@ function DetailItem({ label, children }) {
   return (
     <div>
       <dt className="text-xs font-bold uppercase tracking-wider text-scarlet">{label}</dt>
-      <dd className="mt-2 whitespace-pre-line text-sm leading-6 text-slate-700">{children || "Not reported"}</dd>
+      <dd className="mt-2 whitespace-pre-line text-sm leading-6 text-slate-700">{children || <span className="text-amber-700 font-semibold italic">MISSING — needs verification</span>}</dd>
     </div>
   );
 }
@@ -695,7 +750,9 @@ function StudyDetailPage() {
           <h1 className="mt-3 text-4xl font-bold leading-tight text-navy">{study.title}</h1>
           <div className="mt-5 flex flex-wrap gap-2">
             <Badge>{study.design_type}</Badge>
-            <Badge tone={study.causal_tier === "Credible" ? "green" : "gold"}>{study.causal_tier}</Badge>
+            <Badge tone={study.causal_tier === "Credible" ? "green" : "gold"}>
+              {study.causal_tier === "Credible" ? "Design-identified" : study.causal_tier}
+            </Badge>
             <Badge tone="red">{study.quality_tier}</Badge>
             <Badge>{study.country}</Badge>
             <StreamBadge stream={study.registry_stream} />
@@ -703,6 +760,19 @@ function StudyDetailPage() {
               <Badge tone="sky">{study.intervention_class}</Badge>
             )}
           </div>
+
+          {(() => {
+            const safety = classifyClaimSafety(study);
+            if (safety && safety.level === "restricted") {
+              return (
+                <div className="mt-6 rounded-xl border border-amber-300 bg-amber-50 px-5 py-4">
+                  <p className="text-xs font-bold text-amber-800 uppercase tracking-wider">Outcome directness warning</p>
+                  <p className="mt-1 text-sm text-amber-800">{safety.message}</p>
+                </div>
+              );
+            }
+            return null;
+          })()}
 
           <section className="card mt-8 p-7">
             <p className="eyebrow">Plain-language finding</p>
@@ -797,8 +867,27 @@ function StudyDetailPage() {
               <DetailItem label="Standard errors or clustering">{study.se_clustering}</DetailItem>
               <DetailItem label="Missing data">{study.missing_data_method}</DetailItem>
               <DetailItem label="Multiple testing">{study.multiple_testing_adjustment}</DetailItem>
+              {(study.identification_assumptions || study.diagnostics_reported) && (
+                <>
+                  <DetailItem label="Identification assumptions">{study.identification_assumptions}</DetailItem>
+                  <DetailItem label="Diagnostics reported">{study.diagnostics_reported}</DetailItem>
+                </>
+              )}
             </dl>
           </section>
+
+          {(study.transferability_setting || study.transferability_population || study.transferability_feasibility) && (
+            <section className="card mt-8 p-7 border-l-4 border-l-purple-400">
+              <h2 className="text-lg font-bold text-navy">Transferability</h2>
+              <p className="mt-1 text-xs text-slate-500">Reviewer judgment — not an algorithmic score. Verify before use.</p>
+              <dl className="mt-4 grid gap-4 sm:grid-cols-2">
+                <DetailItem label="Setting similarity">{study.transferability_setting}</DetailItem>
+                <DetailItem label="Population match">{study.transferability_population}</DetailItem>
+                <DetailItem label="Implementation feasibility">{study.transferability_feasibility}</DetailItem>
+                <DetailItem label="Overall transferability">{study.transferability_overall}</DetailItem>
+              </dl>
+            </section>
+          )}
 
           <section className="mt-10">
             <h2 className="text-3xl font-bold text-navy">Appraisal and use</h2>
@@ -2936,6 +3025,336 @@ function ImplementationPage() {
 }
 
 
+// ── Evidence Streams page ─────────────────────────────────────────────────────
+
+function EvidenceStreamsPage() {
+  const streams = [
+    {
+      id: "exposure",
+      label: "Exposure → Harm",
+      color: "border-t-scarlet",
+      what: "What neighborhood and community violence does to young people — effects on mental health, sleep, cognition, education, behavior, physiology, and service use.",
+      canSupport: [
+        "Estimates of acute disruption and cumulative developmental risk when designs and diagnostics are credible.",
+        "Within-person, difference-in-differences, and natural-experiment estimates of specific violence types on specific outcomes.",
+        "Subgroup variation by age, sex, developmental stage, and prior exposure history.",
+      ],
+      cannotSupport: [
+        "One pooled causal effect across all violence types, ages, locations, and time windows.",
+        "Evidence that a given exposure causes a specific DSM diagnosis.",
+        "Causal claims from studies that do not report identification assumptions or diagnostics.",
+      ],
+      designNote: "Causal-identification design does not equal causal proof. Each study's assumptions and diagnostics must be inspected.",
+      to: "/registry?stream=exposure",
+    },
+    {
+      id: "intervention-reduction",
+      label: "Intervention → Exposure Reduction",
+      color: "border-t-emerald-500",
+      what: "What interventions reduce local violence exposure, incident burden, or perceived threat — greening, lighting, policing strategy, housing mobility, violence interruption.",
+      canSupport: [
+        "Whether an intervention reduces local violence incidents, crime rates, or perceived safety threat.",
+        "Geographic and temporal scope of exposure-reduction effects.",
+        "Setting similarity and population match for transfer consideration.",
+      ],
+      cannotSupport: [
+        "Automatic claim that mental health improved unless mental health was directly measured.",
+        "Individual-level risk reduction from area-level exposure change.",
+        "Long-term developmental benefits without longitudinal follow-up data.",
+      ],
+      designNote: "An intervention that reduces neighborhood violence does not automatically improve youth mental health. These are separate claims requiring separate measurement.",
+      to: "/registry?stream=intervention",
+    },
+    {
+      id: "intervention-recovery",
+      label: "Intervention → Mental Health Recovery",
+      color: "border-t-blue-500",
+      what: "What interventions improve mental health symptoms, distress, PTSD, depression, anxiety, sleep, coping, or functioning after violence exposure.",
+      canSupport: [
+        "Direct mental-health outcomes when directly measured using validated instruments.",
+        "Time-limited intervention effects with reported follow-up windows.",
+        "Comparative patterns across intervention types in this evidence base.",
+      ],
+      cannotSupport: [
+        "Reduced violence exposure unless exposure was directly measured.",
+        "Generalization to untested populations without transferability assessment.",
+        "Clinical treatment recommendations — VICINITY is evidence summary, not clinical guidance.",
+      ],
+      designNote: "Recovery evidence requires direct mental-health measurement. Functioning, attendance, or behavior outcomes are important but are not equivalent to clinical mental-health outcomes.",
+      to: "/registry?stream=intervention",
+    },
+    {
+      id: "pathways",
+      label: "Pathways and Mechanisms",
+      color: "border-t-purple-500",
+      what: "Plausible mechanisms connecting violence exposure to mental health — fear, perceived safety, sleep disruption, cortisol dysregulation, social support, school functioning.",
+      canSupport: [
+        "Mediation evidence with appropriate designs and measurement.",
+        "Physiological and behavioral pathway evidence.",
+        "Hypotheses about how harm accumulates or how interventions work.",
+      ],
+      cannotSupport: [
+        "Direct mental-health improvement claims — these are mechanisms, not outcomes.",
+        "Policy claims without outcome-level evidence.",
+      ],
+      designNote: "Pathway evidence contextualizes why violence affects mental health. It does not substitute for direct outcome measurement.",
+      to: "/registry",
+    },
+  ];
+
+  return (
+    <main className="page-shell py-12">
+      <p className="eyebrow">Evidence streams</p>
+      <h1 className="mt-2 text-4xl font-bold text-navy">What each stream can and cannot support</h1>
+      <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600">
+        VICINITY separates exposure consequences from intervention outcomes as distinct causal questions.
+        Each stream has different eligibility criteria, outcome requirements, and claim limits.
+        Collapsing these streams is the most common error in violence-prevention policy translation.
+      </p>
+      <div className="mt-10 space-y-8">
+        {streams.map((stream) => (
+          <div key={stream.id} className={`card border-t-4 ${stream.color} p-8`}>
+            <h2 className="text-2xl font-bold text-navy">{stream.label}</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-700">{stream.what}</p>
+            <div className="mt-6 grid gap-6 md:grid-cols-2">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-3">Can support</p>
+                <ul className="space-y-2">
+                  {stream.canSupport.map((item, i) => (
+                    <li key={i} className="flex gap-2 text-sm text-slate-700">
+                      <span className="mt-0.5 text-emerald-600 shrink-0">✓</span>{item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-scarlet mb-3">Cannot support</p>
+                <ul className="space-y-2">
+                  {stream.cannotSupport.map((item, i) => (
+                    <li key={i} className="flex gap-2 text-sm text-slate-700">
+                      <span className="mt-0.5 text-scarlet shrink-0">✗</span>{item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-5 py-4">
+              <p className="text-xs font-bold text-amber-800 uppercase tracking-wider mb-1">Design note</p>
+              <p className="text-sm text-amber-900">{stream.designNote}</p>
+            </div>
+            <div className="mt-5">
+              <Link to={stream.to} className="text-sm font-bold text-scarlet hover:underline">
+                Browse {stream.label} studies →
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="mt-12 rounded-2xl border border-navy/10 bg-navy/3 p-8">
+        <h3 className="text-lg font-bold text-navy">Why this separation matters</h3>
+        <p className="mt-3 text-sm leading-7 text-slate-700">
+          A school district cannot use evidence from an exposure study to justify an intervention.
+          A violence-interruption program that reduces homicides is not evidence of improved student mental health
+          unless mental health was measured. VICINITY makes this distinction visible on every record.
+        </p>
+      </div>
+    </main>
+  );
+}
+
+
+// ── Outcome Directness page ───────────────────────────────────────────────────
+
+function OutcomeDirectnessPage() {
+  const categories = [
+    {
+      label: "Direct mental-health outcome",
+      colorClass: "bg-emerald-50 border-emerald-300 text-emerald-900",
+      badgeClass: "bg-emerald-100 text-emerald-800",
+      description: "Mental health was directly measured using a validated instrument (PHQ, PTSD Checklist, K6, CBCL, etc.).",
+      examples: ["PHQ-9 depression score", "PCL-5 PTSD symptoms", "K6 psychological distress", "CBCL internalizing scale"],
+      warning: null,
+    },
+    {
+      label: "Pathway or mechanism",
+      colorClass: "bg-purple-50 border-purple-300 text-purple-900",
+      badgeClass: "bg-purple-100 text-purple-800",
+      description: "The study measured an intermediate pathway — fear, perceived safety, cortisol, sleep — plausibly connected to mental health but not a direct outcome.",
+      examples: ["Salivary cortisol", "Perceived safety rating", "Sleep onset latency", "Fear of crime measure"],
+      warning: "Do not describe this as evidence of mental-health improvement. These are pathway measures.",
+    },
+    {
+      label: "Functioning or education",
+      colorClass: "bg-blue-50 border-blue-300 text-blue-900",
+      badgeClass: "bg-blue-100 text-blue-800",
+      description: "The study measured academic functioning, attendance, GPA, or cognitive performance — important outcomes that are not equivalent to mental-health symptoms or diagnoses.",
+      examples: ["GPA", "School absenteeism", "Standardized test scores", "Graduation rate"],
+      warning: "Functioning outcomes are meaningful but should not be described as mental-health outcomes.",
+    },
+    {
+      label: "Service use",
+      colorClass: "bg-sky-50 border-sky-300 text-sky-900",
+      badgeClass: "bg-sky-100 text-sky-800",
+      description: "The study measured mental-health service utilization — prescriptions, visits, hospitalizations — as a proxy for mental-health need.",
+      examples: ["Antidepressant prescriptions", "Mental health hospitalizations", "Therapy visits"],
+      warning: "Service use indicates demand or access. It is not equivalent to direct symptom measurement.",
+    },
+    {
+      label: "Physiological stress",
+      colorClass: "bg-amber-50 border-amber-300 text-amber-900",
+      badgeClass: "bg-amber-100 text-amber-800",
+      description: "The study measured biological stress markers — cortisol awakening response, inflammatory markers, autonomic nervous system indicators.",
+      examples: ["IL-6 inflammatory marker", "Cortisol awakening response", "Heart rate variability"],
+      warning: "Physiological stress markers are not equivalent to clinical mental-health outcomes.",
+    },
+    {
+      label: "Violence exposure only",
+      colorClass: "bg-slate-50 border-slate-300 text-slate-700",
+      badgeClass: "bg-slate-100 text-slate-700",
+      description: "The study measured change in violence exposure or crime rates without measuring mental-health, functioning, or pathway outcomes.",
+      examples: ["Homicide rate", "Gun assault incidents", "Crime clearance rate"],
+      warning: "Evidence restricted to violence-exposure change. No mental-health claim is supported.",
+    },
+    {
+      label: "Inferred only",
+      colorClass: "bg-red-50 border-red-300 text-red-900",
+      badgeClass: "bg-red-100 text-red-800",
+      description: "No direct measurement of the claimed outcome. The mental-health benefit is assumed from the type of intervention or exposure context.",
+      examples: ["Assumed from program type", "No outcome measure reported"],
+      warning: "Claim restricted. Mental-health benefit is inferred, not directly observed. Do not use this record to claim mental-health improvement.",
+    },
+  ];
+
+  return (
+    <main className="page-shell py-12">
+      <p className="eyebrow">Outcome directness</p>
+      <h1 className="mt-2 text-4xl font-bold text-navy">Outcome Directness Checker</h1>
+      <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600">
+        The most common error in violence-prevention policy is claiming an intervention improved youth mental
+        health when mental health was never measured. VICINITY classifies every study by what was actually
+        measured — not what the intervention was designed to do.
+      </p>
+      <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-5">
+        <p className="text-sm font-bold text-amber-900">Core rule</p>
+        <p className="mt-1 text-sm text-amber-800">
+          An intervention that reduces neighborhood violence does not automatically improve youth mental health.
+          A program that improves school attendance does not automatically improve mental-health symptoms.
+          These are separate claims requiring separate measurement.
+        </p>
+      </div>
+      <div className="mt-10 space-y-5">
+        {categories.map((cat) => (
+          <div key={cat.label} className={`rounded-2xl border p-6 ${cat.colorClass}`}>
+            <span className={`rounded-full px-3 py-1 text-xs font-bold ${cat.badgeClass}`}>{cat.label}</span>
+            <p className="mt-3 text-sm leading-6">{cat.description}</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {cat.examples.map((ex) => (
+                <span key={ex} className="rounded border border-current/20 bg-white/50 px-2 py-0.5 text-xs">{ex}</span>
+              ))}
+            </div>
+            {cat.warning && (
+              <div className="mt-4 rounded-lg border border-current/30 bg-white/60 px-4 py-3">
+                <p className="text-xs font-bold uppercase tracking-wider mb-1">Warning</p>
+                <p className="text-xs leading-5">{cat.warning}</p>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <div className="mt-12">
+        <h2 className="text-xl font-bold text-navy">Practical guidance</h2>
+        <div className="mt-5 space-y-4">
+          {[
+            { q: "Can I say this intervention improved youth mental health?", a: "Only if outcome_directness = Direct mental-health outcome and a validated instrument was used." },
+            { q: "Can I use a functioning or education study to support a mental-health claim?", a: "No. Academic functioning is an important outcome but is not a substitute for direct mental-health measurement." },
+            { q: "Can I infer mental-health benefit from a violence-reduction intervention?", a: "No. The pathway from reduced exposure to improved mental health is plausible but requires direct measurement to support a claim." },
+            { q: "What if the study reports cortisol but no symptom measure?", a: "Classify as Physiological stress. Note the pathway evidence. Do not claim mental-health improvement." },
+          ].map((item) => (
+            <div key={item.q} className="card p-6">
+              <p className="text-sm font-bold text-navy">{item.q}</p>
+              <p className="mt-2 text-sm leading-6 text-slate-700">{item.a}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-8">
+          <Link to="/registry" className="button-primary">Browse registry with outcome directness</Link>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+
+// ── Methods page ──────────────────────────────────────────────────────────────
+
+function MethodsPage() {
+  const sections = [
+    { title: "Evidence sources", body: "VICINITY includes studies from two registered systematic reviews. The exposure/harm review (PROSPERO CRD420251076481) searched PubMed, Scopus, Web of Science, PsycINFO, and Google Scholar through March 23, 2026. The intervention review searched the same databases with additional intervention-specific terms. Search histories are documented using PRISMA-S." },
+    { title: "Study eligibility", body: "Studies are eligible if they examine neighborhood or community violence exposure or a structural/psychosocial intervention response, include youth or young adult populations, report outcomes in mental health, behavior, physiology, cognition, education, or service use, and use a design with a credible identification strategy or are transparently labeled as observational. Studies without any causal identification strategy are retained with design labels and associational flags." },
+    { title: "Causal question separation", body: "Every study is classified into a single evidence stream: exposure/harm, intervention/exposure reduction, intervention/recovery, or pathway/mechanism. Mixing these streams is the most common error in violence-prevention policy translation. VICINITY maintains this separation at the data level and in every public display." },
+    { title: "Design classification", body: "Studies are classified by design family: randomized trial, difference-in-differences, natural experiment, instrumental variables, within-person fixed effects, within-family fixed effects, matching-only, or observational. Design classification reflects the identification strategy described in the paper. Causal design classification does not equal causal proof. Identification assumptions and diagnostics must be inspected per study." },
+    { title: "Outcome directness enforcement", body: "Every study is classified by what was actually measured: direct mental-health outcomes, pathways, functioning, service use, physiological stress, violence exposure only, or inferred only. No intervention is described as improving mental health unless mental health was directly measured using a validated instrument. This classification appears on every study card and cannot be overridden." },
+    { title: "Risk-of-bias appraisal", body: "Risk of bias is assessed using JBI critical appraisal tools appropriate to each design. Ratings are low, moderate, high, or needs verification. Narrative appraisal text from the source workbooks is displayed with every record. A reviewer must verify the normalized rating against the final JBI protocol before publication use." },
+    { title: "Dual-reviewer workflow", body: "Every incoming candidate study requires two independent named reviewers to agree at both title/abstract screening and full-text review stages. Conflicts are recorded and held as unresolved until adjudication. This is the same standard applied by Cochrane. Reviewer identity and decision timestamps are logged." },
+    { title: "Transferability fields", body: "Each intervention study carries transferability assessments across setting similarity, population match, and implementation feasibility. These are reviewer judgments, not algorithmic scores. They are displayed with 'Needs verification' labels until a reviewer has completed the assessment. A High transferability rating for one context does not generalize automatically to another." },
+    { title: "Versioned releases", body: "Each registry release is a frozen, citable snapshot. Release versions are permanent. Where a DOI has been minted via Zenodo, that identifier is stable and citable in peer-reviewed publications. The live registry may contain records added after the last frozen release." },
+    { title: "Living surveillance", body: "The living surveillance pipeline uses PubMed and Crossref for scheduled search. Every identified publication moves through a defined workflow: discovery, deduplication, title/abstract screening, full-text review, extraction, appraisal, approval, and publication. Automated tools identify candidates only — they do not classify or approve studies. Causal classification requires human reviewer judgment." },
+    { title: "Verification flags", body: "Fields that could not be verified against source documents are marked with verification flags visible on every study record. Missing fields are displayed as 'MISSING — needs verification' rather than hidden. VICINITY does not manufacture estimates or promote uncertain designs." },
+  ];
+
+  return (
+    <main className="page-shell py-12">
+      <p className="eyebrow">Governance and methods</p>
+      <h1 className="mt-2 text-4xl font-bold text-navy">How VICINITY works</h1>
+      <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600">
+        VICINITY is a methodologically governed evidence observatory. Every classification rule, eligibility
+        criterion, and workflow step is documented here. No automated tool determines causal credibility.
+      </p>
+      <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-5">
+        <p className="text-xs font-bold text-amber-800 uppercase tracking-wider">Important</p>
+        <p className="mt-1 text-sm text-amber-800">
+          The living surveillance pipeline identifies candidate publications automatically. It does not classify,
+          appraise, or approve studies. All evidence classification and risk-of-bias appraisal requires human reviewer judgment.
+        </p>
+      </div>
+      <div className="mt-10 space-y-6">
+        {sections.map((section) => (
+          <div key={section.title} className="card p-7">
+            <h2 className="text-lg font-bold text-navy">{section.title}</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-700">{section.body}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-10 card p-7">
+        <h2 className="text-lg font-bold text-navy">What VICINITY does not do</h2>
+        <ul className="mt-4 space-y-2">
+          {[
+            "State that all studies are causal.",
+            "Equate a causal-identification design with causal proof.",
+            "State that an intervention improves mental health unless mental health was directly measured.",
+            "Infer missing effect sizes or pool estimates across different exposures, ages, or designs.",
+            "Combine exposure studies and intervention studies into a single causal claim.",
+            "Hide verification flags or remove uncertainty language.",
+            "Use automated tools to determine causal credibility.",
+          ].map((item) => (
+            <li key={item} className="flex gap-2 text-sm text-slate-700">
+              <span className="text-scarlet shrink-0 mt-0.5">✗</span>{item}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="mt-6 card p-7">
+        <h2 className="text-lg font-bold text-navy">PROSPERO registration</h2>
+        <p className="mt-3 text-sm leading-7 text-slate-700">
+          Systematic review protocol registered with PROSPERO: CRD420251076481.
+          Search coverage through March 23, 2026.
+        </p>
+      </div>
+    </main>
+  );
+}
+
+
 // ── 404 ───────────────────────────────────────────────────────────────────────
 
 function NotFoundPage() {
@@ -2966,6 +3385,9 @@ export default function App() {
         <Route path="/changelog" element={<ChangelogPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/scenarios" element={<DecisionProfilesPage />} />
+        <Route path="/streams" element={<EvidenceStreamsPage />} />
+        <Route path="/outcome-directness" element={<OutcomeDirectnessPage />} />
+        <Route path="/methods" element={<MethodsPage />} />
         <Route path="/submit" element={<SubmitPage />} />
         <Route path="/reviewer" element={<ReviewerPage />} />
         <Route path="/implementation" element={<ImplementationPage />} />

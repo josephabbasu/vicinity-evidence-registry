@@ -116,6 +116,14 @@ class Study(Base):
         DateTime(timezone=True), default=utc_now, onupdate=utc_now
     )
 
+    # Design transparency and transferability
+    identification_assumptions: Mapped[str] = mapped_column(Text, default="")
+    diagnostics_reported: Mapped[str] = mapped_column(Text, default="")
+    transferability_setting: Mapped[str] = mapped_column(String(80), default="Needs verification")
+    transferability_population: Mapped[str] = mapped_column(String(80), default="Needs verification")
+    transferability_feasibility: Mapped[str] = mapped_column(String(80), default="Needs verification")
+    transferability_overall: Mapped[str] = mapped_column(String(40), default="Needs verification")
+
     effect_estimates: Mapped[list[EffectEstimate]] = relationship(
         "EffectEstimate", back_populates="study", cascade="all, delete-orphan"
     )
