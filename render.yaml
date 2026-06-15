@@ -57,6 +57,8 @@ services:
           name: vicinity-evidence-api
           type: web
           property: host
+      - key: VITE_DEV_ACCESS_CODE
+        sync: false
     routes:
       - type: rewrite
         source: /*

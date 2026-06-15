@@ -1,4 +1,4 @@
-// VICINITY v2 — Joseph Abbas, Rutgers University-Camden
+// VICINITY v2 — Joseph Abbas
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Link,
@@ -185,7 +185,7 @@ function Footer() {
             Living Causal Evidence Observatory for neighborhood violence and youth mental health.
           </p>
           <p className="mt-4 text-xs text-white/50">
-            Developed by J. Abbas · Rutgers University · Version 2.0
+            Developed by J. Abbas · Version 2.0
           </p>
         </div>
         <div className="text-sm leading-7 text-white/75">
@@ -1588,8 +1588,8 @@ function ChangelogPage() {
             </p>
             <div className="mt-4 rounded-xl border border-navy/10 bg-white p-5 font-mono text-sm leading-6 text-slate-700">
               Abbas, J. (2026). VICINITY: Living Causal Evidence Observatory for Neighborhood Violence
-              and Youth Mental Health. Version 2.0. Rutgers University.
-              Retrieved [date] from https://vicinity.rutgers.edu
+              and Youth Mental Health. Version 2.0.
+              Retrieved [date] from https://vicinity-evidence-registry.onrender.com
             </div>
           </div>
         </div>
@@ -1934,23 +1934,12 @@ function AboutPage() {
                 of VICINITY. He designed and led both systematic reviews, developed the registry
                 architecture, the evidence classification framework, the dual-reviewer workflow,
                 and the living-surveillance pipeline.
-                This work was completed at <span className="font-bold">Rutgers University-Camden</span>,
-                where the Department of Prevention Science supports research at the
+                This work was developed to support research at the
                 intersection of prevention science, urban equity, and public health.
               </p>
               <p className="mt-3 text-sm text-slate-500">
                 PROSPERO registration: CRD420251076481 · Search coverage through July 31, 2025
               </p>
-            </div>
-            <div className="shrink-0">
-              <div className="rounded-2xl border border-navy/15 bg-navy p-6 text-center text-white">
-                <p className="text-xs font-bold uppercase tracking-wider text-gold">Institution</p>
-                <p className="mt-3 text-lg font-bold">Rutgers</p>
-                <p className="text-sm text-white/70">University-Camden</p>
-                <div className="mt-4 border-t border-white/15 pt-4 text-xs text-white/60 leading-5">
-                  Department of Prevention Science
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -2078,7 +2067,7 @@ function AboutPage() {
               <div>
                 <p className="text-sm font-bold text-navy">Principal investigator and developer</p>
                 <p className="mt-1 text-slate-700">
-                  Joseph Abbas · PhD Candidate in Prevention Science · Rutgers University-Camden
+                  Joseph Abbas · PhD Candidate in Prevention Science
                 </p>
                 <p className="mt-1 text-sm text-slate-600">
                   Scientific concept, systematic reviews, data architecture, registry development,
@@ -3409,10 +3398,63 @@ function NotFoundPage() {
 }
 
 
+// ── Developer access gate ─────────────────────────────────────────────────────
+
+const DEV_ACCESS_KEY = "vicinity_dev_access";
+const DEV_ACCESS_CODE = import.meta.env.VITE_DEV_ACCESS_CODE || "vicinity-dev-2026";
+
+function AccessGate({ onUnlock }) {
+  const [input, setInput] = useState("");
+  const [error, setError] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (input.trim() === DEV_ACCESS_CODE) {
+      sessionStorage.setItem(DEV_ACCESS_KEY, "1");
+      onUnlock();
+    } else {
+      setError(true);
+      setInput("");
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-navy">
+      <div className="w-full max-w-sm rounded-3xl border border-white/15 bg-white/10 p-10 backdrop-blur text-white text-center">
+        <p className="font-serif text-3xl font-bold">VICINITY</p>
+        <p className="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-gold">Evidence Observatory</p>
+        <p className="mt-6 text-sm text-white/70">This site is currently restricted to authorized developers only.</p>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+          <input
+            type="password"
+            value={input}
+            onChange={(e) => { setInput(e.target.value); setError(false); }}
+            placeholder="Access code"
+            autoFocus
+            className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm text-white placeholder-white/40 focus:border-gold focus:outline-none"
+          />
+          {error && (
+            <p className="text-xs text-scarlet font-semibold">Incorrect access code.</p>
+          )}
+          <button type="submit" className="w-full rounded-xl bg-gold px-4 py-3 text-sm font-bold text-navy hover:bg-amber-400 transition">
+            Enter
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+
 // ── App root ──────────────────────────────────────────────────────────────────
 
 export default function App() {
   const [reviewerToken] = useState(() => sessionStorage.getItem("vicinity_reviewer_token") || "");
+  const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem(DEV_ACCESS_KEY) === "1");
+
+  if (!unlocked) {
+    return <AccessGate onUnlock={() => setUnlocked(true)} />;
+  }
 
   return (
     <div className="min-h-screen">
