@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+creatoros.db
+node_modules/
+dist/
+.env

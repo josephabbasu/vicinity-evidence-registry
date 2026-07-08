@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-paper text-ink antialiased;
+}
+
+.btn {
+  @apply px-3 py-1.5 rounded bg-ink text-paper text-sm font-medium hover:bg-slate-700 disabled:opacity-40;
+}
+.btn-green {
+  @apply px-3 py-1.5 rounded bg-verified text-white text-sm font-medium hover:opacity-90 disabled:opacity-40;
+}
+.input {
+  @apply border border-slate-300 rounded px-2 py-1.5 text-sm w-full bg-white;
+}
+.card {
+  @apply bg-white rounded-lg border border-slate-200 p-4;
+}
+.label {
+  @apply text-xs uppercase tracking-wide text-slate-500;
+}
