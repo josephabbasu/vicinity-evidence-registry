@@ -1,0 +1,7 @@
+# Add Health restricted-use data and all derived outputs must never be
+# committed. Simulated test files land in the same directories and are
+# excluded too, so nothing in input/ or output/ can leak by accident.
+input/*
+output/*
+!input/.gitkeep
+!output/.gitkeep
