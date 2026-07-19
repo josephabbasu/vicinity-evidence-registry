@@ -12,3 +12,10 @@ dist/
 ~$*
 backend/app/data/vicinity.db
 frontend/.vite/
+
+# Analysis outputs (never real Add Health data -- see
+# dissertation/paper1_biomarkers/README.md) and any local data extracts.
+dissertation/paper1_biomarkers/output/
+dissertation/**/*.rds
+dissertation/**/*.dta
+dissertation/**/*.sav
