@@ -1,0 +1,641 @@
+{
+  "derived": true,
+  "n_studies": {
+    "exposure": 32,
+    "intervention": 26
+  },
+  "mechanism_status": {
+    "exposure": {
+      "listed-verify-if-tested": 3,
+      "asserted-not-tested": 29
+    },
+    "intervention": {
+      "asserted-not-tested": 20,
+      "listed-verify-if-tested": 6
+    }
+  },
+  "mechanism_debt_share": {
+    "exposure": 0.91,
+    "intervention": 0.77
+  },
+  "domain_counts": {
+    "exposure": {
+      "Institutional trust & policing": 1,
+      "Safety perception & fear": 1,
+      "School disruption & cognition": 6,
+      "Trauma & emotional distress": 6,
+      "Health-care access": 2,
+      "Stress physiology & sleep": 11,
+      "Parenting & caregiver": 7,
+      "Social control & cohesion": 3,
+      "Norms & social cognition": 4,
+      "Genetic / shared-family confounding": 3
+    },
+    "intervention": {
+      "Physical environment": 4,
+      "Social control & cohesion": 7,
+      "Stress physiology & sleep": 5,
+      "Safety perception & fear": 5,
+      "Institutional trust & policing": 2,
+      "Trauma & emotional distress": 1,
+      "Norms & social cognition": 1,
+      "Parenting & caregiver": 1,
+      "School disruption & cognition": 1
+    }
+  },
+  "harm_pathways_with_no_intervention_language": [
+    [
+      "Health-care access",
+      2,
+      0
+    ],
+    [
+      "Genetic / shared-family confounding",
+      3,
+      0
+    ]
+  ],
+  "intervention_pathways_never_linked_to_harm_stream": [
+    [
+      "Physical environment",
+      0,
+      4
+    ]
+  ],
+  "psychosocial_studies_naming_no_pathway": [
+    7,
+    7
+  ],
+  "studies": [
+    {
+      "stream": "exposure",
+      "study": "Ang  (2021)",
+      "intervention_type": null,
+      "mechanism_status": "listed-verify-if-tested",
+      "pathway_domains": [
+        "Institutional trust & policing",
+        "Safety perception & fear",
+        "School disruption & cognition",
+        "Trauma & emotional distress"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Rossin-Slater et al., (2020)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Health-care access"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Gujral et al., ( 2023)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Stress physiology & sleep"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Bharadwaj et al. (2021)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Health-care access",
+        "Parenting & caregiver"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "McCoy et al., (2015)",
+      "intervention_type": null,
+      "mechanism_status": "listed-verify-if-tested",
+      "pathway_domains": [
+        "Stress physiology & sleep",
+        "Trauma & emotional distress"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Levine & McKnight (2024)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "School disruption & cognition",
+        "Trauma & emotional distress"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Karandinos et al. (2026)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Parenting & caregiver",
+        "Social control & cohesion",
+        "Trauma & emotional distress"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Cabral et al. (2026)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Sharkey & Shen (2021)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Deb & Gangaram (2024)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Heissel et al.,( 2018)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "School disruption & cognition",
+        "Stress physiology & sleep"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Cristancho et al., (2024)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "School disruption & cognition",
+        "Stress physiology & sleep"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Sharkey (2010)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Norms & social cognition",
+        "School disruption & cognition",
+        "Stress physiology & sleep",
+        "Trauma & emotional distress"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Abufhele & Laurito (2024)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Parenting & caregiver",
+        "Stress physiology & sleep"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Molano et al. (2018)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Norms & social cognition",
+        "Stress physiology & sleep",
+        "Trauma & emotional distress"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Vogel et al. (2024)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Norms & social cognition"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "McCoy et al. (2024)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Parenting & caregiver",
+        "Stress physiology & sleep"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Cuartas & Leventhal (2020)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Parenting & caregiver",
+        "Stress physiology & sleep"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Shulman et al. (2021)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Norms & social cognition"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Jaffee et al. (2023)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Connolly et al. (2022)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Genetic / shared-family confounding",
+        "Parenting & caregiver",
+        "Social control & cohesion"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Singham et al. (2017)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Genetic / shared-family confounding"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Schaefer et al., (2018)",
+      "intervention_type": null,
+      "mechanism_status": "listed-verify-if-tested",
+      "pathway_domains": [
+        "Genetic / shared-family confounding"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Balmori-de-la-Miyar et al. (2025)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Stress physiology & sleep"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Odgers & Russell (2017)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Finegood et al.,( 2024)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Lyons et al., (2024)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Parenting & caregiver",
+        "Social control & cohesion"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Voith, Gromoske, & Holmes (2014)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Quintana-Navarrete (2025)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Stress physiology & sleep"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Tarkiainen et al. (2024)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "School disruption & cognition"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Miller et al.,( 2024)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "exposure",
+      "study": "Pitk\u00e4nen et al. (2026)",
+      "intervention_type": null,
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Aliprantis & Hartley 2015",
+      "intervention_type": "structural",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Anderson et al. 2013",
+      "intervention_type": "structural",
+      "mechanism_status": "listed-verify-if-tested",
+      "pathway_domains": [
+        "Physical environment",
+        "Social control & cohesion"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Branas et al. (2011).",
+      "intervention_type": "structural",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Physical environment",
+        "Stress physiology & sleep"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Branas et al., (2018)",
+      "intervention_type": "structural",
+      "mechanism_status": "listed-verify-if-tested",
+      "pathway_domains": [
+        "Safety perception & fear"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Gonzalez & Komisarow (2020)",
+      "intervention_type": "structural",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Social control & cohesion"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Chalfin et al., 2022",
+      "intervention_type": "structural",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Leventhal & Brooks-Gunn (2003)",
+      "intervention_type": "structural",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Kling, Ludwig, & Katz (2005)",
+      "intervention_type": "structural",
+      "mechanism_status": "listed-verify-if-tested",
+      "pathway_domains": [
+        "Institutional trust & policing",
+        "Social control & cohesion"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Kling et al. (2007)",
+      "intervention_type": "structural",
+      "mechanism_status": "listed-verify-if-tested",
+      "pathway_domains": [
+        "Safety perception & fear",
+        "Social control & cohesion"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Kondo_2016",
+      "intervention_type": "structural",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Osypuk et al., (2012a)",
+      "intervention_type": "structural",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Stress physiology & sleep",
+        "Trauma & emotional distress"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Osypuk et al. (2012b)",
+      "intervention_type": "structural",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Norms & social cognition",
+        "Social control & cohesion",
+        "Stress physiology & sleep"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Nguyen et al., (2016)",
+      "intervention_type": "structural",
+      "mechanism_status": "listed-verify-if-tested",
+      "pathway_domains": [
+        "Parenting & caregiver",
+        "Safety perception & fear",
+        "School disruption & cognition"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Schmidt et al., (2020)",
+      "intervention_type": "structural",
+      "mechanism_status": "listed-verify-if-tested",
+      "pathway_domains": [
+        "Physical environment",
+        "Social control & cohesion"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "South et al., 2015",
+      "intervention_type": "structural",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Pollack et al., 2021",
+      "intervention_type": "structural",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Kim et al., 2023.",
+      "intervention_type": "structural",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Ludwig et al., 2013",
+      "intervention_type": "structural",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Safety perception & fear",
+        "Stress physiology & sleep"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "South et al. 2023.",
+      "intervention_type": "structural",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [
+        "Institutional trust & policing",
+        "Physical environment",
+        "Safety perception & fear",
+        "Social control & cohesion",
+        "Stress physiology & sleep"
+      ],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Langley 2015",
+      "intervention_type": "psychosocial",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Santiago et al. 2018",
+      "intervention_type": "psychosocial",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Guerra, Taylor, & Arredondo 2024",
+      "intervention_type": "psychosocial",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "van Rosmalen-Nooijens et al., 2017",
+      "intervention_type": "psychosocial",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Jaycox et al., 2009.",
+      "intervention_type": "psychosocial",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Carrion et al., 2013",
+      "intervention_type": "psychosocial",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    },
+    {
+      "stream": "intervention",
+      "study": "Stein et al., (2003)",
+      "intervention_type": "psychosocial",
+      "mechanism_status": "asserted-not-tested",
+      "pathway_domains": [],
+      "verification_required": true
+    }
+  ]
+}
