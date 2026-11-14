@@ -1,0 +1,17 @@
+variable,waves,role,coding,notes
+id,all,identifier,unique respondent id (AID),
+fam,all,cluster,family identifier for clustered folds / sibling checks,
+female,fixed,baseline,0/1,
+minority,fixed,baseline,0/1 (define from Wave I race and ethnicity; document),
+ses,fixed,baseline,standardised parental education/income,
+age1,fixed,baseline,age at Wave I (years),
+age_w,1-6,time-varying (context),age at interview,
+vic_w,1-5,exposure component + lagged confounder,0/1 past-year weapon victimization,"any positive item=1; 0 only if all items observed and negative; Wave III uses 4 items, IV-V 2 items"
+perp_w,1-5,exposure component + lagged confounder,0/1 past-year weapon perpetration,"items H1FV7/H1FV8, H2FV6/H2FV7, H3DS18H/H3DS18I, H4DS19/H4DS20, H5CJ1E/H5CJ1F"
+wit_w,1-5,lagged confounder,0/1 past-year witnessed shooting/stabbing,"H1FV1, H2FV1, H3DS18A, H4DS14, H5CJ2B"
+dep_w,1-5,outcome (D designs) / lagged confounder,0-9 three-item CES-D sum,Wave V rescored by subtracting 1 per item
+bmi_w,3-6,lagged confounder,BMI,confirm measured vs self-reported by wave
+sbp_w,4-6,outcome (BP designs) / lagged confounder,systolic BP mmHg,"last two of three seated readings; biomarker-wave protocol differences"
+cdis_w,1-3,time-varying context,county concentrated disadvantage,restricted contextual file
+ccrime_w,1-3,time-varying context,log county violent crime rate,restricted contextual file; do not carry past Wave III
+nbhd_w,4-5,time-varying context,neighbourhood disadvantage,confirm source and wave availability

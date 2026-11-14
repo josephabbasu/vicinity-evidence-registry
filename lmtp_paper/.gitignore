@@ -1,0 +1,4 @@
+output/
+*.Rhistory
+.RData
+data/analysis_wide.csv
