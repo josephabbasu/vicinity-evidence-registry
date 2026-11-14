@@ -5,7 +5,7 @@
 #   lmtp::lmtp_tmle  (primary)     lmtp::lmtp_sdr (sensitivity)
 # STATUS: written against the lmtp API from its documentation; it could NOT be
 # executed in the sandbox where this repo was prepared (CRAN unreachable).
-# Run 06_check_lmtp_api.R first on your machine: it fits a tiny model on the
+# Run check_lmtp_api() (R/06_diagnostics.R) first on your machine: it fits a tiny model on the
 # simulated data and fails loudly if any argument name differs in your version.
 # ------------------------------------------------------------------
 if (!exists("policy_waves")) source("R/00_config.R")
