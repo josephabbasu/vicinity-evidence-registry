@@ -11,8 +11,15 @@ source("R/03_fit_lmtp.R"); source("R/04_gcomp_validation.R"); source("R/05_fe_be
 source("R/06_diagnostics.R"); source("R/08_results_tables.R")
 suppressPackageStartupMessages(library(data.table))
 
-wide <- fread("data/analysis_wide.csv")
-need <- c("id", "fam", "female", "minority", "ses", "age1", "vic_1", "perp_1", "dep_1")
+# Option A (recommended): run inside the RStudio session that already holds your objects
+#   panel, biomarkers_panel_long_w456, sib_prof   (see R/07a_adapter_from_panel.R)
+# Option B: a saved canonical wide file.
+source("R/07a_adapter_from_panel.R")
+if (exists("panel") && exists("biomarkers_panel_long_w456")) {
+  wide <- build_wide_from_panel(panel, biomarkers_panel_long_w456,
+                                if (exists("sib_prof")) sib_prof else NULL)
+} else wide <- fread("data/analysis_wide.csv")
+need <- c("id", "fam", "female", "minority", "age1", "vic_1", "perp_1", "dep_1")
 stopifnot(all(need %in% names(wide)))
 
 all <- list(); i <- 0

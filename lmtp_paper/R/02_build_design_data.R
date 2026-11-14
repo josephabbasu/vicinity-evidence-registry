@@ -17,22 +17,23 @@ make_exposure <- function(W, w, exposure = "any") {
          stop("exposure must be any, vic or perp"))
 }
 
-ctx_names <- function(w) if (w <= 3) paste0(c("cdis_", "ccrime_"), w) else paste0("nbhd_", w)
+ctx_names <- function(w) paste0(c("cdis_", "ccrime_", "nbhd_"), w)   # whichever exist in the data
 
 # covariates measured BEFORE the exposure of treatment wave w
 tv_names <- function(w, timing, avail) {
   p <- w - 1
   v <- character(0)
-  if (p >= 1) v <- c(v, paste0(c("dep", "vic", "perp", "wit", "bmi", "sbp"), "_", p))
+  if (p >= 1) v <- c(v, paste0(c("dep", "vic", "perp", "wit", "bmi", "sbp", "med", "pov", "cumv", "cump"), "_", p))
   v <- c(v, ctx_names(w), paste0("age_", w))
-  if (timing == "pre") v <- c(v, paste0(c("dep", "bmi", "sbp"), "_", w))
+  if (timing == "pre") v <- c(v, paste0(c("dep", "bmi", "sbp", "med"), "_", w))
   intersect(v, avail)
 }
 
 baseline_names <- function(w1, avail) {
   b <- c("female", "minority", "ses", "age1")
   if (w1 - 2 >= 1) for (s in 1:(w1 - 2))
-    b <- c(b, paste0(c("dep", "vic", "perp", "wit", "cdis", "ccrime"), "_", s))
+    b <- c(b, paste0(c("dep", "vic", "perp", "wit", "cdis", "ccrime", "nbhd", "pov", "cumv", "cump"), "_", s))
+  b <- c(b, "famconn_base", "schconn_base", "nbcoh_base")   # adolescent social resources, if present
   intersect(b, avail)
 }
 

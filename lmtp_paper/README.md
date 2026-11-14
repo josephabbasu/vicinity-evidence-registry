@@ -88,3 +88,28 @@ a point in the simulator. Expect wide intervals: run
 `Rscript run_simulation_check.R 3 5000 calibrated` and
 `sim_truth()` at your sample size before preregistering the primary contrast.
 For BP, only 183 (IV->V) and 41 (V->VI) respondents changed history in your data.
+
+## Using your existing session objects (added after reviewing your scripts)
+`R/07a_adapter_from_panel.R :: build_wide_from_panel(panel, biomarkers_panel_long_w456, sib_prof)`
+converts the long objects already in your RStudio session into the canonical wide file, reusing
+the variables your Papers 2-4 built (no re-coding of raw Add Health items). `run_real_data.R`
+calls it automatically when those objects exist.
+
+Mapping used (edit `ADAPTER_MAP` if wrong). **CHECK** = not verifiable from the code photographed:
+
+| pipeline | your column | note |
+|---|---|---|
+| `vic_w`, `perp_w`, `wit_w` | `weapon_victimization`, `weapon_violence`, `weapon_witnessing` | `> 0` -> 1, as in your `vict`/`perp` |
+| `dep_w` | `depression` | CHECK: the harmonised 0-9 sum, not a z-score |
+| `nbhd_w` (waves 1-5) | `neigh_conc_disadv_raw` | from `B1..B5NRBHDDISAD` |
+| `ccrime_w` (waves 1-3) | `cty_violent_rate_log` | CHECK; your county model also restricts to non-movers |
+| `pov_w` | `poverty_z` | CHECK: available at all waves? higher = more poverty |
+| `sbp_w`, `bmi_w`, `med_w` | biomarker panel `sbp`, `bmi`, `med_bp` | waves 4-6 |
+| `cumv_w`, `cump_w` | built from the above | same definition as `make_history()`: cumsum(current, NA->0) |
+| `famconn_base`, `schconn_base`, `nbcoh_base` | `*_baseline` columns | baseline social resources |
+| `fam` | `sib_prof$FAMID` | clustered folds |
+| `female`, `minority` | `gender`, `race` | CHECK coding (`as_female`, `as_minority`) |
+
+Not carried over: self-esteem (waves 1-3 only), religion, `nonmover`. Add them in the adapter if wanted.
+Note: `timing = "pre"` makes same-wave SBP/BMI/medication required covariates, which drops about
+30% of the BP-design sample in the simulation (those without a BP measure); report `post` as primary.

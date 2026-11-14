@@ -18,7 +18,7 @@ family_of <- function(v) sub("_[0-9]+$", "", v)
 
 # Stops if any covariate in a block is measured after it is allowed to be.
 #   post mode: dep/vic/perp/wit/bmi/sbp must come from waves <= w-1
-#   pre  mode: dep/bmi/sbp may also come from wave w (same wave)
+#   pre  mode: dep/bmi/sbp/med may also come from wave w (same wave)
 #   context/age: waves <= w
 #   baseline : waves <= first treatment wave - 2 (earlier history)
 #   outcome  : wave > last treatment wave
@@ -29,7 +29,7 @@ check_time_ordering <- function(spec, trt_waves, timing = "post") {
     v  <- spec$time_vary[[k]]
     wv <- wave_of(v); fam <- family_of(v)
     allowed <- ifelse(fam %in% .ctx_family, w,
-               ifelse(timing == "pre" & fam %in% c("dep", "bmi", "sbp"), w, w - 1))
+               ifelse(timing == "pre" & fam %in% c("dep", "bmi", "sbp", "med"), w, w - 1))
     bad <- v[!is.na(wv) & wv > allowed]
     if (length(bad))
       stop(sprintf("Time-ordering violation in block %d (treatment wave %d): %s",

@@ -59,4 +59,40 @@ cs <- cesd3(list(c(0, 1, 2, NA), c(1, 1, 3, 0), c(0, 2, 3, 0)), wave = 3)
 ok(identical(cs, c(1, 4, 8, NA)), "cesd3 sums three items, NA if any missing")
 cs5 <- cesd3(list(c(1, 2), c(1, 2), c(1, 4)), wave = 5)
 ok(identical(cs5, c(0, 5)), "cesd3 rescales Wave V (1-4 -> 0-3)")
+cat("8. adapter: objects shaped like your session (long panel, biomarker panel, sib_prof)\n")
+source("R/07a_adapter_from_panel.R")
+ws <- simulate_cohort(1500, seed = 3)
+long <- rbindlist(lapply(1:5, function(t) {
+  keep <- !is.na(ws[[paste0("dep_", t)]])
+  data.table(aid = ws$id[keep], wave = t,
+    weapon_victimization = ws[[paste0("vic_", t)]][keep] * (if (t <= 2) 2 else 1),  # Waves I-II frequency codes
+    weapon_violence = ws[[paste0("perp_", t)]][keep], weapon_witnessing = ws[[paste0("wit_", t)]][keep],
+    depression = ws[[paste0("dep_", t)]][keep], age = ws[[paste0("age_", t)]][keep],
+    gender = ifelse(ws$female[keep] == 1, "Female", "Male"), race = ifelse(ws$minority[keep] == 1, "Black", "White"),
+    neigh_conc_disadv_raw = if (t <= 3) ws[[paste0("cdis_", t)]][keep] else ws[[paste0("nbhd_", t)]][keep],
+    cty_violent_rate_log = if (t <= 3) ws[[paste0("ccrime_", t)]][keep] else NA_real_,
+    poverty_z = rnorm(sum(keep)), family_connection_baseline = ws$ses[keep])
+}))
+bio <- rbindlist(lapply(4:6, function(t) {
+  keep <- !is.na(ws[[paste0("sbp_", t)]])
+  data.table(aid = ws$id[keep], wave = t, sbp = ws[[paste0("sbp_", t)]][keep],
+             bmi = ws[[paste0("bmi_", t)]][keep], med_bp = 0)
+}))
+sibp <- data.table(AID = ws$id, FAMID = ws$fam)
+Wd <- build_wide_from_panel(long, bio, sibp, verbose = FALSE)
+m <- match(Wd$id, as.character(ws$id))
+ok(all(Wd$vic_1 == as.integer(ws$vic_1[m]), na.rm = TRUE), "victimization recoded >0 (frequency codes -> 0/1)")
+ok(isTRUE(all.equal(Wd$dep_5, ws$dep_5[m])), "depression carried through unchanged")
+ok(isTRUE(all.equal(Wd$sbp_5, ws$sbp_5[m])), "biomarker panel merged by aid x wave")
+ok(all(Wd$fam == as.character(ws$fam[m])), "FAMID -> fam")
+ok(all(Wd$female == ws$female[m]) && all(Wd$minority == ws$minority[m]), "sex and race recoded")
+ok(isTRUE(all.equal(Wd$cumv_3, ws$vic_1[m] + ws$vic_2[m] + ws$vic_3[m])), "earlier-report count matches your make_history() definition")
+ok(!"ccrime_4" %in% names(Wd), "county crime restricted to waves 1-3")
+for (nm in names(cfg$designs)) for (tm in cfg$timings) {
+  b <- build_design(Wd, cfg$designs[[nm]], "any", tm, verbose = FALSE)
+  ok(nrow(b$data) > 100, sprintf("adapter output builds design %s/%s (n=%d)", nm, tm, nrow(b$data)))
+}
+bb <- build_design(Wd, cfg$designs$dep_III_IV, "any", "post", verbose = FALSE)
+cat("     covariates in block 1:", paste(bb$spec$time_vary[[1]], collapse = ", "), "\n")
+cat("     baseline:", paste(bb$spec$baseline, collapse = ", "), "\n")
 cat("\nALL TESTS PASSED\n")
