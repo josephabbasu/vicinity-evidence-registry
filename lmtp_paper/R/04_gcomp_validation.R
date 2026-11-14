@@ -64,6 +64,7 @@ ice_gcomp <- function(dd, spec, policy_cols = character(0),
 # natural course + policies for one built design
 gcomp_policies <- function(bd, policy_names, cands = c("glmnet", "ranger")) {
   des <- bd$design
+  if (length(des$trt_waves) == 1) policy_names <- "prevent_all"
   out <- data.frame(policy = c("natural", policy_names), est = NA_real_)
   out$est[1] <- ice_gcomp(bd$data, bd$spec, character(0), cands)
   for (i in seq_along(policy_names)) {

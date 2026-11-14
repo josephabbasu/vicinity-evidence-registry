@@ -45,6 +45,7 @@ fit_lmtp_design <- function(bd, policy_names = cfg$policy_names,
                             learners = default_learners(),
                             folds = cfg$folds, k = cfg$k, seed = cfg$seed) {
   estimator <- match.arg(estimator)
+  if (length(bd$design$trt_waves) == 1) policy_names <- "prevent_all"  # first = last = all
   fn <- switch(estimator, tmle = lmtp::lmtp_tmle, sdr = lmtp::lmtp_sdr)
   dd <- bd$data; spec <- bd$spec; des <- bd$design
   common <- list(data = dd, trt = spec$trt, outcome = spec$outcome,
